@@ -8,21 +8,6 @@
     android:background="#373737"
     tools:context=".RegistrarBiciActivity">
 
-    <EditText
-        android:id="@+id/Nombre_ED"
-        android:layout_width="320dp"
-        android:layout_height="45dp"
-        android:ems="10"
-        android:hint="Nombres"
-        android:inputType="text"
-        android:textColorHint="#FFFFFF"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.494"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.255" />
-
     <Button
         android:id="@+id/Guardar_BTN"
         android:layout_width="wrap_content"
@@ -35,37 +20,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.856" />
-
-    <EditText
-        android:id="@+id/Cedula_NUM"
-        android:layout_width="320dp"
-        android:layout_height="45dp"
-        android:ems="10"
-        android:hint="Cedula"
-        android:inputType="number"
-        android:textColorHint="#FFFFFF"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.494"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.428" />
-
-    <EditText
-        android:id="@+id/Apellidos_ED"
-        android:layout_width="320dp"
-        android:layout_height="45dp"
-        android:ems="10"
-        android:hint="Apellidos"
-        android:inputType="text"
-        android:textColorHint="#FFFFFF"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.494"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.341" />
+        app:layout_constraintVertical_bias="0.938" />
 
     <EditText
         android:id="@+id/Color_ED"
@@ -80,7 +35,37 @@
         app:layout_constraintHorizontal_bias="0.494"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.593" />
+        app:layout_constraintVertical_bias="0.583" />
+
+    <EditText
+        android:id="@+id/Cedula_NUM"
+        android:layout_width="320dp"
+        android:layout_height="45dp"
+        android:ems="10"
+        android:hint="Cedula"
+        android:inputType="number"
+        android:textColorHint="#FFFFFF"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.494"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.418" />
+
+    <EditText
+        android:id="@+id/Apellidos_ED"
+        android:layout_width="320dp"
+        android:layout_height="45dp"
+        android:ems="10"
+        android:hint="Apellidos"
+        android:inputType="text"
+        android:textColorHint="#FFFFFF"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.494"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.33" />
 
     <EditText
         android:id="@+id/Marco_NUM"
@@ -95,7 +80,34 @@
         app:layout_constraintHorizontal_bias="0.494"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.507" />
+        app:layout_constraintVertical_bias="0.497" />
+
+    <ImageView
+        android:id="@+id/imageView4"
+        android:layout_width="352dp"
+        android:layout_height="77dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.491"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.096"
+        app:srcCompat="@drawable/registrar_bicicleta" />
+
+    <EditText
+        android:id="@+id/Nombre_ED"
+        android:layout_width="320dp"
+        android:layout_height="45dp"
+        android:ems="10"
+        android:hint="Nombres"
+        android:inputType="text"
+        android:textColorHint="#FFFFFF"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.494"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.244" />
 
     <TextView
         android:id="@+id/textView3"
@@ -108,12 +120,12 @@
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.674" />
+        app:layout_constraintVertical_bias="0.66" />
 
     <Button
         android:id="@+id/AgregarFoto1_BTN"
-        android:layout_width="145dp"
-        android:layout_height="62dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:backgroundTint="#C13622"
         android:text="Bicicleta"
         android:textColor="#FFFFFF"
@@ -122,20 +134,20 @@
         app:iconTint="#FFFFFF"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.251"
+        app:layout_constraintHorizontal_bias="0.247"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.765" />
+        app:layout_constraintVertical_bias="0.764" />
 
     <Button
         android:id="@+id/AgregarFoto2_BTN"
-        android:layout_width="123dp"
-        android:layout_height="64dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:backgroundTint="#C13622"
         android:text="Usuario"
         android:textColor="#FFFFFF"
         android:textColorHint="#FFFFFF"
-        app:icon="@android:drawable/ic_menu_camera"
+        app:icon="@drawable/usuario"
         app:iconTint="#FFFFFF"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -143,6 +155,34 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.764" />
+
+    <Button
+        android:id="@+id/Eliminar_BTN"
+        android:layout_width="45dp"
+        android:layout_height="40dp"
+        android:backgroundTint="#C13622"
+        android:drawableBottom="@mipmap/x"
+        android:text="Borrar Informacion"
+        android:textColor="#FFFFFF"
+        android:textColorHint="#FFFFFF"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.846" />
+
+    <Button
+        android:id="@+id/Listo_BTN"
+        android:layout_width="45dp"
+        android:layout_height="40dp"
+        android:backgroundTint="#C13622"
+        android:drawableBottom="@mipmap/bien"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.661"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.846" />
 
     <Button
         android:id="@+id/Editar_BTN"
@@ -158,46 +198,6 @@
         app:layout_constraintHorizontal_bias="0.333"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.181" />
-
-    <Button
-        android:id="@+id/Eliminar_BTN"
-        android:layout_width="45dp"
-        android:layout_height="40dp"
-        android:backgroundTint="#C13622"
-        android:drawableBottom="@mipmap/x"
-        android:text="Borrar Informacion"
-        android:textColor="#FFFFFF"
-        android:textColorHint="#FFFFFF"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.18" />
-
-    <ImageView
-        android:id="@+id/imageView4"
-        android:layout_width="352dp"
-        android:layout_height="77dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.491"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.055"
-        app:srcCompat="@drawable/registrar_bicicleta" />
-
-    <Button
-        android:id="@+id/Listo_BTN"
-        android:layout_width="45dp"
-        android:layout_height="40dp"
-        android:backgroundTint="#C13622"
-        android:drawableBottom="@mipmap/bien"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.661"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.18" />
+        app:layout_constraintVertical_bias="0.846" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -8,143 +8,173 @@
     android:background="#373737"
     tools:context=".AuthActivity">
 
-    <ImageView
-        android:id="@+id/imageView"
-        android:layout_width="285dp"
-        android:layout_height="276dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.112"
-        app:srcCompat="@drawable/logo2" />
-
     <Button
         android:id="@+id/Google_BTN"
-        android:layout_width="250dp"
-        android:layout_height="53dp"
-        android:backgroundTint="#FFFFFF"
+        android:layout_width="250sp"
+        android:layout_height="53sp"
+        android:backgroundTint="@drawable/c_email"
         android:drawableBottom="@mipmap/google"
         android:text="Ingresa"
         android:textColor="#000000"
         android:textColorHint="#FFFFFF"
+        android:padding="5sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.496"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.948" />
-
-    <ImageView
-        android:id="@+id/imageView6"
-        android:layout_width="375dp"
-        android:layout_height="139dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.555"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.44"
-        app:srcCompat="@drawable/logo_mini" />
-
-    <TextView
-        android:id="@+id/textView5"
-        android:layout_width="333dp"
-        android:layout_height="42dp"
-        android:text="Esta es una app dedicada a facilitar el ingreso al parqueadero de UNIMINUTO, sede Soacha."
-        android:textAlignment="center"
-        android:textColor="#FFFFFF"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.554" />
+        app:layout_constraintVertical_bias="0.917" />
 
     <TextView
         android:id="@+id/textView6"
-        android:layout_width="333dp"
-        android:layout_height="42dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:text="Por favor, identifícate para continuar. "
         android:textAlignment="center"
         android:textColor="#FFFFFF"
+        android:textSize="15sp"
+        android:padding="5sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.503"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.615" />
-
-    <EditText
-        android:id="@+id/Correo_ED"
-        android:layout_width="330dp"
-        android:layout_height="40dp"
-        android:ems="10"
-        android:hint="Correo electronico"
-        android:inputType="textEmailAddress"
-        android:textColorHint="#FFFFFF"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.481"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.674" />
-
-    <EditText
-        android:id="@+id/Contraseña_ED"
-        android:layout_width="330dp"
-        android:layout_height="40dp"
-        android:ems="10"
-        android:hint="Contraseña"
-        android:inputType="textPassword"
-        android:textColorHint="#FFFFFF"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.481"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.732" />
-
-    <TextView
-        android:id="@+id/textView7"
-        android:layout_width="138dp"
-        android:layout_height="18dp"
-        android:text="o Inicia sesion con:"
-        android:textAlignment="center"
-        android:textColor="#FFFFFF"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.876" />
+        app:layout_constraintVertical_bias="0.583" />
 
     <Button
         android:id="@+id/Acceder_BTN"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:backgroundTint="#C13622"
+        android:backgroundTint="@drawable/c_boton"
         android:text="Acceder"
         android:textColor="#FFFFFF"
         android:textColorHint="#FFFFFF"
+        android:padding="5sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.29"
+        app:layout_constraintHorizontal_bias="0.258"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.815" />
+        app:layout_constraintVertical_bias="0.784" />
 
     <Button
         android:id="@+id/Registrarse_BTN"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:backgroundTint="#C13622"
-        android:text="Registrarseee"
+        android:backgroundTint="@drawable/c_boton"
+        android:text="Registrese"
         android:textColor="#FFFFFF"
         android:textColorHint="#FFFFFF"
+        android:padding="5sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.715"
+        app:layout_constraintHorizontal_bias="0.769"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.815" />
+        app:layout_constraintVertical_bias="0.784" />
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="285sp"
+        android:layout_height="276sp"
+        android:padding="5sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.065"
+        app:srcCompat="@drawable/logo2" />
+
+    <EditText
+        android:id="@+id/Correo_ED"
+        android:layout_width="330sp"
+        android:layout_height="40sp"
+        android:ems="10"
+        android:hint="Correo electronico"
+        android:inputType="textEmailAddress"
+        android:textColorHint="#625A5A"
+        android:visibility="visible"
+        android:padding="5sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.481"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.643" />
+
+    <EditText
+        android:id="@+id/Contraseña_ED"
+        android:layout_width="330sp"
+        android:layout_height="40sp"
+        android:ems="10"
+        android:hint="Contraseña"
+        android:inputType="textPassword"
+        android:textColorHint="#625A5A"
+        android:padding="5sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.481"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.701" />
+
+    <TextView
+        android:id="@+id/textView5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Esta es una app dedicada a facilitar el ingreso al parqueadero de UNIMINUTO, sede Soacha."
+        android:textAlignment="center"
+        android:textColor="#FFFFFF"
+        android:textSize="16sp"
+        android:padding="5sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.523" />
+
+    <ImageView
+        android:id="@+id/ocultar"
+        android:layout_width="35sp"
+        android:layout_height="35sp"
+        android:clickable="true"
+        android:focusable="true"
+        android:padding="8sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.877"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.696"
+        app:srcCompat="@drawable/eyeclose" />
+
+    <ImageView
+        android:id="@+id/imageView6"
+        android:layout_width="375sp"
+        android:layout_height="139sp"
+        android:padding="5sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.555"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.405"
+        app:srcCompat="@drawable/logo_mini" />
+
+    <TextView
+        android:id="@+id/textView7"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="o Inicia sesion con:"
+        android:textAlignment="center"
+        android:textColor="#FFFFFF"
+        android:textSize="14sp"
+        android:padding="5sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.846" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.provider.MediaStore
 import android.widget.Button
 import android.widget.EditText
+import android.widget.ImageView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -29,6 +30,7 @@ class RegistrarBiciActivity : AppCompatActivity() {
     private lateinit var agregarFoto2Btn: Button
     private lateinit var editarBtn: Button
     private lateinit var eliminarBtn: Button
+    private lateinit var imageView: ImageView
 
     private var fotoUri1: Uri? = null
     private var fotoUri2: Uri? = null
@@ -290,7 +292,6 @@ class RegistrarBiciActivity : AppCompatActivity() {
                 Toast.makeText(this, "Error al Subir $fotoName: ${e.message}", Toast.LENGTH_SHORT).show()
             }
     }
-
 }
 
 

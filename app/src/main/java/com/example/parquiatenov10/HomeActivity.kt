@@ -2,12 +2,14 @@ package com.example.parquiatenov10
 
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.auth.FirebaseAuth
 import android.widget.TextView
 import android.widget.Button
+import android.widget.ImageView
 import androidx.appcompat.app.AlertDialog
 
 class HomeActivity : AppCompatActivity() {

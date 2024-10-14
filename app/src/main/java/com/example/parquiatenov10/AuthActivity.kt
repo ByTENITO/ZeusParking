@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.text.InputType
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -16,6 +17,7 @@ import com.google.firebase.auth.GoogleAuthProvider
 import android.widget.Button
 import android.widget.EditText
 import android.util.Patterns
+import android.widget.ImageView
 
 enum class ProviderType {
     GOOGLE,
@@ -30,10 +32,10 @@ class AuthActivity : AppCompatActivity() {
     private lateinit var Correo_ED: EditText
     private lateinit var Contraseña_ED: EditText
     private lateinit var auth: FirebaseAuth
+    private var eye = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         enableEdgeToEdge()
         setContentView(R.layout.activity_auth)
 
@@ -48,7 +50,6 @@ class AuthActivity : AppCompatActivity() {
         setup()
         session()  // Verifica si ya existe una sesión activa
     }
-
     private fun session() {
         // Recupera la sesión almacenada en SharedPreferences
         val prefs = getSharedPreferences(getString(R.string.prefs_file), Context.MODE_PRIVATE)
@@ -81,7 +82,24 @@ class AuthActivity : AppCompatActivity() {
             googleClient.signOut()
             startActivityForResult(googleClient.signInIntent, GOOGLE_SIGN_IN)
         }
+        //visualizar contraseña
+        val ocultar: ImageView = findViewById(R.id.ocultar)
+        ocultar.setOnClickListener {
+            eye = !eye
 
+            if (eye) {
+                // Si no está oculto, cambia el password a inputType y actualiza el ícono
+                Contraseña_ED.inputType = InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD
+                ocultar.setImageResource(R.drawable.eyeopen) // Ojo abierto
+            } else {
+                // Si está oculto, cambia el inputType a password y actualiza el ícono
+                Contraseña_ED.inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
+                ocultar.setImageResource(R.drawable.eyeclose) // Ojo cerrado
+            }
+
+            // Mueve el cursor al final del texto después de cambiar el inputType
+            Contraseña_ED.setSelection(Contraseña_ED.text.length)
+        }
         // Inicio de sesión con email y contraseña
         Acceder_BTN.setOnClickListener {
             val email = Correo_ED.text.toString()
