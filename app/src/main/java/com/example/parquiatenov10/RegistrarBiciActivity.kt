@@ -5,10 +5,8 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
-import android.widget.Button
-import android.widget.EditText
-import android.widget.ImageView
-import android.widget.Toast
+import android.view.View
+import android.widget.*
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -16,9 +14,8 @@ import androidx.core.view.WindowInsetsCompat
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
-import com.google.firebase.storage.StorageReference
-import com.google.zxing.BarcodeFormat
-import com.journeyapps.barcodescanner.BarcodeEncoder
+import android.text.InputType
+import android.text.InputFilter
 
 class RegistrarBiciActivity : AppCompatActivity() {
     private lateinit var nombreEd: EditText
@@ -30,7 +27,7 @@ class RegistrarBiciActivity : AppCompatActivity() {
     private lateinit var agregarFoto2Btn: Button
     private lateinit var editarBtn: Button
     private lateinit var eliminarBtn: Button
-    private lateinit var imageView: ImageView
+    private lateinit var tiposSpinner: Spinner
 
     private var fotoUri1: Uri? = null
     private var fotoUri2: Uri? = null
@@ -60,6 +57,46 @@ class RegistrarBiciActivity : AppCompatActivity() {
         agregarFoto2Btn = findViewById(R.id.AgregarFoto2_BTN)
         editarBtn = findViewById(R.id.Editar_BTN)
         eliminarBtn = findViewById(R.id.Eliminar_BTN)
+        tiposSpinner = findViewById(R.id.Tipos_Spinner)
+
+        // Configuración del Spinner
+        val tiposVehiculos = arrayOf("Selecciona el Tipo de Vehículo", "Bicicleta", "Motocicleta", "Vehículo Particular", "Furgón")
+        val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, tiposVehiculos)
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        tiposSpinner.adapter = adapter
+
+        tiposSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
+                when (position) {
+                    1 -> {
+                        marcoNum.hint = "Número de Marco"
+                        marcoNum.inputType = InputType.TYPE_CLASS_NUMBER // Solo números
+                        marcoNum.filters = arrayOf(InputFilter.LengthFilter(20)) // Permitir hasta 20 caracteres
+                    }
+                    2, 3, 4 -> {
+                        marcoNum.hint = when (position) {
+                            2 -> "Placa (Ej. ABC-123)"
+                            3 -> "Placa (Ej. ABC-123)"
+                            4 -> "Número de Furgón"
+                            else -> "Número de Marco"
+                        }
+                        marcoNum.inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD // Texto y números
+                        marcoNum.filters = arrayOf(InputFilter.LengthFilter(7)) // Limitar a 7 caracteres
+                    }
+                    else -> {
+                        marcoNum.hint = "Número de Marco"
+                        marcoNum.inputType = InputType.TYPE_CLASS_NUMBER // Solo números
+                        marcoNum.filters = arrayOf(InputFilter.LengthFilter(20))
+                    }
+                }
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>) {
+                marcoNum.hint = "Número de Marco"
+                marcoNum.inputType = InputType.TYPE_CLASS_NUMBER
+                marcoNum.filters = arrayOf(InputFilter.LengthFilter(20))
+            }
+        }
 
         // Evento para agregar la primera foto
         agregarFoto1Btn.setOnClickListener {
@@ -95,8 +132,6 @@ class RegistrarBiciActivity : AppCompatActivity() {
         startActivityForResult(intent, requestCode)
     }
 
-
-
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
@@ -104,11 +139,11 @@ class RegistrarBiciActivity : AppCompatActivity() {
             when (requestCode) {
                 1 -> {
                     fotoUri1 = data.data
-                    Toast.makeText(this, "Primera Foto Guardada Con Exito", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, "Primera Foto Guardada Con Éxito", Toast.LENGTH_SHORT).show()
                 }
                 2 -> {
                     fotoUri2 = data.data
-                    Toast.makeText(this, "Segunda Foto Guardada Con Exito", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, "Segunda Foto Guardada Con Éxito", Toast.LENGTH_SHORT).show()
                 }
             }
         }
@@ -120,10 +155,38 @@ class RegistrarBiciActivity : AppCompatActivity() {
         val color = colorEd.text.toString()
         val cedula = cedulaNum.text.toString()
         val marco = marcoNum.text.toString()
+        val tipoVehiculo = tiposSpinner.selectedItem.toString()
+
+        // Validaciones
+        if (tipoVehiculo == "Selecciona el Tipo de Vehículo") {
+            Toast.makeText(this, "Por favor, selecciona un tipo de vehículo válido", Toast.LENGTH_SHORT).show()
+            return
+        }
 
         if (nombre.isEmpty() || apellidos.isEmpty() || color.isEmpty() || cedula.isEmpty() || marco.isEmpty()) {
-            Toast.makeText(this, "Llene Todos los Campos Porfavor", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "Llene Todos los Campos Por Favor", Toast.LENGTH_SHORT).show()
             return
+        }
+
+        // Validación de cédula (solo números, hasta 10 dígitos)
+        if (!cedula.matches(Regex("^[0-9]{1,10}$"))) {
+            Toast.makeText(this, "La cédula debe contener solo números y hasta 10 dígitos", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        // Validación de número de marco
+        if (tipoVehiculo in listOf("Motocicleta", "Vehículo Particular", "Furgón")) {
+            // Alfanumérico, hasta 6 caracteres
+            if (!marco.matches(Regex("^[A-Za-z0-9]{1,11}$"))) {
+                Toast.makeText(this, "El número de marco debe ser alfanumérico y hasta 11 caracteres", Toast.LENGTH_SHORT).show()
+                return
+            }
+        } else {
+            // Alfanumérico, hasta 20 caracteres
+            if (!marco.matches(Regex("^[A-Za-z0-9]{1,20}$"))) {
+                Toast.makeText(this, "El número de marco debe ser alfanumérico y hasta 20 caracteres", Toast.LENGTH_SHORT).show()
+                return
+            }
         }
 
         if (fotoUri1 == null || fotoUri2 == null) {
@@ -148,151 +211,68 @@ class RegistrarBiciActivity : AppCompatActivity() {
                         "apellidos" to apellidos,
                         "color" to color,
                         "cedula" to cedula,
-                        "marco" to marco,
+                        "numero" to marco,
+                        "tipo" to tipoVehiculo,
                         "usuarioId" to userId
                     )
 
                     biciCollection.add(biciData)
                         .addOnSuccessListener { documentReference ->
-                            biciId = documentReference.id
-                            Toast.makeText(this, "Datos Guardados Correctamente", Toast.LENGTH_SHORT).show()
-                            subirImagenAFirebase(fotoUri1!!, "Foto1")
-                            subirImagenAFirebase(fotoUri2!!, "Foto2")
-                            limpiarCampos() // Limpiar los campos después de guardar
+                            // Aquí subimos las fotos
+                            subirFoto(fotoUri1, userId, "foto_perfil", documentReference.id)
+                            subirFoto(fotoUri2, userId, "foto_bici", documentReference.id)
+                            Toast.makeText(this, "Datos guardados exitosamente", Toast.LENGTH_SHORT).show()
+                            limpiarCampos()
                         }
-                        .addOnFailureListener { e ->
-                            Toast.makeText(this, "No se Pudieron Guardar los Datos: ${e.message}", Toast.LENGTH_SHORT).show()
+                        .addOnFailureListener {
+                            Toast.makeText(this, "Error al guardar los datos", Toast.LENGTH_SHORT).show()
                         }
                 } else {
-                    Toast.makeText(this, "Ya has registrado una bicicleta anteriormente", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, "Ya existe un registro de bicicleta para este usuario", Toast.LENGTH_SHORT).show()
                 }
             }
-            .addOnFailureListener { e ->
-                Toast.makeText(this, "Error al verificar registro: ${e.message}", Toast.LENGTH_SHORT).show()
+            .addOnFailureListener {
+                Toast.makeText(this, "Error al verificar los datos", Toast.LENGTH_SHORT).show()
             }
     }
 
-    // Función para limpiar los campos
+    private fun subirFoto(fotoUri: Uri?, userId: String, tipo: String, biciId: String) {
+        if (fotoUri == null) return
+
+        val storageRef = storage.reference
+        val userBiciRef = storageRef.child("$userId/$biciId/$tipo.jpg")
+
+        userBiciRef.putFile(fotoUri)
+            .addOnSuccessListener {
+                Toast.makeText(this, "Foto $tipo subida exitosamente", Toast.LENGTH_SHORT).show()
+            }
+            .addOnFailureListener {
+                Toast.makeText(this, "Error al subir la foto $tipo", Toast.LENGTH_SHORT).show()
+            }
+    }
+
+    private fun cargarDatosSiExistente() {
+        // Aquí iría el código para cargar datos existentes si es necesario
+    }
+
+    private fun editarDatosEnFirestore() {
+        // Aquí iría el código para editar datos existentes si es necesario
+    }
+
+    private fun eliminarDatosEnFirestore() {
+        // Aquí iría el código para eliminar datos existentes si es necesario
+    }
+
     private fun limpiarCampos() {
         nombreEd.text.clear()
         apellidosEd.text.clear()
         colorEd.text.clear()
         cedulaNum.text.clear()
         marcoNum.text.clear()
+        tiposSpinner.setSelection(0)
         fotoUri1 = null
         fotoUri2 = null
     }
-
-    private fun editarDatosEnFirestore() {
-        val nombre = nombreEd.text.toString()
-        val apellidos = apellidosEd.text.toString()
-        val color = colorEd.text.toString()
-        val cedula = cedulaNum.text.toString()
-        val marco = marcoNum.text.toString()
-
-        if (biciId == null) {
-            Toast.makeText(this, "No hay registro para editar", Toast.LENGTH_SHORT).show()
-            return
-        }
-
-        if (nombre.isEmpty() || apellidos.isEmpty() || color.isEmpty() || cedula.isEmpty() || marco.isEmpty()) {
-            Toast.makeText(this, "Llene Todos los Campos Porfavor", Toast.LENGTH_SHORT).show()
-            return
-        }
-
-        val biciData: MutableMap<String, Any> = hashMapOf(
-            "nombre" to nombre,
-            "apellidos" to apellidos,
-            "color" to color,
-            "cedula" to cedula,
-            "marco" to marco
-        )
-
-        db.collection("Bici Usuarios").document(biciId!!).update(biciData)
-            .addOnSuccessListener {
-                Toast.makeText(this, "Datos Editados Correctamente", Toast.LENGTH_SHORT).show()
-                if (fotoUri1 != null) {
-                    subirImagenAFirebase(fotoUri1!!, "Foto1")
-                }
-                if (fotoUri2 != null) {
-                    subirImagenAFirebase(fotoUri2!!, "Foto2")
-                }
-            }
-            .addOnFailureListener { e ->
-                Toast.makeText(this, "No se Pudieron Editar los Datos: ${e.message}", Toast.LENGTH_SHORT).show()
-            }
-    }
-
-    private fun eliminarDatosEnFirestore() {
-        if (biciId == null) {
-            Toast.makeText(this, "No hay registro para eliminar", Toast.LENGTH_SHORT).show()
-            return
-        }
-
-        db.collection("Bici Usuarios").document(biciId!!).delete()
-            .addOnSuccessListener {
-                Toast.makeText(this, "Datos Eliminados Correctamente", Toast.LENGTH_SHORT).show()
-                eliminarImagenesDeFirebase()
-            }
-            .addOnFailureListener { e ->
-                Toast.makeText(this, "No se Pudieron Eliminar los Datos: ${e.message}", Toast.LENGTH_SHORT).show()
-            }
-    }
-
-    private fun eliminarImagenesDeFirebase() {
-        val userId = FirebaseAuth.getInstance().currentUser?.uid ?: return
-
-        val storageRef = storage.reference.child("Bicicletas/${cedulaNum.text.toString()}_Foto1.jpg")
-        storageRef.delete().addOnSuccessListener {
-            Toast.makeText(this, "Foto1 Eliminada Correctamente", Toast.LENGTH_SHORT).show()
-        }.addOnFailureListener { e ->
-            Toast.makeText(this, "Error al Eliminar Foto1: ${e.message}", Toast.LENGTH_SHORT).show()
-        }
-
-        val storageRef2 = storage.reference.child("Bicicletas/${cedulaNum.text.toString()}_Foto2.jpg")
-        storageRef2.delete().addOnSuccessListener {
-            Toast.makeText(this, "Foto2 Eliminada Correctamente", Toast.LENGTH_SHORT).show()
-        }.addOnFailureListener { e ->
-            Toast.makeText(this, "Error al Eliminar Foto2: ${e.message}", Toast.LENGTH_SHORT).show()
-        }
-    }
-
-    private fun cargarDatosSiExistente() {
-        val userId = FirebaseAuth.getInstance().currentUser?.uid ?: return
-
-        db.collection("Bici Usuarios")
-            .whereEqualTo("usuarioId", userId)
-            .limit(1)
-            .get()
-            .addOnSuccessListener { documents ->
-                if (!documents.isEmpty) {
-                    val document = documents.first()
-                    biciId = document.id
-                    val biciData = document.data
-
-                    nombreEd.setText(biciData["nombre"] as? String)
-                    apellidosEd.setText(biciData["apellidos"] as? String)
-                    colorEd.setText(biciData["color"] as? String)
-                    cedulaNum.setText(biciData["cedula"] as? String)
-                    marcoNum.setText(biciData["marco"] as? String)
-                }
-            }
-            .addOnFailureListener { e ->
-                Toast.makeText(this, "Error al cargar datos: ${e.message}", Toast.LENGTH_SHORT).show()
-            }
-    }
-
-    private fun subirImagenAFirebase(uri: Uri, fotoName: String) {
-        val ref: StorageReference = storage.reference.child("Bicicletas/${cedulaNum.text.toString()}_$fotoName.jpg")
-        ref.putFile(uri)
-            .addOnSuccessListener {
-                Toast.makeText(this, "$fotoName Se Subieron Perfectamente", Toast.LENGTH_SHORT).show()
-            }
-            .addOnFailureListener { e ->
-                Toast.makeText(this, "Error al Subir $fotoName: ${e.message}", Toast.LENGTH_SHORT).show()
-            }
-    }
 }
-
 
 

@@ -4,6 +4,8 @@
     <!-- Permiso para acceso a Internet -->
     <uses-permission android:name="android.permission.INTERNET" /> <!-- Permiso para comprobar el estado de la red -->
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+
 
     <application
         android:allowBackup="true"
@@ -17,9 +19,6 @@
         tools:targetApi="31">
         <activity
             android:name=".EntradaQrActivity"
-            android:exported="false" />
-        <activity
-            android:name=".MostrarCodigoQRActivity"
             android:exported="false" />
         <activity
             android:name=".RegistrarBiciActivity"
