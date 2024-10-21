@@ -16,6 +16,7 @@ class HomeActivity : AppCompatActivity() {
     private lateinit var Correo_TV: TextView
     private lateinit var cerrarSesion: Button
     private lateinit var registrarBiciButton: Button // Declara el botón de registrar bici
+    private lateinit var DisponibilidadButton: Button
     private lateinit var entradaButton: Button // Declara el botón Entrada_BTN
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -26,6 +27,7 @@ class HomeActivity : AppCompatActivity() {
         // Setup
         Correo_TV = findViewById(R.id.Correo_TV) // Referencia al TextView del correo
         cerrarSesion = findViewById(R.id.CerrarSesion)
+        DisponibilidadButton = findViewById(R.id.Disponibilidad_BTN)
         registrarBiciButton = findViewById(R.id.RegistrarBici_BTN) // Referencia al botón de registrar bici
         entradaButton = findViewById(R.id.Entrada_BTN) // Referencia al botón Entrada_BTN
 
@@ -54,6 +56,10 @@ class HomeActivity : AppCompatActivity() {
         entradaButton.setOnClickListener {
             val intent = Intent(this, EntradaQrActivity::class.java)
             startActivity(intent) // Navegar a EntradaQrActivity
+        }
+        DisponibilidadButton.setOnClickListener {
+            val intent = Intent(this, Disponibilidad::class.java)
+            startActivity(intent)
         }
     }
 

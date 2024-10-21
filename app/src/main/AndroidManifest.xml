@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
+
     <!-- Permiso para acceso a Internet -->
     <uses-permission android:name="android.permission.INTERNET" /> <!-- Permiso para comprobar el estado de la red -->
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -15,11 +16,15 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.ParquiatenoV10"
         tools:targetApi="31">
+
+        <activity
+            android:name=".Disponibilidad"
+            android:exported="false" />
         <activity
             android:name=".EntradaQrActivity"
             android:exported="false" />
         <activity
-            android:name=".MostrarCodigoQRActivity"
+            android:name="MostrarCodigoQRActivity"
             android:exported="false" />
         <activity
             android:name=".RegistrarBiciActivity"

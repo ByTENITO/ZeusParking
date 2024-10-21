@@ -10,11 +10,12 @@
 
     <ImageView
         android:id="@+id/imageView2"
-        android:layout_width="299dp"
-        android:layout_height="277dp"
-        android:layout_marginBottom="24dp"
+        android:layout_width="188dp"
+        android:layout_height="142dp"
+        android:layout_marginBottom="468dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
         app:srcCompat="@drawable/usuario" />
 </androidx.constraintlayout.widget.ConstraintLayout>
