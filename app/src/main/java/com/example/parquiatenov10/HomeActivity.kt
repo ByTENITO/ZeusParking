@@ -9,7 +9,6 @@ import com.google.firebase.auth.FirebaseAuth
 import android.widget.TextView
 import android.widget.Button
 import androidx.appcompat.app.AlertDialog
-import com.example.parquiatenov10.ui.theme.Disponibilidad
 
 class HomeActivity : AppCompatActivity() {
     private lateinit var Correo_TV: TextView
