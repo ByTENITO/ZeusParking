@@ -18,6 +18,8 @@ import android.widget.Button
 import android.widget.EditText
 import android.util.Patterns
 import android.widget.ImageView
+import android.widget.RadioButton
+import android.widget.TextView
 
 enum class ProviderType {
     GOOGLE,
@@ -219,3 +221,26 @@ class AuthActivity : AppCompatActivity() {
 }
 
 
+class Disponibilidad : AppCompatActivity() {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        var cuantos = 11
+        var total = 20
+        var restante = total-cuantos
+        super.onCreate(savedInstanceState)
+        enableEdgeToEdge()
+        setContentView(R.layout.activity_disponibilidad)
+        for (i in 1..cuantos) {
+            val radioButtonId = resources.getIdentifier("select$i", "id", packageName)
+            val radioButton = findViewById<RadioButton>(radioButtonId)
+            radioButton.isEnabled = false
+        }
+
+        for (i in 1..cuantos) {
+            val radioButtonId = resources.getIdentifier("select$i", "id", packageName)
+            val radioButton = findViewById<RadioButton>(radioButtonId)
+            radioButton.isChecked = true
+        }
+        val textView = findViewById<TextView>(R.id.textView)
+        textView.text = "ojo quedan "+restante+" espacios"
+    }
+}

@@ -2,9 +2,9 @@
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
 
     <!-- Estado cuando el RadioButton está seleccionado -->
-    <item android:drawable="@drawable/iconoavailability" android:state_checked="false" android:buttonTint="@null"/>
+    <item android:drawable="@drawable/disable" android:state_checked="true"/>
 
     <!-- Estado cuando el RadioButton NO está seleccionado -->
-    <item android:drawable="@drawable/iconodisabled" android:state_checked="true" android:buttonTint="@null"/>
+    <item android:drawable="@drawable/availability" android:state_checked="false"/>
 
 </selector>
