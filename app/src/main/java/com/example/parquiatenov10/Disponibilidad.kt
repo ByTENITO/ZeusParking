@@ -8,23 +8,23 @@ import androidx.appcompat.app.AppCompatActivity
 
 class Disponibilidad : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
-        var cuantos = 11
-        var total = 20
-        var restante = total-cuantos
+        var Cuantos = 11
+        var Total = 20
+        var Restante = Total-Cuantos
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.activity_disponibilidad)
-        for (i in 1..total) {
+        for (i in 1..Total) {
             val radioButtonId = resources.getIdentifier("select$i", "id", packageName)
             val radioButton = findViewById<RadioButton>(radioButtonId)
             radioButton.isEnabled = false
         }
-        for (i in 1..cuantos) {
+        for (i in 1..Cuantos) {
             val radioButtonId = resources.getIdentifier("select$i", "id", packageName)
             val radioButton = findViewById<RadioButton>(radioButtonId)
             radioButton.isChecked = true
         }
         val textView = findViewById<TextView>(R.id.textView)
-        textView.text = "ojo quedan "+restante+" espacios"
+        textView.text = "ojo quedan "+Restante+" espacios"
     }
 }
