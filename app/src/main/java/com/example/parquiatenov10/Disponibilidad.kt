@@ -14,12 +14,11 @@ class Disponibilidad : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.activity_disponibilidad)
-        for (i in 1..cuantos) {
+        for (i in 1..total) {
             val radioButtonId = resources.getIdentifier("select$i", "id", packageName)
             val radioButton = findViewById<RadioButton>(radioButtonId)
             radioButton.isEnabled = false
         }
-
         for (i in 1..cuantos) {
             val radioButtonId = resources.getIdentifier("select$i", "id", packageName)
             val radioButton = findViewById<RadioButton>(radioButtonId)
