@@ -2,12 +2,12 @@
 <project version="4">
   <component name="deploymentTargetSelector">
     <selectionStates>
-      <SelectionState runConfigName="app">
+      <SelectionState runConfigName="Parqueadero">
         <option name="selectionMode" value="DROPDOWN" />
-        <DropdownSelection timestamp="2024-10-15T03:23:36.169349800Z">
+        <DropdownSelection timestamp="2024-11-04T21:49:43.196985500Z">
           <Target type="DEFAULT_BOOT">
             <handle>
-              <DeviceId pluginId="PhysicalDevice" identifier="serial=103953738K006618" />
+              <DeviceId pluginId="PhysicalDevice" identifier="serial=ZY22DP95RZ" />
             </handle>
           </Target>
         </DropdownSelection>

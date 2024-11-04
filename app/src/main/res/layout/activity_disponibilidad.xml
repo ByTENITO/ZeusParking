@@ -5,8 +5,8 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Disponibilidad"
-    android:background="#373737">
+    android:background="#f5dd8e"
+    tools:context=".Disponibilidad">
 
     <ImageView
         android:id="@+id/imageView3"
@@ -24,14 +24,14 @@
         android:id="@+id/dispon"
         android:layout_width="198dp"
         android:layout_height="278dp"
+        android:buttonTint="@null"
         android:orientation="horizontal"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.677"
-        android:buttonTint="@null">
+        app:layout_constraintVertical_bias="0.677">
 
 
         <!-- Primera fila de RadioButtons -->
@@ -186,9 +186,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="que mas"
-        android:textStyle="italic"
         android:textColor="#ffff"
         android:textSize="20dp"
+        android:textStyle="italic"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
@@ -200,7 +200,7 @@
         android:id="@+id/Volver_BTN"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:backgroundTint="#C13622"
+        android:backgroundTint="@drawable/c_boton"
         android:text="Volver"
         android:textColor="#FFFFFF"
         android:textColorHint="#FFFFFF"
