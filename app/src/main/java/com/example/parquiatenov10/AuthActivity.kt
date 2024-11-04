@@ -18,6 +18,8 @@ import android.widget.Button
 import android.widget.EditText
 import android.util.Patterns
 import android.widget.ImageView
+import android.widget.RadioButton
+import android.widget.TextView
 
 enum class ProviderType {
     GOOGLE,
@@ -217,5 +219,3 @@ class AuthActivity : AppCompatActivity() {
         }
     }
 }
-
-

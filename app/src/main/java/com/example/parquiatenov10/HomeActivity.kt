@@ -2,14 +2,12 @@ package com.example.parquiatenov10
 
 import android.content.Context
 import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.auth.FirebaseAuth
 import android.widget.TextView
 import android.widget.Button
-import android.widget.ImageView
 import androidx.appcompat.app.AlertDialog
 
 class HomeActivity : AppCompatActivity() {
@@ -17,6 +15,8 @@ class HomeActivity : AppCompatActivity() {
     private lateinit var cerrarSesion: Button
     private lateinit var registrarBiciButton: Button // Declara el botón de registrar bici
     private lateinit var entradaButton: Button // Declara el botón Entrada_BTN
+    private lateinit var disponibilidadButton: Button
+    private lateinit var localizacionButton: Button
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,6 +28,8 @@ class HomeActivity : AppCompatActivity() {
         cerrarSesion = findViewById(R.id.CerrarSesion)
         registrarBiciButton = findViewById(R.id.RegistrarBici_BTN) // Referencia al botón de registrar bici
         entradaButton = findViewById(R.id.Entrada_BTN) // Referencia al botón Entrada_BTN
+        disponibilidadButton = findViewById(R.id.Disponibilidad_BTN)
+        localizacionButton = findViewById(R.id.Localizacion_BTN)
 
         val bundle: Bundle? = intent.extras
         val email: String? = bundle?.getString("email")
@@ -49,11 +51,18 @@ class HomeActivity : AppCompatActivity() {
             val intent = Intent(this, RegistrarBiciActivity::class.java)
             startActivity(intent) // Navegar a RegistrarBiciActivity
         }
-
-        // Listener para el botón Entrada_BTN que navega a EntradaQrActivity
         entradaButton.setOnClickListener {
             val intent = Intent(this, EntradaQrActivity::class.java)
             startActivity(intent) // Navegar a EntradaQrActivity
+        }
+        // Listener para el botón  que navega a
+        disponibilidadButton.setOnClickListener {
+            val intent = Intent(this, Disponibilidad::class.java)
+            startActivity(intent) // Navegar a
+        }
+        localizacionButton.setOnClickListener {
+            val intent = Intent(this, Localizacion::class.java)
+            startActivity(intent) // Navegar a
         }
     }
 
