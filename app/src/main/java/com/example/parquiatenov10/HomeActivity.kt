@@ -20,7 +20,7 @@ class HomeActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()  // Asegúrate de que este método esté bien implementado o quítalo si no es necesario
+        enableEdgeToEdge()
         setContentView(R.layout.activity_home)
 
         // Setup
