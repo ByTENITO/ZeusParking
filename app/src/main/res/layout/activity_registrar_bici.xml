@@ -20,7 +20,101 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.938" />
+        app:layout_constraintVertical_bias="0.904" />
+
+    <Button
+        android:id="@+id/Listo_BTN"
+        android:layout_width="45dp"
+        android:layout_height="40dp"
+        android:backgroundTint="#C13622"
+        android:drawableBottom="@mipmap/bien"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.661"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.813" />
+
+    <Button
+        android:id="@+id/Eliminar_BTN"
+        android:layout_width="45dp"
+        android:layout_height="40dp"
+        android:backgroundTint="#C13622"
+        android:drawableBottom="@mipmap/x"
+        android:text="Borrar Informacion"
+        android:textColor="#FFFFFF"
+        android:textColorHint="#FFFFFF"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.813" />
+
+    <Button
+        android:id="@+id/AgregarFoto2_BTN"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:backgroundTint="#C13622"
+        android:text="Usuario"
+        android:textColor="#FFFFFF"
+        android:textColorHint="#FFFFFF"
+        app:icon="@drawable/usuario"
+        app:iconTint="#FFFFFF"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.736"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.73" />
+
+    <Button
+        android:id="@+id/AgregarFoto1_BTN"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:backgroundTint="#C13622"
+        android:text="Bicicleta"
+        android:textColor="#FFFFFF"
+        android:textColorHint="#FFFFFF"
+        app:icon="@android:drawable/ic_menu_camera"
+        app:iconTint="#FFFFFF"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.247"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.73" />
+
+    <Button
+        android:id="@+id/Volver_BTN"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:backgroundTint="#C13622"
+        android:text="Volver"
+        android:textColor="#FFFFFF"
+        android:textColorHint="#FFFFFF"
+        app:iconTint="#FFFFFF"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.888"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.904" />
+
+    <Button
+        android:id="@+id/Editar_BTN"
+        android:layout_width="45dp"
+        android:layout_height="40dp"
+        android:backgroundTint="#C13622"
+        android:drawableBottom="@mipmap/editar"
+        android:textColor="#FFFFFF"
+        android:textColorHint="#FFFFFF"
+        app:iconTint="#FFFFFF"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.333"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.813" />
 
     <EditText
         android:id="@+id/Color_ED"
@@ -121,84 +215,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.66" />
-
-    <Button
-        android:id="@+id/AgregarFoto1_BTN"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:backgroundTint="#C13622"
-        android:text="Bicicleta"
-        android:textColor="#FFFFFF"
-        android:textColorHint="#FFFFFF"
-        app:icon="@android:drawable/ic_menu_camera"
-        app:iconTint="#FFFFFF"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.247"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.764" />
-
-    <Button
-        android:id="@+id/AgregarFoto2_BTN"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:backgroundTint="#C13622"
-        android:text="Usuario"
-        android:textColor="#FFFFFF"
-        android:textColorHint="#FFFFFF"
-        app:icon="@drawable/usuario"
-        app:iconTint="#FFFFFF"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.736"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.764" />
-
-    <Button
-        android:id="@+id/Eliminar_BTN"
-        android:layout_width="45dp"
-        android:layout_height="40dp"
-        android:backgroundTint="#C13622"
-        android:drawableBottom="@mipmap/x"
-        android:text="Borrar Informacion"
-        android:textColor="#FFFFFF"
-        android:textColorHint="#FFFFFF"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.846" />
-
-    <Button
-        android:id="@+id/Listo_BTN"
-        android:layout_width="45dp"
-        android:layout_height="40dp"
-        android:backgroundTint="#C13622"
-        android:drawableBottom="@mipmap/bien"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.661"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.846" />
-
-    <Button
-        android:id="@+id/Editar_BTN"
-        android:layout_width="45dp"
-        android:layout_height="40dp"
-        android:backgroundTint="#C13622"
-        android:drawableBottom="@mipmap/editar"
-        android:textColor="#FFFFFF"
-        android:textColorHint="#FFFFFF"
-        app:iconTint="#FFFFFF"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.333"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.846" />
 
     <Spinner
         android:id="@+id/Tipos_Spinner"

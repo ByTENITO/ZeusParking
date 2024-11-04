@@ -28,6 +28,7 @@ class RegistrarBiciActivity : AppCompatActivity() {
     private lateinit var editarBtn: Button
     private lateinit var eliminarBtn: Button
     private lateinit var tiposSpinner: Spinner
+    private lateinit var VolverButton:Button
 
     private var fotoUri1: Uri? = null
     private var fotoUri2: Uri? = null
@@ -40,7 +41,10 @@ class RegistrarBiciActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.activity_registrar_bici)
-
+        VolverButton = findViewById(R.id.Volver_BTN)
+        VolverButton.setOnClickListener {
+            finish()
+        }
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
@@ -58,6 +62,7 @@ class RegistrarBiciActivity : AppCompatActivity() {
         editarBtn = findViewById(R.id.Editar_BTN)
         eliminarBtn = findViewById(R.id.Eliminar_BTN)
         tiposSpinner = findViewById(R.id.Tipos_Spinner)
+        VolverButton = findViewById(R.id.Volver_BTN)
 
         // Configuración del Spinner
         val tiposVehiculos = arrayOf("Selecciona el Tipo de Vehículo", "Bicicleta", "Motocicleta", "Vehículo Particular", "Furgón")
