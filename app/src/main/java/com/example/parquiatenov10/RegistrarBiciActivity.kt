@@ -65,9 +65,9 @@ class RegistrarBiciActivity : AppCompatActivity() {
         VolverButton = findViewById(R.id.Volver_BTN)
 
         // Configuración del Spinner
-        val tiposVehiculos = arrayOf("Selecciona el Tipo de Vehículo", "Bicicleta", "Motocicleta", "Vehículo Particular", "Furgón")
-        val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, tiposVehiculos)
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        val tiposVehiculos:Spinner = findViewById(R.id.Tipos_Spinner)
+        val adapter = ArrayAdapter.createFromResource(this,R.array.items,R.layout.estilo_spinner)
+        adapter.setDropDownViewResource(R.layout.estilo_spinner)
         tiposSpinner.adapter = adapter
 
         tiposSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
