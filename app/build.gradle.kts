@@ -65,9 +65,21 @@ dependencies {
     implementation(platform("com.google.firebase:firebase-bom:32.8.0"))
     implementation("com.google.firebase:firebase-auth")
 
-    //Codigos QR
+    //Codigos de Barras
+    implementation ("com.google.firebase:firebase-ml-vision:24.0.3")
+    implementation ("com.google.firebase:firebase-ml-vision-barcode-model:16.0.1")
+
     implementation ("com.journeyapps:zxing-android-embedded:4.3.0")
-    implementation ("com.google.zxing:core:3.3.3")
+    implementation ("com.google.zxing:core:3.4.1")
+
+    //Imagen de Perfil
+    implementation ("com.squareup.picasso:picasso:2.71828")
+
+    //Camara X
+    implementation ("androidx.camera:camera-core:1.0.2")
+    implementation ("androidx.camera:camera-camera2:1.0.2")
+    implementation ("androidx.camera:camera-lifecycle:1.0.2")
+    implementation ("androidx.camera:camera-view:1.0.0-alpha27")
 
 
     //Android Studio

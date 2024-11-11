@@ -135,8 +135,8 @@
 
     <Spinner
         android:id="@+id/Tipos_Spinner"
-        android:layout_width="330dp"
-        android:layout_height="48dp"
+        android:layout_width="320dp"
+        android:layout_height="45dp"
         android:popupBackground="#f5dd8e"
         android:textColor="#000000"
         app:layout_constraintBottom_toBottomOf="parent"

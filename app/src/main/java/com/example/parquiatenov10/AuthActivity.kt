@@ -171,10 +171,10 @@ class AuthActivity : AppCompatActivity() {
     }
 
     private fun validatePassword(password: String): Boolean {
-        return if (password.length >= 6) {
+        return if (password.length >= 8) {
             true
         } else {
-            showAlert("La contraseña debe tener al menos 6 caracteres.")
+            showAlert("La contraseña debe tener al menos 8 caracteres.")
             false
         }
     }
@@ -189,12 +189,17 @@ class AuthActivity : AppCompatActivity() {
     }
 
     private fun showHome(email: String, provider: ProviderType) {
+        val user = auth.currentUser
+        val fotoUrl = user?.photoUrl?.toString()  // Obtén la URL de la foto solo para Google
+
         val homeIntent = Intent(this, HomeActivity::class.java).apply {
             putExtra("email", email)
-            putExtra("provider", provider.name)
+            putExtra("provider", provider.name)  // Enviar el proveedor para decidir la lógica
+            putExtra("foto_perfil_url", fotoUrl)
         }
         startActivity(homeIntent)
     }
+
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
