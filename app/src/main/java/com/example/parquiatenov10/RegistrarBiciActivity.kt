@@ -23,9 +23,7 @@ class RegistrarBiciActivity : AppCompatActivity() {
     private lateinit var marcoNum: EditText
     private lateinit var agregarFoto1Btn: Button
     private lateinit var agregarFoto2Btn: Button
-    private lateinit var editarBtn: Button
-    private lateinit var eliminarBtn: Button
-    private lateinit var tiposSpinner: Spinner
+        private lateinit var tiposSpinner: Spinner
     private lateinit var VolverButton: Button
 
     private var fotoUri1: Uri? = null
@@ -57,10 +55,7 @@ class RegistrarBiciActivity : AppCompatActivity() {
         marcoNum = findViewById(R.id.Marco_NUM)
         agregarFoto1Btn = findViewById(R.id.AgregarFoto1_BTN)
         agregarFoto2Btn = findViewById(R.id.AgregarFoto2_BTN)
-        editarBtn = findViewById(R.id.Editar_BTN)
-        eliminarBtn = findViewById(R.id.Eliminar_BTN)
         tiposSpinner = findViewById(R.id.Tipos_Spinner)
-        VolverButton = findViewById(R.id.Volver_BTN)
 
         // Configuración del Spinner
         val adapter = ArrayAdapter.createFromResource(this, R.array.items, R.layout.estilo_spinner)
@@ -86,7 +81,7 @@ class RegistrarBiciActivity : AppCompatActivity() {
                         marcoNum.filters = arrayOf(InputFilter.LengthFilter(7))
                     }
                     else -> {
-                        marcoNum.hint = "Número de Marco"
+                        marcoNum.hint = ""
                         marcoNum.inputType = InputType.TYPE_CLASS_NUMBER
                         marcoNum.filters = arrayOf(InputFilter.LengthFilter(20))
                     }
@@ -106,20 +101,6 @@ class RegistrarBiciActivity : AppCompatActivity() {
             seleccionarImagen(2)
         }
 
-        // Guardar los datos en Firestore
-        findViewById<Button>(R.id.Guardar_BTN).setOnClickListener {
-            guardarDatosEnFirestore()
-        }
-
-        // Editar los datos
-        editarBtn.setOnClickListener {
-            editarDatosEnFirestore()
-        }
-
-        // Eliminar los datos
-        eliminarBtn.setOnClickListener {
-            eliminarDatosEnFirestore()
-        }
     }
 
     private fun seleccionarImagen(requestCode: Int) {
@@ -196,6 +177,7 @@ class RegistrarBiciActivity : AppCompatActivity() {
         fotoUri1 = null
         fotoUri2 = null
     }
+
 
     private fun editarDatosEnFirestore() {}
     private fun eliminarDatosEnFirestore() {}

@@ -2,6 +2,6 @@
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:state_pressed="true" android:color="#ff5733" /> <!--color cuando el boton es presionado-->
-    <item android:state_enabled="false" android:color="#07213f" /><!--color cuando el boton esta deshabilitado-->
-    <item android:color="#07213f" /><!--color cuando el boton esta sin ser accionado-->
+    <item android:state_enabled="false" android:color="#E4CC00" /><!--color cuando el boton esta deshabilitado-->
+    <item android:color="#E4CC00" /><!--color cuando el boton esta sin ser accionado-->
 </selector>

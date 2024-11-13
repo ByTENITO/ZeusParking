@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string-array name="items">
-        <item>tipo de vehiculo</item>
-        <item>carro</item>
-        <item>moto</item>
-        <item>furgoneta</item>
-        <item>bicicleta</item>
+        <item>Tipo de Vehiculo</item>
+        <item>Bicicleta</item>
+        <item>Motocicleta</item>
+        <item>Vehiculo Particular</item>
+        <item>Furgon</item>
     </string-array>
 </resources>

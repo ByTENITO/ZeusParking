@@ -5,7 +5,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#f5dd8e"
+    android:background="@drawable/fondo"
     tools:context=".RegistrarBiciActivity">
 
     <Button
@@ -14,67 +14,39 @@
         android:layout_height="53dp"
         android:backgroundTint="@drawable/c_boton"
         android:text="Guardar"
-        android:textColor="#FFFFFF"
+        android:textColor="#000000"
         android:textColorHint="#FFFFFF"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.876" />
-
-    <Button
-        android:id="@+id/Listo_BTN"
-        android:layout_width="45dp"
-        android:layout_height="40dp"
-        android:backgroundTint="@drawable/c_boton"
-        android:drawableBottom="@mipmap/bien"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.661"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.043" />
-
-    <Button
-        android:id="@+id/Eliminar_BTN"
-        android:layout_width="45dp"
-        android:layout_height="40dp"
-        android:backgroundTint="@drawable/c_boton"
-        android:drawableBottom="@mipmap/x"
-        android:text="Borrar Informacion"
-        android:textColor="#FFFFFF"
-        android:textColorHint="#FFFFFF"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.043" />
+        app:layout_constraintVertical_bias="0.923" />
 
     <Button
         android:id="@+id/AgregarFoto2_BTN"
-        android:layout_width="212dp"
+        android:layout_width="300dp"
         android:layout_height="65dp"
         android:backgroundTint="@drawable/c_boton"
         android:text="Usuario"
-        android:textColor="#FFFFFF"
+        android:textColor="#000000"
         android:textColorHint="#FFFFFF"
         app:icon="@drawable/usuario"
         app:iconTint="#FFFFFF"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintHorizontal_bias="0.495"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.777" />
+        app:layout_constraintVertical_bias="0.804" />
 
     <Button
         android:id="@+id/AgregarFoto1_BTN"
-        android:layout_width="212dp"
+        android:layout_width="300dp"
         android:layout_height="65dp"
         android:backgroundTint="@drawable/c_boton"
         android:text="Bicicleta"
-        android:textColor="#FFFFFF"
+        android:textColor="#000000"
         android:textColorHint="#FFFFFF"
         app:icon="@android:drawable/ic_menu_camera"
         app:iconTint="#FFFFFF"
@@ -85,60 +57,28 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.68" />
 
-    <Button
-        android:id="@+id/Volver_BTN"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:backgroundTint="@drawable/c_boton"
-        android:text="Volver"
-        android:textColor="#FFFFFF"
-        android:textColorHint="#FFFFFF"
-        app:iconTint="#FFFFFF"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.976" />
-
-    <Button
-        android:id="@+id/Editar_BTN"
-        android:layout_width="45dp"
-        android:layout_height="40dp"
-        android:backgroundTint="@drawable/c_boton"
-        android:drawableBottom="@mipmap/editar"
-        android:textColor="#FFFFFF"
-        android:textColorHint="#FFFFFF"
-        app:iconTint="#FFFFFF"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.333"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.043" />
-
     <EditText
         android:id="@+id/Color_ED"
-        android:layout_width="320dp"
+        android:layout_width="355dp"
         android:layout_height="45dp"
         android:ems="10"
         android:hint="Color"
         android:inputType="text"
-        android:textColorHint="#403F3F"
-        android:textColor="#000000"
+        android:textColor="#FFFFFF"
+        android:textColorHint="#FFFFFF"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.494"
+        app:layout_constraintHorizontal_bias="0.545"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.529" />
+        app:layout_constraintVertical_bias="0.517" />
 
     <Spinner
         android:id="@+id/Tipos_Spinner"
-        android:layout_width="320dp"
+        android:layout_width="355dp"
         android:layout_height="45dp"
-        android:popupBackground="#f5dd8e"
-        android:textColor="#000000"
+        android:popupBackground="#2F2F2F"
+        android:textColor="#FFFFFF"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.493"
@@ -148,13 +88,13 @@
 
     <EditText
         android:id="@+id/Apellidos_ED"
-        android:layout_width="320dp"
+        android:layout_width="355dp"
         android:layout_height="45dp"
         android:ems="10"
         android:hint="Apellidos"
         android:inputType="text"
-        android:textColorHint="#403F3F"
-        android:textColor="#000000"
+        android:textColor="#FFFFFF"
+        android:textColorHint="#FFFFFF"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.494"
@@ -164,13 +104,13 @@
 
     <EditText
         android:id="@+id/Nombre_ED"
-        android:layout_width="320dp"
+        android:layout_width="355dp"
         android:layout_height="45dp"
         android:ems="10"
         android:hint="Nombres"
         android:inputType="text"
-        android:textColorHint="#403F3F"
-        android:textColor="#000000"
+        android:textColor="#FFFFFF"
+        android:textColorHint="#FFFFFF"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.494"
@@ -180,29 +120,30 @@
 
     <EditText
         android:id="@+id/Marco_NUM"
-        android:layout_width="320dp"
+        android:layout_width="355dp"
         android:layout_height="45dp"
         android:ems="10"
         android:hint="Num Marco - Placa"
         android:inputType="number"
-        android:textColorHint="#403F3F"
-        android:textColor="#000000"
+        android:textColor="#FFFFFF"
+        android:textColorHint="#FFFFFF"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.494"
+        app:layout_constraintHorizontal_bias="0.545"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.448" />
+        app:layout_constraintVertical_bias="0.44" />
 
     <EditText
         android:id="@+id/Cedula_NUM"
-        android:layout_width="320dp"
+        android:layout_width="355dp"
         android:layout_height="45dp"
         android:ems="10"
         android:hint="Cedula"
         android:inputType="number"
-        android:textColorHint="#403F3F"
-        android:textColor="#000000"
+        android:textColor="#FFFFFF"
+        android:textColorHint="#FFFFFF"
+        android:textSize="19sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.494"
@@ -215,7 +156,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Sube aqui tus fotos 👇🏼"
-        android:textColor="#000000"
+        android:textColor="#FFFFFF"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
