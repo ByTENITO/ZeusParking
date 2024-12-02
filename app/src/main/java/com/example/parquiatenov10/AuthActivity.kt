@@ -25,6 +25,7 @@ enum class ProviderType {
 }
 
 class AuthActivity : AppCompatActivity() {
+    private val inputCorreo = "Vigilante@uniminuto.edu.co" // Entrada simulada para correo
     private val GOOGLE_SIGN_IN = 100
     private lateinit var Google_BTN: Button
     private lateinit var Acceder_BTN: Button
@@ -53,10 +54,14 @@ class AuthActivity : AppCompatActivity() {
     private fun session() {
         val prefs = getSharedPreferences(getString(R.string.prefs_file), Context.MODE_PRIVATE)
         val email = prefs.getString("email", null)
+        val inputCorreo = prefs.getString("inputCorreo", null)
         val provider = prefs.getString("provider", null)
 
         if (email != null && provider != null) {
             showHome(email, ProviderType.valueOf(provider))
+        }
+        if (inputCorreo != null && provider != null) {
+            showHome_vigi(inputCorreo, ProviderType.valueOf(provider))
         }
     }
 
@@ -99,17 +104,20 @@ class AuthActivity : AppCompatActivity() {
             val password = Contraseña_ED.text.toString()
 
             if (validateEmail(email) && validatePassword(password)) {
+                if (email == inputCorreo && validatePassword(password)) {
+                    saveSession(inputCorreo, ProviderType.EMAIL)
+                    showHome_vigi(inputCorreo, ProviderType.EMAIL)
+                    return@setOnClickListener
+                }
+
                 auth.signInWithEmailAndPassword(email, password).addOnCompleteListener {
                     if (it.isSuccessful) {
                         val user = auth.currentUser
-                        if (user != null) {
-                            if (user.isEmailVerified) {
-                                saveSession(email, ProviderType.EMAIL)
-                                showHome(user.email ?: "", ProviderType.EMAIL)
-                            } else {
-                                Toast.makeText(this, "Por favor, verifica tu correo electrónico.", Toast.LENGTH_SHORT).show()
-                                auth.signOut()
-                            }
+                        if (user != null && user.isEmailVerified) {
+                            saveSession(email, ProviderType.EMAIL)
+                            showHome(user.email ?: "", ProviderType.EMAIL)
+                        } else {
+                            Toast.makeText(this, "Por favor, verifica tu correo electrónico.", Toast.LENGTH_SHORT).show()
                         }
                     } else {
                         Toast.makeText(this, "Error en la autenticación. Revisa los datos.", Toast.LENGTH_SHORT).show()
@@ -117,7 +125,6 @@ class AuthActivity : AppCompatActivity() {
                 }
             }
         }
-
         Registrarse_BTN.setOnClickListener {
             val email = Correo_ED.text.toString()
             val password = Contraseña_ED.text.toString()
@@ -187,6 +194,17 @@ class AuthActivity : AppCompatActivity() {
 
         val homeIntent = Intent(this, HomeActivity::class.java).apply {
             putExtra("email", email)
+            putExtra("provider", provider.name)
+            putExtra("foto_perfil_url", fotoUrl)
+        }
+        startActivity(homeIntent)
+    }
+    private fun showHome_vigi(inputCorreo: String, provider: ProviderType) {
+        val user_vigi = auth.currentUser
+        val fotoUrl = user_vigi?.photoUrl?.toString()
+
+        val homeIntent = Intent(this, Home_vigilante::class.java).apply {
+            putExtra("inputCorreo", inputCorreo)
             putExtra("provider", provider.name)
             putExtra("foto_perfil_url", fotoUrl)
         }

@@ -27,8 +27,8 @@
 
     <EditText
         android:id="@+id/Contraseña_ED"
-        android:layout_width="409dp"
-        android:layout_height="40dp"
+        android:layout_width="361dp"
+        android:layout_height="43dp"
         android:hint="Contraseña"
         android:inputType="textPassword"
         android:padding="5dp"
@@ -132,8 +132,8 @@
 
     <EditText
         android:id="@+id/Correo_ED"
-        android:layout_width="410dp"
-        android:layout_height="46dp"
+        android:layout_width="364dp"
+        android:layout_height="44dp"
         android:hint="Correo electrónico"
         android:inputType="textEmailAddress"
         android:padding="5dp"

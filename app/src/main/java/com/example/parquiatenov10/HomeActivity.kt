@@ -50,7 +50,6 @@ class HomeActivity : AppCompatActivity() {
             setup(email)
             loadProfilePicture(fotoPerfilUrl)
         } else if (email != null) {
-
             setup(email)
         }
 

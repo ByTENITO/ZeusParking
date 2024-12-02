@@ -3,14 +3,13 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/fondo"
-    tools:context=".HomeActivity">
+    tools:context=".Home_vigilante">
 
     <Button
-        android:id="@+id/CerrarSesion"
+        android:id="@+id/CerrarSesion_vigi"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:backgroundTint="@drawable/c_cambio"
@@ -25,87 +24,39 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.959" />
 
-    <Button
-        android:id="@+id/RegistrarBici_BTN"
-        android:layout_width="365dp"
-        android:layout_height="75dp"
-        android:backgroundTint="@drawable/c_boton"
-        android:padding="18sp"
-        android:text="Registrar Bicicleta"
-        android:textColor="#000000"
-        android:textColorHint="#FFFFFF"
-        android:textSize="18dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.782" />
-
-    <Button
-        android:id="@+id/Localizacion_BTN"
-        android:layout_width="365dp"
-        android:layout_height="75dp"
-        android:backgroundTint="@drawable/c_boton"
-        android:padding="18sp"
-        android:text="Localizacion de parqueaderos"
-        android:textColor="#000000"
-        android:textColorHint="#FFFFFF"
-        android:textSize="18dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.871" />
-
-    <Button
-        android:id="@+id/Disponibilidad_BTN"
-        android:layout_width="365dp"
-        android:layout_height="75dp"
-        android:backgroundTint="@drawable/c_boton"
-        android:padding="18sp"
-        android:text="Disponibilidad"
-        android:textColor="#000000"
-        android:textColorHint="#FFFFFF"
-        android:textSize="18dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.695" />
-
 
     <TextView
-        android:id="@+id/Bienvenida_TV"
-        android:layout_width="291dp"
-        android:layout_height="63dp"
+        android:id="@+id/Bienvenida_vigi"
+        android:layout_width="275dp"
+        android:layout_height="47dp"
         android:layout_gravity="center"
         android:text="Bienvenido"
         android:textColor="@color/white"
-        android:textSize="24sp"
+        android:textSize="20sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.2"
+        app:layout_constraintHorizontal_bias="0.131"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.082" />
+        app:layout_constraintVertical_bias="0.112" />
 
     <TextView
-        android:id="@+id/Correo_TV"
-        android:layout_width="264dp"
-        android:layout_height="53dp"
+        android:id="@+id/Usuario_vigi"
+        android:layout_width="231dp"
+        android:layout_height="51dp"
         android:padding="15sp"
         android:text="TextView"
         android:textColor="#FFFFFF"
-        android:textSize="14sp"
+        android:textSize="15sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.646"
+        app:layout_constraintHorizontal_bias="0.351"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.174" />
+        app:layout_constraintVertical_bias="0.182" />
 
     <Button
-        android:id="@+id/Entrada_BTN"
+        android:id="@+id/Entrada_vigi"
         android:layout_width="365dp"
         android:layout_height="75dp"
         android:backgroundTint="@drawable/c_boton"
@@ -118,10 +69,26 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.521" />
+        app:layout_constraintVertical_bias="0.585" />
 
     <Button
-        android:id="@+id/Salida_BTN"
+        android:id="@+id/Disponibilidad_vigi"
+        android:layout_width="365dp"
+        android:layout_height="75dp"
+        android:backgroundTint="@drawable/c_boton"
+        android:padding="18sp"
+        android:text="Disponibilidad"
+        android:textColor="#000000"
+        android:textColorHint="#FFFFFF"
+        android:textSize="18dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.814" />
+
+    <Button
+        android:id="@+id/Salida_vigi"
         android:layout_width="365dp"
         android:layout_height="75dp"
         android:backgroundTint="@drawable/c_boton"
@@ -134,10 +101,11 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.608" />
+        app:layout_constraintVertical_bias="0.699" />
 
     <ImageView
-        android:id="@+id/FotoPerfil_ImageView"
+        android:id="@+id/FotoPerfil_vigi"
+        android:src="@drawable/fondo_vigilante"
         android:layout_width="98dp"
         android:layout_height="90dp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -145,7 +113,7 @@
         app:layout_constraintHorizontal_bias="0.948"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.085"
+        app:layout_constraintVertical_bias="0.118"
         tools:srcCompat="@tools:sample/avatars" />
 
     <TextView
@@ -154,12 +122,12 @@
         android:layout_height="23dp"
         android:text="Usuario:"
         android:textColor="#FFFFFF"
-        android:textSize="14sp"
+        android:textSize="15sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.067"
+        app:layout_constraintHorizontal_bias="0.053"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.186" />
+        app:layout_constraintVertical_bias="0.175" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

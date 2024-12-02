@@ -73,7 +73,7 @@ dependencies {
     implementation ("com.google.zxing:core:3.4.1")
 
     //Imagen de Perfil
-    implementation ("com.squareup.picasso:picasso:2.71828")
+    implementation ("com.squareup.picasso:picasso:2.8")
 
     //Camara X
     implementation ("androidx.camera:camera-core:1.0.2")

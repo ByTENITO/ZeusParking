@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="NONE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="fa31020c-9a99-4cf0-830f-cc49f63d2141" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/../../java/com/example/parquiatenov10/Disponibilidad_Vigi.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../java/com/example/parquiatenov10/EntradaQrActivity_vigi.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../java/com/example/parquiatenov10/Home_vigilante.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../java/com/example/parquiatenov10/SalidaQrActivity_Vigi.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../layout/activity_disponibilidad_vigi.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../layout/activity_entrada_qr_vigi.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../layout/activity_home_vigilante.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../layout/activity_salida_qr_vigi.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../layout_vig" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../../../.idea/deploymentTargetSelector.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../../build.gradle.kts" beforeDir="false" afterPath="$PROJECT_DIR$/../../../../build.gradle.kts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../AndroidManifest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../../AndroidManifest.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../java/com/example/parquiatenov10/AuthActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../../java/com/example/parquiatenov10/AuthActivity.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../java/com/example/parquiatenov10/EntradaQrActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../../java/com/example/parquiatenov10/EntradaQrActivity.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../java/com/example/parquiatenov10/HomeActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../../java/com/example/parquiatenov10/HomeActivity.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../layout/activity_auth.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../layout/activity_auth.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../layout/activity_entrada_qr.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../layout/activity_entrada_qr.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../layout/activity_salida_qr.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../layout/activity_salida_qr.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../values/strings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../values/strings.xml" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ClangdSettings">
+    <option name="formatViaClangd" value="false" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/../../../../.." />
+  </component>
+  <component name="ProjectColorInfo"><![CDATA[{
+  "associatedIndex": 3
+}]]></component>
+  <component name="ProjectId" id="2pPnYxqkDEHHfs2zwUSGCJVpzFb" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.cidr.known.project.marker": "true",
+    "RunOnceActivity.readMode.enableVisualFormatting": "true",
+    "cf.first.check.clang-format": "false",
+    "cidr.known.project.marker": "true",
+    "git-widget-placeholder": "des",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "C:/Users/dougl/Parquiateno-v1.0/app"
+  }
+}]]></component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="fa31020c-9a99-4cf0-830f-cc49f63d2141" name="Changes" comment="" />
+      <created>1732676629879</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1732676629879</updated>
+    </task>
+    <servers />
+  </component>
+</project>

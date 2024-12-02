@@ -11,27 +11,26 @@ import com.google.zxing.BarcodeFormat
 import com.journeyapps.barcodescanner.BarcodeEncoder
 import java.lang.Exception
 
-class EntradaQrActivity : AppCompatActivity() {
-
+class SalidaQrParqueadero : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_entrada_qr)
+        setContentView(R.layout.activity_salida_qr_parqueadero)
 
-        val ivCodigoQR: ImageView = findViewById(R.id.ivCodigoSalida)
-        val etDatos: EditText = findViewById(R.id.etentrada)
-        val btnGenerar: Button = findViewById(R.id.btnSalida)
+        val CodigoQRParqu: ImageView = findViewById(R.id.CodigoSalidaParqu)
+        val DatosParqu: EditText = findViewById(R.id.etentradaParqu)
+        val btnGenerarParqu: Button = findViewById(R.id.btnSalidaParqu)
 
-        btnGenerar.setOnClickListener(View.OnClickListener {
+        btnGenerarParqu.setOnClickListener(View.OnClickListener {
             try {
                 val barcodeEncoder = BarcodeEncoder()
                 val bitmap: Bitmap = barcodeEncoder.encodeBitmap(
-                    etDatos.text.toString(),
+                    DatosParqu.text.toString(),
                     BarcodeFormat.QR_CODE,
                     750,
                     750
                 )
 
-                ivCodigoQR.setImageBitmap(bitmap)
+                CodigoQRParqu.setImageBitmap(bitmap)
             } catch (e: Exception) {
                 e.printStackTrace()
             }
