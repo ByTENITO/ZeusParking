@@ -4,6 +4,8 @@ import android.app.Activity
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.provider.MediaStore
 import android.view.View
 import android.widget.*
@@ -14,6 +16,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import android.text.InputType
 import android.text.InputFilter
+import android.view.animation.AnimationUtils
 
 class RegistrarBiciActivity : AppCompatActivity() {
     private lateinit var nombreEd: EditText
@@ -23,8 +26,10 @@ class RegistrarBiciActivity : AppCompatActivity() {
     private lateinit var marcoNum: EditText
     private lateinit var agregarFoto1Btn: Button
     private lateinit var agregarFoto2Btn: Button
-        private lateinit var tiposSpinner: Spinner
+    private lateinit var tiposSpinner: Spinner
     private lateinit var VolverButton: Button
+    private lateinit var Guardar: Button
+    private lateinit var texto: TextView
 
     private var fotoUri1: Uri? = null
     private var fotoUri2: Uri? = null
@@ -45,7 +50,9 @@ class RegistrarBiciActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+        startAnimationsWithDelay()
         setContentView(R.layout.activity_registrar_bici)
+        overridePendingTransition( 0,0)
 
         // Configuración de los elementos de la interfaz
         nombreEd = findViewById(R.id.Nombre_ED)
@@ -56,6 +63,8 @@ class RegistrarBiciActivity : AppCompatActivity() {
         agregarFoto1Btn = findViewById(R.id.AgregarFoto1_BTN)
         agregarFoto2Btn = findViewById(R.id.AgregarFoto2_BTN)
         tiposSpinner = findViewById(R.id.Tipos_Spinner)
+        Guardar = findViewById(R.id.Guardar_BTN)
+        texto = findViewById(R.id.textView3)
 
         // Configuración del Spinner
         val adapter = ArrayAdapter.createFromResource(this, R.array.items, R.layout.estilo_spinner)
@@ -101,6 +110,25 @@ class RegistrarBiciActivity : AppCompatActivity() {
             seleccionarImagen(2)
         }
 
+    }
+    private fun startAnimationsWithDelay() {
+        val fadeIn = AnimationUtils.loadAnimation(this, R.anim.fade_in)
+        Handler(Looper.getMainLooper()).postDelayed({
+            listOf(
+                nombreEd,
+                apellidosEd,
+                colorEd,
+                cedulaNum,
+                marcoNum,
+                agregarFoto1Btn,
+                agregarFoto2Btn,
+                tiposSpinner,
+                texto,
+                Guardar
+            ).forEach { view ->
+                view.startAnimation(fadeIn)
+            }
+        }, 0) // Ajusta el tiempo de retraso si es necesario
     }
 
     private fun seleccionarImagen(requestCode: Int) {

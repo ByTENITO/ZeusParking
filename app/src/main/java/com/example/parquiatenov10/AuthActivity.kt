@@ -3,7 +3,10 @@ package com.example.parquiatenov10
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.text.InputType
+import android.util.Log
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import android.widget.Button
@@ -18,6 +21,8 @@ import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
 import android.util.Patterns
+import android.view.View
+import android.view.animation.AnimationUtils
 
 enum class ProviderType {
     GOOGLE,
@@ -25,8 +30,9 @@ enum class ProviderType {
 }
 
 class AuthActivity : AppCompatActivity() {
-    private val inputCorreo = "Vigilante@uniminuto.edu.co" // Entrada simulada para correo
+
     private val GOOGLE_SIGN_IN = 100
+    private val inputCorreo = "Vigilante@uniminuto.edu.co" // Entrada simulada para correo
     private lateinit var Google_BTN: Button
     private lateinit var Acceder_BTN: Button
     private lateinit var Registrarse_BTN: Button
@@ -41,11 +47,31 @@ class AuthActivity : AppCompatActivity() {
         enableEdgeToEdge()
         setContentView(R.layout.activity_auth)
 
+        val Google_BTN = findViewById<Button>(R.id.Google_BTN)
+        val Acceder_BTN = findViewById<Button>(R.id.Acceder_BTN)
+        val Registrarse_BTN = findViewById<Button>(R.id.Registrarse_BTN)
+        val Correo_ED = findViewById<EditText>(R.id.Correo_ED)
+        val Contraseña_ED = findViewById<EditText>(R.id.Contraseña_ED)
+        val ForgotPassword_TV = findViewById<TextView>(R.id.OlvidasteContrasena_TV)
+        val text5 = findViewById<TextView>(R.id.textView5)
+        val text6 = findViewById<TextView>(R.id.textView6)
+        val text7 = findViewById<TextView>(R.id.textView7)
         val analytics = FirebaseAnalytics.getInstance(this)
         val bundle = Bundle()
+        val fadeIn = AnimationUtils.loadAnimation(this, R.anim.fade_in)
+        Google_BTN.startAnimation(fadeIn)
+        Acceder_BTN.startAnimation(fadeIn)
+        Registrarse_BTN.startAnimation(fadeIn)
+        Correo_ED.startAnimation(fadeIn)
+        Contraseña_ED.startAnimation(fadeIn)
+        ForgotPassword_TV.startAnimation(fadeIn)
+        text5.startAnimation(fadeIn)
+        text6.startAnimation(fadeIn)
+        text7.startAnimation(fadeIn)
         bundle.putString("message", "Integración de Firebase completa")
         analytics.logEvent("InitScreen", bundle)
 
+        overridePendingTransition( 0,0)
         auth = FirebaseAuth.getInstance()
         setup()
         session()
@@ -189,15 +215,23 @@ class AuthActivity : AppCompatActivity() {
     }
 
     private fun showHome(email: String, provider: ProviderType) {
+        enableEdgeToEdge()
+        setContentView(R.layout.activity_splash_home)
         val user = auth.currentUser
         val fotoUrl = user?.photoUrl?.toString()
+        val transicionC = findViewById<ImageView>(R.id.carga)
+        val fadeOutC = AnimationUtils.loadAnimation(this, R.anim.fade_out_c)
+        transicionC.startAnimation(fadeOutC)
 
+        Handler(Looper.getMainLooper()).postDelayed({
         val homeIntent = Intent(this, HomeActivity::class.java).apply {
             putExtra("email", email)
             putExtra("provider", provider.name)
             putExtra("foto_perfil_url", fotoUrl)
         }
         startActivity(homeIntent)
+            overridePendingTransition( 0,0)
+        },5000)
     }
     private fun showHome_vigi(inputCorreo: String, provider: ProviderType) {
         val user_vigi = auth.currentUser

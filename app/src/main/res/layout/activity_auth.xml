@@ -9,6 +9,20 @@
     android:background="@drawable/fondo"
     tools:context=".AuthActivity">
 
+
+    <ImageView
+        android:id="@+id/imageView8"
+        android:layout_width="500dp"
+        android:layout_height="290dp"
+        app:layout_constraintBottom_toTopOf="@id/textView5"
+        app:layout_constraintDimensionRatio="1.2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.505"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.444"
+        app:srcCompat="@drawable/logoo"
+        android:animateLayoutChanges="true"/>
     <Button
         android:id="@+id/Google_BTN"
         android:layout_width="250dp"
@@ -23,7 +37,8 @@
         app:layout_constraintHorizontal_bias="0.496"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.957" />
+        app:layout_constraintVertical_bias="0.957"
+        android:animateLayoutChanges="true"/>
 
     <EditText
         android:id="@+id/Contraseña_ED"
@@ -38,12 +53,14 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.692" />
+        app:layout_constraintVertical_bias="0.692"
+        android:animateLayoutChanges="true"/>
 
     <TextView
         android:id="@+id/textView7"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:animateLayoutChanges="true"
         android:padding="5dp"
         android:text="o Inicia sesión con:"
         android:textAlignment="center"
@@ -68,13 +85,15 @@
         app:layout_constraintHorizontal_bias="0.247"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.777" />
+        app:layout_constraintVertical_bias="0.777"
+        android:animateLayoutChanges="true"/>
 
     <TextView
         android:id="@+id/OlvidasteContrasena_TV"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="116dp"
+        android:layout_marginTop="84dp"
+        android:animateLayoutChanges="true"
         android:clickable="true"
         android:focusable="true"
         android:text="¿Olvidaste tu contraseña?"
@@ -98,7 +117,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.431" />
+        app:layout_constraintVertical_bias="0.431"
+        android:animateLayoutChanges="true"/>
 
     <ImageView
         android:id="@+id/ocultar"
@@ -113,7 +133,8 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.683"
-        app:srcCompat="@drawable/eyeclose" />
+        app:srcCompat="@drawable/eyeclose"
+        android:animateLayoutChanges="true"/>
 
     <Button
         android:id="@+id/Registrarse_BTN"
@@ -128,7 +149,8 @@
         app:layout_constraintHorizontal_bias="0.758"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.777" />
+        app:layout_constraintVertical_bias="0.777"
+        android:animateLayoutChanges="true"/>
 
     <EditText
         android:id="@+id/Correo_ED"
@@ -143,7 +165,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.628" />
+        app:layout_constraintVertical_bias="0.628"
+        android:animateLayoutChanges="true"/>
 
     <TextView
         android:id="@+id/textView6"
@@ -158,20 +181,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.533" />
-
-    <ImageView
-        android:id="@+id/imageView8"
-        android:layout_width="500dp"
-        android:layout_height="290dp"
-        app:layout_constraintBottom_toTopOf="@id/textView5"
-        app:layout_constraintDimensionRatio="1.2
-"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.606"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.444"
-        app:srcCompat="@drawable/logoo" />
+        app:layout_constraintVertical_bias="0.533"
+        android:animateLayoutChanges="true"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

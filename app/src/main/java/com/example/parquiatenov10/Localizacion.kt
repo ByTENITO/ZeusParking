@@ -3,6 +3,9 @@ import android.Manifest
 import android.content.pm.PackageManager
 import android.location.Location
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
+import android.view.animation.AnimationUtils
 import android.widget.Button
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.FragmentActivity
@@ -31,6 +34,7 @@ class Localizacion : FragmentActivity(), OnMapReadyCallback {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_localizacion)
+        overridePendingTransition( 0,0)
 
         VolverButton = findViewById(R.id.Volver_BTN)
         usuario = LocationServices.getFusedLocationProviderClient(this)

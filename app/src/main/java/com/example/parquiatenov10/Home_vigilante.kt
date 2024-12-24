@@ -3,6 +3,9 @@ package com.example.parquiatenov10
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
+import android.view.animation.AnimationUtils
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.auth.FirebaseAuth
@@ -20,12 +23,14 @@ class Home_vigilante : AppCompatActivity() {
     private lateinit var perfil_vigi: ImageView
     private lateinit var Bienvenida_vigi: TextView
     private lateinit var usuario_vigi:TextView
+    private lateinit var texto:TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        startAnimationsWithDelay()
         enableEdgeToEdge()
         setContentView(R.layout.activity_home_vigilante)
-
+        overridePendingTransition( 0,0)
         // Setup de vistas
         cerrarSesion_vigi = findViewById(R.id.CerrarSesion_vigi)
         entrada_vigi = findViewById(R.id.Entrada_vigi)
@@ -34,6 +39,7 @@ class Home_vigilante : AppCompatActivity() {
         perfil_vigi = findViewById(R.id.FotoPerfil_vigi)
         Bienvenida_vigi= findViewById(R.id.Bienvenida_vigi)
         usuario_vigi = findViewById(R.id.Usuario_vigi)
+        texto = findViewById(R.id.textView2)
 
         // Obtener datos del intent
         val bundle: Bundle? = intent.extras
@@ -54,6 +60,23 @@ class Home_vigilante : AppCompatActivity() {
         val editor = prefs.edit()
         editor.putString("email", inputCorreo)
         editor.apply()
+    }
+    private fun startAnimationsWithDelay() {
+        val fadeIn = AnimationUtils.loadAnimation(this, R.anim.fade_in)
+        Handler(Looper.getMainLooper()).postDelayed({
+            listOf(
+                cerrarSesion_vigi,
+                entrada_vigi,
+                disponibilidad_vigi,
+                salida_vigi,
+                perfil_vigi,
+                Bienvenida_vigi,
+                usuario_vigi,
+                texto
+            ).forEach { view ->
+                view.startAnimation(fadeIn)
+            }
+        }, 1) // Ajusta el tiempo de retraso si es necesario
     }
 
     // Función para cargar la foto de perfil desde la URL

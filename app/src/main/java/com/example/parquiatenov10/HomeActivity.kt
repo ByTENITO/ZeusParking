@@ -3,6 +3,10 @@ package com.example.parquiatenov10
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
+import android.util.Log
+import android.view.animation.AnimationUtils
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.auth.FirebaseAuth
@@ -14,6 +18,7 @@ import com.squareup.picasso.Picasso  // Si usas Picasso
 class HomeActivity : AppCompatActivity() {
     // Variables y vistas
     private lateinit var Correo_TV: TextView
+    private lateinit var Usuario : TextView
     private lateinit var cerrarSesion: Button
     private lateinit var registrarBiciButton: Button
     private lateinit var entradaButton: Button
@@ -26,10 +31,12 @@ class HomeActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+        startAnimationsWithDelay()
         setContentView(R.layout.activity_home)
 
         // Setup de vistas
         Correo_TV = findViewById(R.id.Correo_TV)
+        Usuario = findViewById(R.id.textView2)
         cerrarSesion = findViewById(R.id.CerrarSesion)
         registrarBiciButton = findViewById(R.id.RegistrarBici_BTN)
         entradaButton = findViewById(R.id.Entrada_BTN)
@@ -45,12 +52,19 @@ class HomeActivity : AppCompatActivity() {
         val provider = bundle?.getString("provider")
         val fotoPerfilUrl: String? = bundle?.getString("foto_perfil_url")
 
+        overridePendingTransition( 0,0)
+
         // Comprobar si el proveedor es Google
         if (provider == ProviderType.GOOGLE.name && email != null && fotoPerfilUrl != null) {
             setup(email)
             loadProfilePicture(fotoPerfilUrl)
         } else if (email != null) {
             setup(email)
+        }
+        if (fotoPerfilUrl.isNullOrEmpty()) {
+            Log.e("CargaImagen", "La URL de la imagen es nula o vacía.")
+        } else {
+            Log.d("CargaImagen", "URL de la imagen recibida: $fotoPerfilUrl")
         }
 
         // Guardar email en preferencias
@@ -61,9 +75,28 @@ class HomeActivity : AppCompatActivity() {
     }
 
     // Función para cargar la foto de perfil desde la URL
-    private fun loadProfilePicture(fotoUrl: String) {
+    private fun loadProfilePicture(fotoPerfilUrl: String) {
         // Usar Picasso para cargar la imagen desde la URL
-        Picasso.get().load(fotoUrl).into(perfilImageView)
+        Picasso.get().load(fotoPerfilUrl).into(perfilImageView)
+    }
+
+    private fun startAnimationsWithDelay() {
+        val fadeIn = AnimationUtils.loadAnimation(this, R.anim.fade_in)
+        Handler(Looper.getMainLooper()).postDelayed({
+            listOf(
+                Correo_TV,
+                Usuario,
+                cerrarSesion,
+                registrarBiciButton,
+                entradaButton,
+                disponibilidadButton,
+                localizacionButton,
+                salidaButton,
+                BienvenidaTextView
+            ).forEach { view ->
+                view.startAnimation(fadeIn)
+            }
+        }, 0) // Ajusta el tiempo de retraso si es necesario
     }
 
     // Configuración inicial del correo y bienvenida
@@ -96,7 +129,9 @@ class HomeActivity : AppCompatActivity() {
 
             // Cerrar sesión en Firebase y finalizar la actividad
             FirebaseAuth.getInstance().signOut()
-            finish()
+            //se reemplazo esta accion ya que si se utiliza el funcion finish() esta volvera a la anterior actiidad utilizada, por lo que esta volvera a la actividad que le apuntamos
+            val intent = Intent(this, AuthActivity::class.java)
+            startActivity(intent)
         }
 
         // Otros botones

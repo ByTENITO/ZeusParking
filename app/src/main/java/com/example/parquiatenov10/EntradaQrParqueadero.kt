@@ -2,7 +2,10 @@ package com.example.parquiatenov10
 
 import android.graphics.Bitmap
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.view.View
+import android.view.animation.AnimationUtils
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
@@ -12,14 +15,18 @@ import com.journeyapps.barcodescanner.BarcodeEncoder
 import java.lang.Exception
 
 class EntradaQrParqueadero : AppCompatActivity() {
+    private lateinit var ivCodigoQR: ImageView
+    private lateinit var etDatos: EditText
+    private lateinit var btnGenerar: Button
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        startAnimationsWithDelay()
         setContentView(R.layout.activity_entrada_qr_parqueadero)
-
-        val ivCodigoQR: ImageView = findViewById(R.id.CodigoSalidaParqu)
-        val etDatos: EditText = findViewById(R.id.etentradaParqu)
-        val btnGenerar: Button = findViewById(R.id.btnSalidaParqu)
+        overridePendingTransition( 0,0)
+        ivCodigoQR = findViewById(R.id.CodigoSalidaParqu)
+        etDatos = findViewById(R.id.etentradaParqu)
+        btnGenerar = findViewById(R.id.btnSalidaParqu)
 
         btnGenerar.setOnClickListener(View.OnClickListener {
             try {
@@ -36,5 +43,17 @@ class EntradaQrParqueadero : AppCompatActivity() {
                 e.printStackTrace()
             }
         })
+    }
+    private fun startAnimationsWithDelay() {
+        val fadeIn = AnimationUtils.loadAnimation(this, R.anim.fade_in)
+        Handler(Looper.getMainLooper()).postDelayed({
+            listOf(
+                ivCodigoQR,
+                etDatos,
+                btnGenerar
+            ).forEach { view ->
+                view.startAnimation(fadeIn)
+            }
+        }, 1) // Ajusta el tiempo de retraso si es necesario
     }
 }
