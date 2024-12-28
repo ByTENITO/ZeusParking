@@ -12,7 +12,6 @@ import androidx.appcompat.app.AppCompatActivity
 
 class DisponibilidadParqueadero : AppCompatActivity() {
     private lateinit var VolverHome:Button
-    private lateinit var disponibilidad:Button
     private lateinit var texto:TextView
     override fun onCreate(savedInstanceState: Bundle?) {
         var Cuantos = 11
@@ -35,7 +34,6 @@ class DisponibilidadParqueadero : AppCompatActivity() {
         val textView = findViewById<TextView>(R.id.textView_vigi)
         textView.text = "parcerito quedan " + Restante + " espacios"
         VolverHome = findViewById(R.id.Volver_Home)
-        disponibilidad = findViewById(R.id.DisponibilidadParque)
         texto = findViewById(R.id.textView_vigi)
         VolverHome.setOnClickListener {
             finish()
@@ -46,7 +44,6 @@ class DisponibilidadParqueadero : AppCompatActivity() {
         Handler(Looper.getMainLooper()).postDelayed({
             listOf(
                 VolverHome,
-                disponibilidad,
                 texto
             ).forEach { view ->
                 view.startAnimation(fadeIn)

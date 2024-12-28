@@ -130,6 +130,7 @@ class AuthActivity : AppCompatActivity() {
             val password = Contraseña_ED.text.toString()
 
             if (validateEmail(email) && validatePassword(password)) {
+                Acceder_BTN.isEnabled = false
                 if (email == inputCorreo && validatePassword(password)) {
                     saveSession(inputCorreo, ProviderType.EMAIL)
                     showHome_vigi(inputCorreo, ProviderType.EMAIL)
@@ -178,6 +179,7 @@ class AuthActivity : AppCompatActivity() {
         ForgotPassword_TV.setOnClickListener {
             val email = Correo_ED.text.toString()
             if (validateEmail(email)) {
+                ForgotPassword_TV.isEnabled = true
                 auth.sendPasswordResetEmail(email).addOnCompleteListener {
                     if (it.isSuccessful) {
                         Toast.makeText(this, "Se ha enviado un enlace para restablecer la contraseña a tu correo.", Toast.LENGTH_SHORT).show()
