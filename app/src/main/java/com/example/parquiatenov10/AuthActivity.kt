@@ -1,7 +1,9 @@
 package com.example.parquiatenov10
 
+import android.animation.ValueAnimator
 import android.content.Context
 import android.content.Intent
+import android.content.pm.ActivityInfo
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -22,7 +24,10 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
 import android.util.Patterns
 import android.view.View
+import android.view.ViewGroup
 import android.view.animation.AnimationUtils
+import android.widget.LinearLayout
+import androidx.constraintlayout.widget.ConstraintSet
 
 enum class ProviderType {
     GOOGLE,
@@ -32,7 +37,8 @@ enum class ProviderType {
 class AuthActivity : AppCompatActivity() {
 
     private val GOOGLE_SIGN_IN = 100
-    private val inputCorreo = "Vigilante@uniminuto.edu.co" // Entrada simulada para correo
+    private val inputCorreo = "vigilante@uniminuto.edu.co" // Entrada simulada para correo
+    private val contraseña = "Vigilante123*"
     private lateinit var Google_BTN: Button
     private lateinit var Acceder_BTN: Button
     private lateinit var Registrarse_BTN: Button
@@ -56,9 +62,12 @@ class AuthActivity : AppCompatActivity() {
         val text5 = findViewById<TextView>(R.id.textView5)
         val text6 = findViewById<TextView>(R.id.textView6)
         val text7 = findViewById<TextView>(R.id.textView7)
+        val logo = findViewById<ImageView>(R.id.imageView8)
         val analytics = FirebaseAnalytics.getInstance(this)
         val bundle = Bundle()
         val fadeIn = AnimationUtils.loadAnimation(this, R.anim.fade_in)
+        val alto = resources.displayMetrics.heightPixels
+
         Google_BTN.startAnimation(fadeIn)
         Acceder_BTN.startAnimation(fadeIn)
         Registrarse_BTN.startAnimation(fadeIn)
@@ -68,13 +77,59 @@ class AuthActivity : AppCompatActivity() {
         text5.startAnimation(fadeIn)
         text6.startAnimation(fadeIn)
         text7.startAnimation(fadeIn)
+
         bundle.putString("message", "Integración de Firebase completa")
         analytics.logEvent("InitScreen", bundle)
 
+        if (alto>=3001){
+            val params = logo.layoutParams
+            params.width = 1160 // Ancho en píxeles
+            params.height = 1160 // Alto en píxeles
+            logo.layoutParams = params
+        }
+
+        if (alto in 1301..2500){
+            if (alto>=2400) {
+                val params = logo.layoutParams
+                params.width = 761 // Ancho en píxeles
+                params.height = 761 // Alto en píxeles
+                logo.layoutParams = params
+            }
+            if (alto in 1841..2399){
+                val params = logo.layoutParams
+                params.width = 870 // Ancho en píxeles
+                params.height = 870 // Alto en píxeles
+                logo.layoutParams = params
+            }
+            if (alto<=1840){
+                val params = logo.layoutParams
+                params.width = 761 // Ancho en píxeles
+                params.height = 761 // Alto en píxeles
+                logo.layoutParams = params
+            }
+        }
+
+        if (alto in 1081..1300){
+            val params = logo.layoutParams
+            params.width = 500 // Ancho en píxeles
+            params.height = 500 // Alto en píxeles
+            logo.layoutParams = params
+        }
+        if (alto<=1080){
+            val params = logo.layoutParams
+            params.width = 300 // Ancho en píxeles
+            params.height = 300 // Alto en píxeles
+            logo.layoutParams = params
+        }
         overridePendingTransition( 0,0)
         auth = FirebaseAuth.getInstance()
         setup()
         session()
+    }
+
+    private fun tamañoPantalla(porcentaje: Float): Int {
+        val alto = resources.displayMetrics.heightPixels
+        return (alto * porcentaje).toInt()
     }
 
     private fun session() {
@@ -91,7 +146,22 @@ class AuthActivity : AppCompatActivity() {
         }
     }
 
+    private fun tamaños(Google_BTN: Button, startHeight: Int) {
+        val animator = ValueAnimator.ofInt(startHeight)
+
+        animator.addUpdateListener { animation ->
+            val newHeight = animation.animatedValue as Int
+            val params = Google_BTN.layoutParams as ViewGroup.MarginLayoutParams
+
+            params.height = newHeight
+            params.bottomMargin = 0
+            Google_BTN.layoutParams = params
+        }
+        animator.start()
+    }
+
     private fun setup() {
+        val tamañoGoogle = tamañoPantalla(0.05f)
         title = "Autenticación"
 
         Google_BTN = findViewById(R.id.Google_BTN)
@@ -100,6 +170,8 @@ class AuthActivity : AppCompatActivity() {
         Correo_ED = findViewById(R.id.Correo_ED)
         Contraseña_ED = findViewById(R.id.Contraseña_ED)
         ForgotPassword_TV = findViewById(R.id.OlvidasteContrasena_TV)
+
+        tamaños(Google_BTN,tamañoGoogle)
 
         Google_BTN.setOnClickListener {
             val googleConf = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -131,7 +203,7 @@ class AuthActivity : AppCompatActivity() {
 
             if (validateEmail(email) && validatePassword(password)) {
                 Acceder_BTN.isEnabled = false
-                if (email == inputCorreo && validatePassword(password)) {
+                if (email == inputCorreo && password == contraseña) {
                     saveSession(inputCorreo, ProviderType.EMAIL)
                     showHome_vigi(inputCorreo, ProviderType.EMAIL)
                     return@setOnClickListener
@@ -145,9 +217,11 @@ class AuthActivity : AppCompatActivity() {
                             showHome(user.email ?: "", ProviderType.EMAIL)
                         } else {
                             Toast.makeText(this, "Por favor, verifica tu correo electrónico.", Toast.LENGTH_SHORT).show()
+                            Acceder_BTN.isEnabled = true
                         }
                     } else {
                         Toast.makeText(this, "Error en la autenticación. Revisa los datos.", Toast.LENGTH_SHORT).show()
+                        Acceder_BTN.isEnabled = true
                     }
                 }
             }
@@ -208,10 +282,11 @@ class AuthActivity : AppCompatActivity() {
     }
 
     private fun validatePassword(password: String): Boolean {
-        return if (password.length >= 8) {
+        val simbolos = "^(?=.*[A-Z])(?=.*[a-z])(?=.*\\d)(?=.*[@\$!%*?&])[A-Za-z\\d@\$!%*?&]{8,}$".toRegex()
+        return if (password.matches(simbolos)) {
             true
         } else {
-            Toast.makeText(this, "La contraseña debe tener al menos 8 caracteres.", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "La contraseña debe tener al menos 8 caracteres, una mayúscula, una minúscula, un número y un carácter especial.", Toast.LENGTH_SHORT).show()
             false
         }
     }
@@ -236,15 +311,23 @@ class AuthActivity : AppCompatActivity() {
         },5000)
     }
     private fun showHome_vigi(inputCorreo: String, provider: ProviderType) {
+        setContentView(R.layout.activity_splash_home)
         val user_vigi = auth.currentUser
         val fotoUrl = user_vigi?.photoUrl?.toString()
+        val transicionC = findViewById<ImageView>(R.id.carga)
+        val fadeOutC = AnimationUtils.loadAnimation(this, R.anim.fade_out_c)
+        transicionC.startAnimation(fadeOutC)
 
+        Handler(Looper.getMainLooper()).postDelayed({
         val homeIntent = Intent(this, Home_vigilante::class.java).apply {
             putExtra("inputCorreo", inputCorreo)
             putExtra("provider", provider.name)
             putExtra("foto_perfil_url", fotoUrl)
         }
+        Acceder_BTN.isEnabled = true
         startActivity(homeIntent)
+            overridePendingTransition( 0,0)
+        },5000)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

@@ -1,10 +1,12 @@
 package com.example.parquiatenov10
 
+import android.animation.ValueAnimator
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.view.View
 import android.view.animation.AnimationUtils
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -12,18 +14,22 @@ import com.google.firebase.auth.FirebaseAuth
 import android.widget.TextView
 import android.widget.Button
 import android.widget.ImageView
+import android.widget.LinearLayout
 import com.squareup.picasso.Picasso  // Si usas Picasso
 
 class Home_vigilante : AppCompatActivity() {
     // Variables y vistas
-    private lateinit var cerrarSesion_vigi: Button
-    private lateinit var entrada_vigi: Button
-    private lateinit var disponibilidad_vigi: Button
-    private lateinit var salida_vigi: Button
+    private lateinit var cerrarSesion_vigi: ImageView
+    private lateinit var entrada_vigi: ImageView
+    private lateinit var disponibilidad_vigi: ImageView
+    private lateinit var salida_vigi: ImageView
     private lateinit var perfil_vigi: ImageView
+    private lateinit var menuVig: ImageView
     private lateinit var Bienvenida_vigi: TextView
     private lateinit var usuario_vigi:TextView
     private lateinit var texto:TextView
+    private lateinit var opciones: LinearLayout
+    private var cambioAnimacion = true
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,6 +38,7 @@ class Home_vigilante : AppCompatActivity() {
         setContentView(R.layout.activity_home_vigilante)
         overridePendingTransition( 0,0)
         // Setup de vistas
+        menuVig = findViewById(R.id.menuVigi)
         cerrarSesion_vigi = findViewById(R.id.CerrarSesion_vigi)
         entrada_vigi = findViewById(R.id.Entrada_vigi)
         disponibilidad_vigi = findViewById(R.id.Disponibilidad_vigi)
@@ -46,6 +53,23 @@ class Home_vigilante : AppCompatActivity() {
         val inputCorreo: String? = bundle?.getString("inputCorreo")
         val provider = bundle?.getString("provider")
         val fotoPerfilUrl: String? = bundle?.getString("foto_perfil_url")
+        val alto = resources.displayMetrics.heightPixels
+
+        if (alto>=3001){
+            responsividad(menuVig,200,200)
+        }
+        if (alto in 2501..3000){
+            responsividad(menuVig,200,200)
+        }
+        if (alto in 1301..2500){
+            responsividad(menuVig,140,140)
+        }
+        if (alto in 1081..1300){
+            responsividad(menuVig,80,80)
+        }
+        if (alto<=1080){
+            responsividad(menuVig,60,60)
+        }
 
         // Comprobar si el proveedor es Google
         if (provider == ProviderType.GOOGLE.name && inputCorreo != null && fotoPerfilUrl != null) {
@@ -85,6 +109,35 @@ class Home_vigilante : AppCompatActivity() {
         Picasso.get().load(fotoUrl).into(perfil_vigi)
     }
 
+    private fun animacionAnchoLinear(view: View, startHeight: Int, endHeight: Int, duration: Long) {
+        val animacionAncho = ValueAnimator.ofInt(startHeight, endHeight)
+        animacionAncho.duration = duration
+        animacionAncho.addUpdateListener { animation ->
+            val params = view.layoutParams
+            params.height = animation.animatedValue as Int
+            view.layoutParams = params
+        }
+        animacionAncho.start()
+    }
+
+    private fun responsividad(view: View, width: Int, heigth: Int){
+        val anchoComponente = ValueAnimator.ofInt(width)
+        val altoComponente = ValueAnimator.ofInt(heigth)
+        anchoComponente.addUpdateListener { animation ->
+            val params = view.layoutParams
+            params.width = animation.animatedValue as Int
+            view.layoutParams = params
+        }
+
+        altoComponente.addUpdateListener { animation ->
+            val params = view.layoutParams
+            params.height = animation.animatedValue as Int
+            view.layoutParams = params
+        }
+        altoComponente.start()
+        anchoComponente.start()
+    }
+
     // Configuración inicial del correo y bienvenida
     private fun setup_vigi(inputCorreo: String) {
         title = "Inicio"
@@ -103,6 +156,70 @@ class Home_vigilante : AppCompatActivity() {
         } else {
             // Si no tiene nombre, mostrar saludo por defecto
             Bienvenida_vigi.text = "Bienvenido, Bici Usuario"
+        }
+
+        menuVig.setOnClickListener{
+            val altura = resources.displayMetrics.heightPixels
+            val pequeño = 60
+            val mediano = 80
+            val medianoAlto = 140
+            val Alto = 200
+            val grande = 200
+            if(cambioAnimacion){
+                if (altura>=3001){
+                    animacionAnchoLinear(opciones,1, 1260, 200L)
+                    responsividad(entrada_vigi,grande,grande)
+                    responsividad(salida_vigi,grande,grande)
+                    responsividad(disponibilidad_vigi,grande,grande)
+                    responsividad(cerrarSesion_vigi,grande,grande)
+                }
+                if (altura in 2501..3000){
+                    animacionAnchoLinear(opciones,1, 825, 200L)
+                    responsividad(entrada_vigi,Alto,Alto)
+                    responsividad(salida_vigi,Alto,Alto)
+                    responsividad(disponibilidad_vigi,Alto,Alto)
+                    responsividad(cerrarSesion_vigi,Alto,Alto)
+                }
+                if (altura in 1301..2500){
+                    animacionAnchoLinear(opciones,1, 890, 200L)
+                    responsividad(entrada_vigi,medianoAlto,medianoAlto)
+                    responsividad(salida_vigi,medianoAlto,medianoAlto)
+                    responsividad(disponibilidad_vigi,medianoAlto,medianoAlto)
+                    responsividad(cerrarSesion_vigi,medianoAlto,medianoAlto)
+                }
+                if (altura in 1081..1300){
+                    animacionAnchoLinear(opciones,1,510 , 200L)
+                    responsividad(entrada_vigi,mediano,mediano)
+                    responsividad(salida_vigi,mediano,mediano)
+                    responsividad(disponibilidad_vigi,mediano,mediano)
+                    responsividad(cerrarSesion_vigi,mediano,mediano)
+                }
+                if (altura<=1080){
+                    animacionAnchoLinear(opciones,1,390 , 200L)
+                    responsividad(entrada_vigi,pequeño,pequeño)
+                    responsividad(salida_vigi,pequeño,pequeño)
+                    responsividad(disponibilidad_vigi,pequeño,pequeño)
+                    responsividad(cerrarSesion_vigi,pequeño,pequeño)
+                }
+            }
+            if(!cambioAnimacion){
+                if (altura>=3001){
+                    animacionAnchoLinear(opciones,1250, 1, 200L)
+                }
+                if (altura in 2501..3000){
+                    animacionAnchoLinear(opciones,825, 1, 200L)
+                }
+                if (altura in 1301..2500){
+                    animacionAnchoLinear(opciones,890,1, 200L)
+                }
+                if (altura in 1081..1300){
+                    animacionAnchoLinear(opciones,510,1, 200L)
+                }
+                if (altura<=1080){
+                    animacionAnchoLinear(opciones,390,1 , 200L)
+                }
+            }
+            cambioAnimacion = !cambioAnimacion
         }
 
         // Configuración de los botones

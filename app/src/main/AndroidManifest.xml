@@ -12,7 +12,6 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.CAMERA" />
-    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:allowBackup="true"
@@ -20,30 +19,33 @@
         android:fullBackupContent="@xml/backup_rules"
         android:icon="@mipmap/ic_launcher_foreground"
         android:label="@string/app_name"
-        android:roundIcon="@drawable/logoo"
+        android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.ParquiatenoV10"
         tools:targetApi="31">
         <activity
             android:name=".EntradaQrParqueadero"
+            android:screenOrientation="portrait"
             android:exported="false" />
         <activity
             android:name=".SalidaQrParqueadero"
+            android:screenOrientation="portrait"
             android:exported="false" />
         <activity
             android:name=".DisponibilidadParqueadero"
+            android:screenOrientation="portrait"
             android:exported="false" />
         <activity
             android:name=".Home_vigilante"
-            android:exported="false" />
-        <activity
-            android:name=".Menu_Options"
+            android:screenOrientation="portrait"
             android:exported="false" />
         <activity
             android:name=".SalidaQrActivity"
+            android:screenOrientation="portrait"
             android:exported="false" />
         <activity
             android:name=".EntradaQrActivity"
+            android:screenOrientation="portrait"
             android:exported="false" />
 
         <meta-data
@@ -53,22 +55,28 @@
         <activity
             android:name=".Localizacion"
             android:exported="false"
+            android:screenOrientation="portrait"
             android:theme="@style/Theme.ParquiatenoV10" />
         <activity
             android:name=".Disponibilidad"
+            android:screenOrientation="portrait"
             android:exported="false" />
         <activity
             android:name=".RegistrarBiciActivity"
+            android:screenOrientation="portrait"
             android:exported="false" />
         <activity
             android:name=".HomeActivity"
+            android:screenOrientation="portrait"
             android:exported="false" />
         <activity
             android:name=".AuthActivity"
+            android:screenOrientation="portrait"
             android:exported="true" />
         <activity
             android:name=".Splash_Auth"
             android:exported="true"
+            android:screenOrientation="portrait"
             android:theme="@style/Theme.App.Splash">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

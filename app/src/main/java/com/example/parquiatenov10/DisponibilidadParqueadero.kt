@@ -18,7 +18,7 @@ class DisponibilidadParqueadero : AppCompatActivity() {
         var Total = 20
         var Restante = Total - Cuantos
         super.onCreate(savedInstanceState)
-        startAnimationsWithDelay()
+        Animacion()
         enableEdgeToEdge()
         setContentView(R.layout.activity_disponibilidad_parqueadero)
         for (i in 1..Total) {
@@ -39,7 +39,7 @@ class DisponibilidadParqueadero : AppCompatActivity() {
             finish()
         }
     }
-    private fun startAnimationsWithDelay() {
+    private fun Animacion() {
         val fadeIn = AnimationUtils.loadAnimation(this, R.anim.fade_in)
         Handler(Looper.getMainLooper()).postDelayed({
             listOf(
@@ -48,6 +48,6 @@ class DisponibilidadParqueadero : AppCompatActivity() {
             ).forEach { view ->
                 view.startAnimation(fadeIn)
             }
-        }, 1) // Ajusta el tiempo de retraso si es necesario
+        }, 1)
     }
 }

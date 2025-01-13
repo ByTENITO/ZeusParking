@@ -1,32 +1,37 @@
 package com.example.parquiatenov10
 
+import android.animation.ValueAnimator
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
+import android.view.View
 import android.view.animation.AnimationUtils
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.auth.FirebaseAuth
 import android.widget.TextView
-import android.widget.Button
 import android.widget.ImageView
+import android.widget.LinearLayout
 import com.squareup.picasso.Picasso  // Si usas Picasso
 
 class HomeActivity : AppCompatActivity() {
     // Variables y vistas
     private lateinit var Correo_TV: TextView
     private lateinit var Usuario : TextView
-    private lateinit var cerrarSesion: Button
-    private lateinit var registrarBiciButton: Button
-    private lateinit var entradaButton: Button
-    private lateinit var disponibilidadButton: Button
-    private lateinit var localizacionButton: Button
-    private lateinit var salidaButton: Button
+    private lateinit var cerrarSesion: ImageView
+    private lateinit var registrarBiciButton: ImageView
+    private lateinit var entradaButton: ImageView
+    private lateinit var disponibilidadButton: ImageView
+    private lateinit var localizacionButton: ImageView
+    private lateinit var salidaButton: ImageView
     private lateinit var perfilImageView: ImageView
     private lateinit var BienvenidaTextView: TextView
+    private lateinit var opciones: LinearLayout
+    private lateinit var menuOp: ImageView
+    private var cambioAnimacion = true
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,14 +50,50 @@ class HomeActivity : AppCompatActivity() {
         salidaButton = findViewById(R.id.Salida_BTN)
         perfilImageView = findViewById(R.id.FotoPerfil_ImageView)
         BienvenidaTextView = findViewById(R.id.Bienvenida_TV)
+        opciones = findViewById(R.id.menuOpciones)
+        menuOp = findViewById(R.id.menu)
 
         // Obtener datos del intent
         val bundle: Bundle? = intent.extras
         val email: String? = bundle?.getString("email")
         val provider = bundle?.getString("provider")
         val fotoPerfilUrl: String? = bundle?.getString("foto_perfil_url")
+        val ancho = resources.displayMetrics.widthPixels
+        val alto = resources.displayMetrics.heightPixels
 
         overridePendingTransition( 0,0)
+
+        if (alto>=3001){
+            responsividad(menuOp,200,200)
+        }
+        if (alto in 2501..3000){
+            responsividad(menuOp,200,200)
+        }
+        if (alto in 1301..2500){
+            responsividad(menuOp,140,140)
+        }
+        if (alto in 1081..1300){
+            responsividad(menuOp,80,80)
+        }
+        if (alto<=1080){
+            responsividad(menuOp,60,60)
+        }
+
+        if (ancho >= 3001){
+            responsividadText(Correo_TV,3500)
+        }
+        if (ancho in 2501..3000){
+            responsividadText(Correo_TV,2500)
+        }
+        if (ancho in 1081..2500){
+            responsividadText(Correo_TV,2000)
+        }
+        if (ancho in 721..1080){
+            responsividadText(Correo_TV,900)
+        }
+        if (ancho <= 720){
+            responsividadText(Correo_TV,580)
+        }
 
         // Comprobar si el proveedor es Google
         if (provider == ProviderType.GOOGLE.name && email != null && fotoPerfilUrl != null) {
@@ -75,9 +116,9 @@ class HomeActivity : AppCompatActivity() {
     }
 
     // Función para cargar la foto de perfil desde la URL
-    private fun loadProfilePicture(fotoPerfilUrl: String) {
+    private fun loadProfilePicture(fotoUrl: String) {
         // Usar Picasso para cargar la imagen desde la URL
-        Picasso.get().load(fotoPerfilUrl).into(perfilImageView)
+        Picasso.get().load(fotoUrl).into(perfilImageView)
     }
 
     private fun startAnimationsWithDelay() {
@@ -86,17 +127,51 @@ class HomeActivity : AppCompatActivity() {
             listOf(
                 Correo_TV,
                 Usuario,
-                cerrarSesion,
-                registrarBiciButton,
-                entradaButton,
-                disponibilidadButton,
-                localizacionButton,
-                salidaButton,
-                BienvenidaTextView
+                BienvenidaTextView,
+                menuOp
             ).forEach { view ->
                 view.startAnimation(fadeIn)
             }
         }, 0) // Ajusta el tiempo de retraso si es necesario
+    }
+
+    private fun animacionAnchoLinear(view: View, startHeight: Int, endHeight: Int, duration: Long) {
+        val animacionAncho = ValueAnimator.ofInt(startHeight, endHeight)
+        animacionAncho.duration = duration
+        animacionAncho.addUpdateListener { animation ->
+            val params = view.layoutParams
+            params.height = animation.animatedValue as Int
+            view.layoutParams = params
+        }
+        animacionAncho.start()
+    }
+
+    private fun responsividadText(view: View,width: Int){
+        val textoUsuario = ValueAnimator.ofInt(width)
+        textoUsuario.addUpdateListener { animation ->
+            val params = view.layoutParams
+            params.width = animation.animatedValue as Int
+            view.layoutParams = params
+        }
+        textoUsuario.start()
+    }
+
+    private fun responsividad(view: View,width: Int,heigth: Int){
+        val anchoComponente = ValueAnimator.ofInt(width)
+        val altoComponente = ValueAnimator.ofInt(heigth)
+        anchoComponente.addUpdateListener { animation ->
+            val params = view.layoutParams
+            params.width = animation.animatedValue as Int
+            view.layoutParams = params
+        }
+
+        altoComponente.addUpdateListener { animation ->
+            val params = view.layoutParams
+            params.height = animation.animatedValue as Int
+            view.layoutParams = params
+        }
+        altoComponente.start()
+        anchoComponente.start()
     }
 
     // Configuración inicial del correo y bienvenida
@@ -120,6 +195,80 @@ class HomeActivity : AppCompatActivity() {
         }
 
         // Configuración de los botones
+        menuOp.setOnClickListener {
+            val altura = resources.displayMetrics.heightPixels
+            val pequeño = 60
+            val mediano = 80
+            val medianoAlto = 140
+            val Alto = 200
+            val grande = 200
+            if(cambioAnimacion){
+                if (altura>=3001){
+                    animacionAnchoLinear(opciones,1, 1260, 200L)
+                    responsividad(entradaButton,grande,grande)
+                    responsividad(salidaButton,grande,grande)
+                    responsividad(localizacionButton,grande,grande)
+                    responsividad(disponibilidadButton,grande,grande)
+                    responsividad(registrarBiciButton,grande,grande)
+                    responsividad(cerrarSesion,grande,grande)
+                }
+                if (altura in 2501..3000){
+                    animacionAnchoLinear(opciones,1, 825, 200L)
+                    responsividad(entradaButton,Alto,Alto)
+                    responsividad(salidaButton,Alto,Alto)
+                    responsividad(localizacionButton,Alto,Alto)
+                    responsividad(disponibilidadButton,Alto,Alto)
+                    responsividad(registrarBiciButton,Alto,Alto)
+                    responsividad(cerrarSesion,Alto,Alto)
+                }
+                if (altura in 1301..2500){
+                    animacionAnchoLinear(opciones,1, 890, 200L)
+                    responsividad(entradaButton,medianoAlto,medianoAlto)
+                    responsividad(salidaButton,medianoAlto,medianoAlto)
+                    responsividad(localizacionButton,medianoAlto,medianoAlto)
+                    responsividad(disponibilidadButton,medianoAlto,medianoAlto)
+                    responsividad(registrarBiciButton,medianoAlto,medianoAlto)
+                    responsividad(cerrarSesion,medianoAlto,medianoAlto)
+                }
+                if (altura in 1081..1300){
+                    animacionAnchoLinear(opciones,1,510 , 200L)
+                    responsividad(entradaButton,mediano,mediano)
+                    responsividad(salidaButton,mediano,mediano)
+                    responsividad(localizacionButton,mediano,mediano)
+                    responsividad(disponibilidadButton,mediano,mediano)
+                    responsividad(registrarBiciButton,mediano,mediano)
+                    responsividad(cerrarSesion,mediano,mediano)
+                }
+                if (altura<=1080){
+                    animacionAnchoLinear(opciones,1,390 , 200L)
+                    responsividad(entradaButton,pequeño,pequeño)
+                    responsividad(salidaButton,pequeño,pequeño)
+                    responsividad(localizacionButton,pequeño,pequeño)
+                    responsividad(disponibilidadButton,pequeño,pequeño)
+                    responsividad(registrarBiciButton,pequeño,pequeño)
+                    responsividad(cerrarSesion,pequeño,pequeño)
+                }
+            }
+            if(!cambioAnimacion){
+                if (altura>=3001){
+                    animacionAnchoLinear(opciones,1250, 1, 200L)
+                }
+                if (altura in 2501..3000){
+                    animacionAnchoLinear(opciones,825, 1, 200L)
+                }
+                if (altura in 1301..2500){
+                    animacionAnchoLinear(opciones,890,1, 200L)
+                }
+                if (altura in 1081..1300){
+                    animacionAnchoLinear(opciones,510,1, 200L)
+                }
+                if (altura<=1080){
+                    animacionAnchoLinear(opciones,390,1 , 200L)
+                }
+            }
+            cambioAnimacion = !cambioAnimacion
+        }
+
         cerrarSesion.setOnClickListener {
             // Borrar datos guardados
             val prefs = getSharedPreferences(getString(R.string.prefs_file), Context.MODE_PRIVATE)

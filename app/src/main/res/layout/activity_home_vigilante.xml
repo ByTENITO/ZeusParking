@@ -8,22 +8,71 @@
     android:background="@drawable/fondo"
     tools:context=".Home_vigilante">
 
-    <Button
-        android:id="@+id/CerrarSesion_vigi"
+    <LinearLayout
+        android:id="@+id/menuOpcionesVigi"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:backgroundTint="@drawable/c_cambio"
-        android:padding="18sp"
-        android:text="Cerrar Sesion"
-        android:textColor="#000000"
-        android:textSize="18dp"
+        android:layout_height="1dp"
+        android:layout_marginBottom="1dp"
+        android:background="@drawable/borde_menu"
+        android:gravity="bottom"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toTopOf="@+id/menuVigi"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.217"
+        app:layout_constraintStart_toStartOf="parent">
+
+
+        <ImageView
+            android:id="@+id/Entrada_vigi"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:backgroundTint="@drawable/c_boton"
+            android:src="@drawable/entrada"
+            android:clickable="true"
+            android:focusable="true"/>
+
+
+        <ImageView
+            android:id="@+id/Salida_vigi"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:backgroundTint="@drawable/c_boton"
+            android:src="@drawable/salida"
+            android:clickable="true"
+            android:focusable="true"/>
+
+        <ImageView
+            android:id="@+id/Disponibilidad_vigi"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:backgroundTint="@drawable/c_boton"
+            android:src="@drawable/disponibilidad"
+            android:clickable="true"
+            android:focusable="true"/>
+
+        <ImageView
+            android:id="@+id/CerrarSesion_vigi"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:backgroundTint="@drawable/c_cambio"
+            android:src="@drawable/cerrar_sesion"
+            android:clickable="true"
+            android:focusable="true"/>
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/menuVigi"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:src="@drawable/menu"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintHorizontal_bias="0.227"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.959" />
-
+        app:layout_constraintVertical_bias="0.963" />
 
     <TextView
         android:id="@+id/Bienvenida_vigi"
@@ -55,54 +104,6 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.182" />
 
-    <Button
-        android:id="@+id/Entrada_vigi"
-        android:layout_width="365dp"
-        android:layout_height="75dp"
-        android:backgroundTint="@drawable/c_boton"
-        android:padding="18sp"
-        android:text="Entrada"
-        android:textColor="#000000"
-        android:textColorHint="#FFFFFF"
-        android:textSize="18dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.585" />
-
-    <Button
-        android:id="@+id/Disponibilidad_vigi"
-        android:layout_width="365dp"
-        android:layout_height="75dp"
-        android:backgroundTint="@drawable/c_boton"
-        android:padding="18sp"
-        android:text="Disponibilidad"
-        android:textColor="#000000"
-        android:textColorHint="#FFFFFF"
-        android:textSize="18dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.814" />
-
-    <Button
-        android:id="@+id/Salida_vigi"
-        android:layout_width="365dp"
-        android:layout_height="75dp"
-        android:backgroundTint="@drawable/c_boton"
-        android:padding="18sp"
-        android:text="Salida"
-        android:textColor="#000000"
-        android:textColorHint="#FFFFFF"
-        android:textSize="18dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.699" />
-
     <ImageView
         android:id="@+id/FotoPerfil_vigi"
         android:src="@drawable/fondo_vigilante"
@@ -129,5 +130,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.175" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

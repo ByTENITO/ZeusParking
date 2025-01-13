@@ -10,79 +10,96 @@
     tools:context=".HomeActivity">
 
 
-    <Button
-        android:id="@+id/CerrarSesion"
+    <ImageView
+        android:id="@+id/menu"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:src="@drawable/menu"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.199"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.964" />
+
+    <LinearLayout
+        android:id="@+id/menuOpciones"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:backgroundTint="@drawable/c_cambio"
-        android:padding="18sp"
-        android:text="Cerrar Sesion"
-        android:textColor="#000000"
-        android:textSize="18dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_height="1dp"
+        android:layout_marginBottom="1dp"
+        android:background="@drawable/borde_menu"
+        android:gravity="bottom"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toTopOf="@+id/menu"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.93" />
+        app:layout_constraintHorizontal_bias="0.185"
+        app:layout_constraintStart_toStartOf="parent">
 
-    <Button
-        android:id="@+id/RegistrarBici_BTN"
-        android:layout_width="365dp"
-        android:layout_height="75dp"
-        android:backgroundTint="@drawable/c_boton"
-        android:padding="18sp"
-        android:text="Registrar Bicicleta"
-        android:textColor="#000000"
-        android:textColorHint="#FFFFFF"
-        android:textSize="18dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.652"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.713" />
 
-    <Button
-        android:id="@+id/Localizacion_BTN"
-        android:layout_width="365dp"
-        android:layout_height="75dp"
-        android:backgroundTint="@drawable/c_boton"
-        android:padding="18sp"
-        android:text="Localizacion de parqueaderos"
-        android:textColor="#000000"
-        android:textColorHint="#FFFFFF"
-        android:textSize="18dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.652"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.827" />
+        <ImageView
+            android:id="@+id/Entrada_BTN"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:backgroundTint="@drawable/c_boton"
+            android:clickable="true"
+            android:focusable="true"
+            android:src="@drawable/entrada"/>
 
-    <Button
-        android:id="@+id/Disponibilidad_BTN"
-        android:layout_width="365dp"
-        android:layout_height="75dp"
-        android:backgroundTint="@drawable/c_boton"
-        android:padding="18sp"
-        android:text="Disponibilidad"
-        android:textColor="#000000"
-        android:textColorHint="#FFFFFF"
-        android:textSize="18dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.652"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.599" />
+        <ImageView
+            android:id="@+id/Salida_BTN"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:backgroundTint="@drawable/c_boton"
+            android:clickable="true"
+            android:focusable="true"
+            android:src="@drawable/salida" />
+
+        <ImageView
+            android:id="@+id/Localizacion_BTN"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:backgroundTint="@drawable/c_boton"
+            android:clickable="true"
+            android:focusable="true"
+            android:src="@drawable/localizacion" />
+
+        <ImageView
+            android:id="@+id/Disponibilidad_BTN"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:backgroundTint="@drawable/c_boton"
+            android:clickable="true"
+            android:focusable="true"
+            android:src="@drawable/disponibilidad" />
+
+        <ImageView
+            android:id="@+id/RegistrarBici_BTN"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:backgroundTint="@drawable/c_boton"
+            android:clickable="true"
+            android:focusable="true"
+            android:src="@drawable/registro" />
+
+        <ImageView
+            android:id="@+id/CerrarSesion"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:backgroundTint="@drawable/c_cambio"
+            android:clickable="true"
+            android:focusable="true"
+            android:src="@drawable/cerrar_sesion" />
+
+    </LinearLayout>
 
     <TextView
         android:id="@+id/Bienvenida_TV"
-        android:layout_width="185dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:text="Bienvenido"
+        android:text="@string/bienvenido"
         android:textColor="@color/white"
         android:textSize="24sp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -94,56 +111,22 @@
 
     <TextView
         android:id="@+id/Correo_TV"
-        android:layout_width="253dp"
+        android:layout_width="1dp"
         android:layout_height="wrap_content"
-        android:text="TextView"
+        android:layout_marginStart="4dp"
+        android:text="@string/textview"
         android:textColor="#FFFFFF"
-        android:textSize="14sp"
+        android:textSize="15sp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.778"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/textView2"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.182" />
-
-    <Button
-        android:id="@+id/Entrada_BTN"
-        android:layout_width="365dp"
-        android:layout_height="75dp"
-        android:backgroundTint="@drawable/c_boton"
-        android:padding="18sp"
-        android:text="Entrada"
-        android:textColor="#000000"
-        android:textColorHint="#FFFFFF"
-        android:textSize="18dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.652"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.37" />
-
-    <Button
-        android:id="@+id/Salida_BTN"
-        android:layout_width="365dp"
-        android:layout_height="75dp"
-        android:backgroundTint="@drawable/c_boton"
-        android:padding="18sp"
-        android:text="Salida"
-        android:textColor="#000000"
-        android:textColorHint="#FFFFFF"
-        android:textSize="18dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.652"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.484" />
+        app:layout_constraintVertical_bias="0.176" />
 
     <ImageView
         android:id="@+id/FotoPerfil_ImageView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:contentDescription="@string/todo"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.876"
@@ -156,14 +139,14 @@
         android:id="@+id/textView2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Usuario:"
+        android:text="@string/usuario"
         android:textColor="#FFFFFF"
         android:textSize="14sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.083"
+        app:layout_constraintHorizontal_bias="0.058"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.182" />
+        app:layout_constraintVertical_bias="0.176" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

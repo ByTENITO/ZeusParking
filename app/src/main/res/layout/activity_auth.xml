@@ -12,8 +12,8 @@
 
     <ImageView
         android:id="@+id/imageView8"
-        android:layout_width="500dp"
-        android:layout_height="290dp"
+        android:layout_width="830px"
+        android:layout_height="830px"
         app:layout_constraintBottom_toTopOf="@id/textView5"
         app:layout_constraintDimensionRatio="1.2"
         app:layout_constraintEnd_toEndOf="parent"
