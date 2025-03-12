@@ -26,7 +26,6 @@ class HomeActivity : AppCompatActivity() {
     private lateinit var entradaButton: ImageView
     private lateinit var disponibilidadButton: ImageView
     private lateinit var localizacionButton: ImageView
-    private lateinit var salidaButton: ImageView
     private lateinit var perfilImageView: ImageView
     private lateinit var BienvenidaTextView: TextView
     private lateinit var opciones: LinearLayout
@@ -47,7 +46,6 @@ class HomeActivity : AppCompatActivity() {
         entradaButton = findViewById(R.id.Entrada_BTN)
         disponibilidadButton = findViewById(R.id.Disponibilidad_BTN)
         localizacionButton = findViewById(R.id.Localizacion_BTN)
-        salidaButton = findViewById(R.id.Salida_BTN)
         perfilImageView = findViewById(R.id.FotoPerfil_ImageView)
         BienvenidaTextView = findViewById(R.id.Bienvenida_TV)
         opciones = findViewById(R.id.menuOpciones)
@@ -58,6 +56,11 @@ class HomeActivity : AppCompatActivity() {
         val email: String? = bundle?.getString("email")
         val provider = bundle?.getString("provider")
         val fotoPerfilUrl: String? = bundle?.getString("foto_perfil_url")
+        val sharedPref = getSharedPreferences("MisDatos", MODE_PRIVATE)
+        with(sharedPref.edit()) {
+            putString("nombreUsuario", email)
+            apply()
+        }
         val ancho = resources.displayMetrics.widthPixels
         val alto = resources.displayMetrics.heightPixels
 
@@ -204,45 +207,40 @@ class HomeActivity : AppCompatActivity() {
             val grande = 200
             if(cambioAnimacion){
                 if (altura>=3001){
-                    animacionAnchoLinear(opciones,1, 1260, 200L)
+                    animacionAnchoLinear(opciones,1, 1130, 200L)
                     responsividad(entradaButton,grande,grande)
-                    responsividad(salidaButton,grande,grande)
                     responsividad(localizacionButton,grande,grande)
                     responsividad(disponibilidadButton,grande,grande)
                     responsividad(registrarBiciButton,grande,grande)
                     responsividad(cerrarSesion,grande,grande)
                 }
                 if (altura in 2501..3000){
-                    animacionAnchoLinear(opciones,1, 825, 200L)
+                    animacionAnchoLinear(opciones,1, 705, 200L)
                     responsividad(entradaButton,Alto,Alto)
-                    responsividad(salidaButton,Alto,Alto)
                     responsividad(localizacionButton,Alto,Alto)
                     responsividad(disponibilidadButton,Alto,Alto)
                     responsividad(registrarBiciButton,Alto,Alto)
                     responsividad(cerrarSesion,Alto,Alto)
                 }
                 if (altura in 1301..2500){
-                    animacionAnchoLinear(opciones,1, 890, 200L)
+                    animacionAnchoLinear(opciones,1, 770, 200L)
                     responsividad(entradaButton,medianoAlto,medianoAlto)
-                    responsividad(salidaButton,medianoAlto,medianoAlto)
                     responsividad(localizacionButton,medianoAlto,medianoAlto)
                     responsividad(disponibilidadButton,medianoAlto,medianoAlto)
                     responsividad(registrarBiciButton,medianoAlto,medianoAlto)
                     responsividad(cerrarSesion,medianoAlto,medianoAlto)
                 }
                 if (altura in 1081..1300){
-                    animacionAnchoLinear(opciones,1,510 , 200L)
+                    animacionAnchoLinear(opciones,1,390 , 200L)
                     responsividad(entradaButton,mediano,mediano)
-                    responsividad(salidaButton,mediano,mediano)
                     responsividad(localizacionButton,mediano,mediano)
                     responsividad(disponibilidadButton,mediano,mediano)
                     responsividad(registrarBiciButton,mediano,mediano)
                     responsividad(cerrarSesion,mediano,mediano)
                 }
                 if (altura<=1080){
-                    animacionAnchoLinear(opciones,1,390 , 200L)
+                    animacionAnchoLinear(opciones,1,270 , 200L)
                     responsividad(entradaButton,pequeño,pequeño)
-                    responsividad(salidaButton,pequeño,pequeño)
                     responsividad(localizacionButton,pequeño,pequeño)
                     responsividad(disponibilidadButton,pequeño,pequeño)
                     responsividad(registrarBiciButton,pequeño,pequeño)
@@ -251,19 +249,19 @@ class HomeActivity : AppCompatActivity() {
             }
             if(!cambioAnimacion){
                 if (altura>=3001){
-                    animacionAnchoLinear(opciones,1250, 1, 200L)
+                    animacionAnchoLinear(opciones,1130, 1, 200L)
                 }
                 if (altura in 2501..3000){
-                    animacionAnchoLinear(opciones,825, 1, 200L)
+                    animacionAnchoLinear(opciones,705, 1, 200L)
                 }
                 if (altura in 1301..2500){
-                    animacionAnchoLinear(opciones,890,1, 200L)
+                    animacionAnchoLinear(opciones,770,1, 200L)
                 }
                 if (altura in 1081..1300){
-                    animacionAnchoLinear(opciones,510,1, 200L)
+                    animacionAnchoLinear(opciones,390,1, 200L)
                 }
                 if (altura<=1080){
-                    animacionAnchoLinear(opciones,390,1 , 200L)
+                    animacionAnchoLinear(opciones,270,1 , 200L)
                 }
             }
             cambioAnimacion = !cambioAnimacion
@@ -285,11 +283,7 @@ class HomeActivity : AppCompatActivity() {
 
         // Otros botones
         entradaButton.setOnClickListener {
-            startActivity(Intent(this, EntradaQrActivity::class.java))
-        }
-
-        salidaButton.setOnClickListener {
-            startActivity(Intent(this, SalidaQrActivity::class.java))
+            startActivity(Intent(this, QrActivity::class.java))
         }
 
         disponibilidadButton.setOnClickListener {

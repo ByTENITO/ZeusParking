@@ -45,16 +45,7 @@
             android:backgroundTint="@drawable/c_boton"
             android:clickable="true"
             android:focusable="true"
-            android:src="@drawable/entrada"/>
-
-        <ImageView
-            android:id="@+id/Salida_BTN"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:backgroundTint="@drawable/c_boton"
-            android:clickable="true"
-            android:focusable="true"
-            android:src="@drawable/salida" />
+            android:src="@drawable/qr"/>
 
         <ImageView
             android:id="@+id/Localizacion_BTN"

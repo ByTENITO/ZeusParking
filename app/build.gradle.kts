@@ -68,6 +68,7 @@ dependencies {
     //Codigos de Barras
     implementation ("com.google.firebase:firebase-ml-vision:24.0.3")
     implementation ("com.google.firebase:firebase-ml-vision-barcode-model:16.0.1")
+    implementation("com.journeyapps:zxing-android-embedded:4.3.0")
 
     implementation ("com.journeyapps:zxing-android-embedded:4.3.0")
     implementation ("com.google.zxing:core:3.4.1")
@@ -75,6 +76,7 @@ dependencies {
     //Imagen de Perfil
     implementation ("com.squareup.picasso:picasso:2.71828")
     implementation ("com.github.bumptech.glide:glide:4.15.1")
+    implementation(libs.firebase.database.ktx)
     annotationProcessor ("com.github.bumptech.glide:compiler:4.15.1")
 
     //Camara X

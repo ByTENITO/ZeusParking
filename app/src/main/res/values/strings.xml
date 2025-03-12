@@ -48,5 +48,14 @@
     <string name="textview">TextView</string>
     <string name="todo">TODO</string>
     <string name="usuario">Usuario:</string>
+    <string name="salir">Salir</string>
+    <string name="guardar">Guardar</string>
+    <string name="bicicleta">Bicicleta</string>
+    <string name="color">Color</string>
+    <string name="apellidos">Apellidos</string>
+    <string name="nombres">Nombres</string>
+    <string name="num_marco_placa">Num Marco - Placa</string>
+    <string name="cedula">Cedula</string>
+    <string name="sube_aqui_tus_fotos">Sube aqui tus fotos 👇🏼</string>
 
 </resources>
