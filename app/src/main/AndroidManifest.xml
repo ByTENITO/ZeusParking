@@ -44,7 +44,7 @@
             android:screenOrientation="portrait"
             android:exported="false" />
         <activity
-            android:name=".EntradaQrActivity"
+            android:name=".QrActivity"
             android:screenOrientation="portrait"
             android:exported="false" />
 

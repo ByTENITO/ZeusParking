@@ -27,7 +27,6 @@ class RegistrarBiciActivity : AppCompatActivity() {
     private lateinit var agregarFoto1Btn: Button
     private lateinit var agregarFoto2Btn: Button
     private lateinit var tiposSpinner: Spinner
-    private lateinit var VolverButton: Button
     private lateinit var Guardar: Button
     private lateinit var texto: TextView
 
@@ -44,7 +43,8 @@ class RegistrarBiciActivity : AppCompatActivity() {
         val color: String,
         val cedula: String,
         val numero: String,
-        val tipo: String
+        val tipo: String,
+        val correo: String
     ) : java.io.Serializable
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -105,11 +105,15 @@ class RegistrarBiciActivity : AppCompatActivity() {
             seleccionarImagen(1)
         }
 
+
         // Evento para agregar la segunda foto
         agregarFoto2Btn.setOnClickListener {
             seleccionarImagen(2)
         }
 
+        Guardar.setOnClickListener {
+            guardarDatosEnFirestore()
+        }
     }
     private fun startAnimationsWithDelay() {
         val fadeIn = AnimationUtils.loadAnimation(this, R.anim.fade_in)
@@ -160,6 +164,8 @@ class RegistrarBiciActivity : AppCompatActivity() {
         val cedula = cedulaNum.text.toString()
         val marco = marcoNum.text.toString()
         val tipoVehiculo = tiposSpinner.selectedItem.toString()
+        val sharedPref = getSharedPreferences("MisDatos", MODE_PRIVATE)
+        val correo = sharedPref.getString("nombreUsuario", "Desconocido")
 
         if (nombre.isEmpty() || apellidos.isEmpty() || color.isEmpty() || cedula.isEmpty() || marco.isEmpty()) {
             Toast.makeText(this, "Llene Todos los Campos Por Favor", Toast.LENGTH_SHORT).show()
@@ -167,7 +173,7 @@ class RegistrarBiciActivity : AppCompatActivity() {
         }
 
         // Creación de la instancia de BiciData
-        val biciData = BiciData(nombre, apellidos, color, cedula, marco, tipoVehiculo)
+        val biciData = BiciData(nombre, apellidos, color, cedula, marco, tipoVehiculo, correo.toString())
 
         db.collection("Bici Usuarios").add(biciData)
             .addOnSuccessListener { documentReference ->
