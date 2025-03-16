@@ -6,11 +6,11 @@ plugins {
 
 android {
     namespace = "com.example.parquiatenov10"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "com.example.parquiatenov10"
-        minSdk = 24
+        minSdk = 23
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
@@ -45,13 +45,11 @@ dependencies {
     implementation(platform("com.google.firebase:firebase-bom:33.3.0"))
     implementation("com.google.firebase:firebase-analytics")
 
-    //Autenticador           
+    //Autenticador
     implementation(platform("com.google.firebase:firebase-bom:32.3.1"))
     implementation("com.google.firebase:firebase-auth-ktx")
 
     //Inicio Google
-    implementation(platform("com.google.firebase:firebase-bom:32.3.1"))
-    implementation("com.google.firebase:firebase-auth-ktx")
     implementation("com.google.android.gms:play-services-auth:20.7.0")
 
     //Storage
@@ -67,9 +65,6 @@ dependencies {
 
     //Codigos de Barras
     implementation ("com.google.firebase:firebase-ml-vision:24.0.3")
-    implementation ("com.google.firebase:firebase-ml-vision-barcode-model:16.0.1")
-    implementation("com.journeyapps:zxing-android-embedded:4.3.0")
-
     implementation ("com.journeyapps:zxing-android-embedded:4.3.0")
     implementation ("com.google.zxing:core:3.4.1")
 
@@ -77,13 +72,15 @@ dependencies {
     implementation ("com.squareup.picasso:picasso:2.71828")
     implementation ("com.github.bumptech.glide:glide:4.15.1")
     implementation(libs.firebase.database.ktx)
+    implementation(libs.androidx.media3.common.ktx)
     annotationProcessor ("com.github.bumptech.glide:compiler:4.15.1")
 
     //Camara X
-    implementation ("androidx.camera:camera-core:1.0.2")
-    implementation ("androidx.camera:camera-camera2:1.0.2")
-    implementation ("androidx.camera:camera-lifecycle:1.0.2")
-    implementation ("androidx.camera:camera-view:1.0.0-alpha27")
+    implementation ("com.google.mlkit:barcode-scanning:17.2.0")
+    implementation ("androidx.camera:camera-core:1.3.0")
+    implementation ("androidx.camera:camera-camera2:1.3.0")
+    implementation ("androidx.camera:camera-lifecycle:1.3.0")
+    implementation ("androidx.camera:camera-view:1.3.0")
 
 
     //Android Studio

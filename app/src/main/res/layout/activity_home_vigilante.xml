@@ -3,10 +3,25 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/fondo"
     tools:context=".Home_vigilante">
+
+    <ImageView
+        android:id="@+id/menuVigi"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:src="@drawable/menu"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.199"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.964" />
 
     <LinearLayout
         android:id="@+id/menuOpcionesVigi"
@@ -18,61 +33,56 @@
         android:orientation="vertical"
         app:layout_constraintBottom_toTopOf="@+id/menuVigi"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.217"
+        app:layout_constraintHorizontal_bias="0.185"
         app:layout_constraintStart_toStartOf="parent">
 
+        <ImageView
+            android:id="@+id/consulta"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:backgroundTint="@drawable/c_boton"
+            android:clickable="true"
+            android:focusable="true"
+            android:src="@drawable/usuarios"/>
 
         <ImageView
             android:id="@+id/Entrada_vigi"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:backgroundTint="@drawable/c_boton"
-            android:src="@drawable/entrada"
             android:clickable="true"
-            android:focusable="true"/>
-
+            android:focusable="true"
+            android:src="@drawable/entrada"/>
 
         <ImageView
             android:id="@+id/Salida_vigi"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:backgroundTint="@drawable/c_boton"
-            android:src="@drawable/salida"
             android:clickable="true"
-            android:focusable="true"/>
+            android:focusable="true"
+            android:src="@drawable/salida"/>
 
         <ImageView
             android:id="@+id/Disponibilidad_vigi"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:backgroundTint="@drawable/c_boton"
-            android:src="@drawable/disponibilidad"
             android:clickable="true"
-            android:focusable="true"/>
+            android:focusable="true"
+            android:src="@drawable/disponibilidad"/>
 
         <ImageView
             android:id="@+id/CerrarSesion_vigi"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:backgroundTint="@drawable/c_cambio"
-            android:src="@drawable/cerrar_sesion"
             android:clickable="true"
-            android:focusable="true"/>
+            android:focusable="true"
+            android:src="@drawable/cerrar_sesion" />
+
     </LinearLayout>
 
-    <ImageView
-        android:id="@+id/menuVigi"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:clickable="true"
-        android:focusable="true"
-        android:src="@drawable/menu"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.227"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.963" />
 
     <TextView
         android:id="@+id/Bienvenida_vigi"
@@ -118,7 +128,7 @@
         tools:srcCompat="@tools:sample/avatars" />
 
     <TextView
-        android:id="@+id/textView2"
+        android:id="@+id/textView2_vigi"
         android:layout_width="72dp"
         android:layout_height="23dp"
         android:text="Usuario:"

@@ -37,7 +37,6 @@ class HomeActivity : AppCompatActivity() {
         enableEdgeToEdge()
         startAnimationsWithDelay()
         setContentView(R.layout.activity_home)
-
         // Setup de vistas
         Correo_TV = findViewById(R.id.Correo_TV)
         Usuario = findViewById(R.id.textView2)

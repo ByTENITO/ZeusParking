@@ -23,11 +23,8 @@ import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
 import android.util.Patterns
-import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
-import android.widget.LinearLayout
-import androidx.constraintlayout.widget.ConstraintSet
 
 enum class ProviderType {
     GOOGLE,

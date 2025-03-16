@@ -1,17 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
-    <!-- Permiso para acceso a Internet -->
-    <uses-feature
-        android:name="android.hardware.camera"
-        android:required="false" />
+    <!-- Permiso para acceso a Camara -->
+    <uses-feature android:name="android.hardware.camera" android:required="true" />
+    <uses-permission android:name="android.permission.CAMERA" />
 
     <uses-permission android:name="android.permission.INTERNET" /> <!-- Permiso para comprobar el estado de la red -->
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    <uses-permission android:name="android.permission.CAMERA" />
 
     <application
         android:allowBackup="true"
@@ -36,22 +34,12 @@
             android:screenOrientation="portrait"
             android:exported="false" />
         <activity
-            android:name=".Home_vigilante"
-            android:screenOrientation="portrait"
-            android:exported="false" />
-        <activity
-            android:name=".SalidaQrActivity"
-            android:screenOrientation="portrait"
-            android:exported="false" />
-        <activity
             android:name=".QrActivity"
             android:screenOrientation="portrait"
             android:exported="false" />
-
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyAE4ILo36Dc-bwocj7dJzekPvRo7UQexQc" />
-
         <activity
             android:name=".Localizacion"
             android:exported="false"
@@ -67,6 +55,10 @@
             android:exported="false" />
         <activity
             android:name=".HomeActivity"
+            android:screenOrientation="portrait"
+            android:exported="false" />
+        <activity
+            android:name=".Home_vigilante"
             android:screenOrientation="portrait"
             android:exported="false" />
         <activity

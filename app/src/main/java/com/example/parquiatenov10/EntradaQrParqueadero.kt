@@ -1,59 +1,92 @@
 package com.example.parquiatenov10
 
-import android.graphics.Bitmap
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
-import android.view.View
-import android.view.animation.AnimationUtils
-import android.widget.Button
-import android.widget.EditText
-import android.widget.ImageView
+import android.util.Log
+import android.widget.Toast
+import androidx.annotation.OptIn
 import androidx.appcompat.app.AppCompatActivity
-import com.google.zxing.BarcodeFormat
-import com.journeyapps.barcodescanner.BarcodeEncoder
-import java.lang.Exception
+import androidx.camera.core.*
+import androidx.camera.lifecycle.ProcessCameraProvider
+import androidx.camera.view.PreviewView
+import androidx.core.content.ContextCompat
+import com.google.mlkit.vision.barcode.BarcodeScanning
+import com.google.mlkit.vision.common.InputImage
+import java.util.concurrent.ExecutorService
+import java.util.concurrent.Executors
 
 class EntradaQrParqueadero : AppCompatActivity() {
-    private lateinit var ivCodigoQR: ImageView
-    private lateinit var etDatos: EditText
-    private lateinit var btnGenerar: Button
+    private lateinit var camaraEjecutar: ExecutorService
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        startAnimationsWithDelay()
         setContentView(R.layout.activity_entrada_qr_parqueadero)
-        overridePendingTransition( 0,0)
-        ivCodigoQR = findViewById(R.id.CodigoSalidaParqu)
-        etDatos = findViewById(R.id.etentradaParqu)
-        btnGenerar = findViewById(R.id.btnSalidaParqu)
 
-        btnGenerar.setOnClickListener(View.OnClickListener {
+        camaraEjecutar = Executors.newSingleThreadExecutor()
+        empezarCamara()
+    }
+    private fun empezarCamara() {
+        val camaraProvedorFuturo = ProcessCameraProvider.getInstance(this)
+
+        camaraProvedorFuturo.addListener({
+            val camaraProvedor: ProcessCameraProvider = camaraProvedorFuturo.get()
+
+            val preview = Preview.Builder()
+                .build()
+                .also {
+                    it.setSurfaceProvider(findViewById<PreviewView>(R.id.Scanner).surfaceProvider)
+            }
+
+            val imagenAnalizada = ImageAnalysis.Builder()
+                .setBackpressureStrategy(ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST)
+                .setOutputImageFormat(ImageAnalysis.OUTPUT_IMAGE_FORMAT_YUV_420_888)
+                .build()
+
+            imagenAnalizada.setAnalyzer(camaraEjecutar, { imageProxy ->
+                processImage(imageProxy)
+            })
+
+            val camaraSelectora = CameraSelector.Builder()
+                .requireLensFacing(CameraSelector.LENS_FACING_BACK)
+                .build()
+
             try {
-                val barcodeEncoder = BarcodeEncoder()
-                val bitmap: Bitmap = barcodeEncoder.encodeBitmap(
-                    etDatos.text.toString(),
-                    BarcodeFormat.QR_CODE,
-                    750,
-                    750
-                )
+                camaraProvedor.unbindAll()
+                camaraProvedor.bindToLifecycle(this, camaraSelectora, preview, imagenAnalizada)
+            } catch (exc: Exception) {
+                Log.e("QRScanner", "Error al iniciar la cámara", exc)
+            }
+        }, ContextCompat.getMainExecutor(this))
+    }
 
-                ivCodigoQR.setImageBitmap(bitmap)
-            } catch (e: Exception) {
-                e.printStackTrace()
+    @OptIn(ExperimentalGetImage::class)
+    private fun processImage(imageProxy: ImageProxy) {
+        val mediaImage = imageProxy.image ?: return
+
+        val image = InputImage.fromMediaImage(mediaImage, imageProxy.imageInfo.rotationDegrees)
+        val scanner = BarcodeScanning.getClient()
+
+        scanner.process(image)
+            .addOnSuccessListener { barcodes ->
+                for (barcode in barcodes) {
+                    val qrText = barcode.displayValue
+                    qrText?.let {
+                        Toast.makeText(this, "Código QR: $it", Toast.LENGTH_SHORT).show()
+                        Log.d("QRScanner", "Código escaneado: $it")
+                        imageProxy.close()
+                    }
+                }
             }
-        })
-    }
-    private fun startAnimationsWithDelay() {
-        val fadeIn = AnimationUtils.loadAnimation(this, R.anim.fade_in)
-        Handler(Looper.getMainLooper()).postDelayed({
-            listOf(
-                ivCodigoQR,
-                etDatos,
-                btnGenerar
-            ).forEach { view ->
-                view.startAnimation(fadeIn)
+            .addOnFailureListener { e ->
+                Log.e("QRScanner", "Error al leer QR", e)
             }
-        }, 1) // Ajusta el tiempo de retraso si es necesario
+            .addOnCompleteListener {
+                imageProxy.close()
+            }
     }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        camaraEjecutar.shutdown()
+    }
+
 }

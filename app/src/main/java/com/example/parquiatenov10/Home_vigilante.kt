@@ -25,35 +25,43 @@ class Home_vigilante : AppCompatActivity() {
     private lateinit var salida_vigi: ImageView
     private lateinit var perfil_vigi: ImageView
     private lateinit var menuVig: ImageView
+    private lateinit var consultaVigi: ImageView
     private lateinit var Bienvenida_vigi: TextView
     private lateinit var usuario_vigi:TextView
     private lateinit var texto:TextView
-    private lateinit var opciones: LinearLayout
+    private lateinit var opcionesVigi: LinearLayout
     private var cambioAnimacion = true
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        startAnimationsWithDelay()
         enableEdgeToEdge()
+        startAnimationsWithDelay()
         setContentView(R.layout.activity_home_vigilante)
-        overridePendingTransition( 0,0)
         // Setup de vistas
-        menuVig = findViewById(R.id.menuVigi)
-        cerrarSesion_vigi = findViewById(R.id.CerrarSesion_vigi)
-        entrada_vigi = findViewById(R.id.Entrada_vigi)
-        disponibilidad_vigi = findViewById(R.id.Disponibilidad_vigi)
-        salida_vigi = findViewById(R.id.Salida_vigi)
         perfil_vigi = findViewById(R.id.FotoPerfil_vigi)
         Bienvenida_vigi= findViewById(R.id.Bienvenida_vigi)
         usuario_vigi = findViewById(R.id.Usuario_vigi)
-        texto = findViewById(R.id.textView2)
+        texto = findViewById(R.id.textView2_vigi)
+        consultaVigi = findViewById(R.id.consulta)
+        entrada_vigi = findViewById(R.id.Entrada_vigi)
+        salida_vigi = findViewById(R.id.Salida_vigi)
+        disponibilidad_vigi = findViewById(R.id.Disponibilidad_vigi)
+        cerrarSesion_vigi = findViewById(R.id.CerrarSesion_vigi)
+        menuVig = findViewById(R.id.menuVigi)
+        opcionesVigi = findViewById(R.id.menuOpcionesVigi)
 
         // Obtener datos del intent
         val bundle: Bundle? = intent.extras
         val inputCorreo: String? = bundle?.getString("inputCorreo")
         val provider = bundle?.getString("provider")
         val fotoPerfilUrl: String? = bundle?.getString("foto_perfil_url")
+        val sharedPref = getSharedPreferences("MisDatos", MODE_PRIVATE)
+        with(sharedPref.edit()) {
+            putString("nombreUsuario", inputCorreo)
+            apply()
+        }
         val alto = resources.displayMetrics.heightPixels
+        overridePendingTransition( 0,0)
 
         if (alto>=3001){
             responsividad(menuVig,200,200)
@@ -89,18 +97,14 @@ class Home_vigilante : AppCompatActivity() {
         val fadeIn = AnimationUtils.loadAnimation(this, R.anim.fade_in)
         Handler(Looper.getMainLooper()).postDelayed({
             listOf(
-                cerrarSesion_vigi,
-                entrada_vigi,
-                disponibilidad_vigi,
-                salida_vigi,
-                perfil_vigi,
-                Bienvenida_vigi,
                 usuario_vigi,
-                texto
+                texto,
+                Bienvenida_vigi,
+                menuVig
             ).forEach { view ->
                 view.startAnimation(fadeIn)
             }
-        }, 1) // Ajusta el tiempo de retraso si es necesario
+        }, 0) // Ajusta el tiempo de retraso si es necesario
     }
 
     // Función para cargar la foto de perfil desde la URL
@@ -167,35 +171,40 @@ class Home_vigilante : AppCompatActivity() {
             val grande = 200
             if(cambioAnimacion){
                 if (altura>=3001){
-                    animacionAnchoLinear(opciones,1, 1260, 200L)
+                    animacionAnchoLinear(opcionesVigi,1, 1130, 200L)
+                    responsividad(consultaVigi,grande,grande)
                     responsividad(entrada_vigi,grande,grande)
                     responsividad(salida_vigi,grande,grande)
                     responsividad(disponibilidad_vigi,grande,grande)
                     responsividad(cerrarSesion_vigi,grande,grande)
                 }
                 if (altura in 2501..3000){
-                    animacionAnchoLinear(opciones,1, 825, 200L)
+                    animacionAnchoLinear(opcionesVigi,1, 705, 200L)
+                    responsividad(consultaVigi,Alto,Alto)
                     responsividad(entrada_vigi,Alto,Alto)
                     responsividad(salida_vigi,Alto,Alto)
                     responsividad(disponibilidad_vigi,Alto,Alto)
                     responsividad(cerrarSesion_vigi,Alto,Alto)
                 }
                 if (altura in 1301..2500){
-                    animacionAnchoLinear(opciones,1, 890, 200L)
+                    animacionAnchoLinear(opcionesVigi,1, 770, 200L)
+                    responsividad(consultaVigi,medianoAlto,medianoAlto)
                     responsividad(entrada_vigi,medianoAlto,medianoAlto)
                     responsividad(salida_vigi,medianoAlto,medianoAlto)
                     responsividad(disponibilidad_vigi,medianoAlto,medianoAlto)
                     responsividad(cerrarSesion_vigi,medianoAlto,medianoAlto)
                 }
                 if (altura in 1081..1300){
-                    animacionAnchoLinear(opciones,1,510 , 200L)
+                    animacionAnchoLinear(opcionesVigi,1,390 , 200L)
+                    responsividad(consultaVigi,mediano,mediano)
                     responsividad(entrada_vigi,mediano,mediano)
                     responsividad(salida_vigi,mediano,mediano)
                     responsividad(disponibilidad_vigi,mediano,mediano)
                     responsividad(cerrarSesion_vigi,mediano,mediano)
                 }
                 if (altura<=1080){
-                    animacionAnchoLinear(opciones,1,390 , 200L)
+                    animacionAnchoLinear(opcionesVigi,1,270 , 200L)
+                    responsividad(consultaVigi,pequeño,pequeño)
                     responsividad(entrada_vigi,pequeño,pequeño)
                     responsividad(salida_vigi,pequeño,pequeño)
                     responsividad(disponibilidad_vigi,pequeño,pequeño)
@@ -204,19 +213,19 @@ class Home_vigilante : AppCompatActivity() {
             }
             if(!cambioAnimacion){
                 if (altura>=3001){
-                    animacionAnchoLinear(opciones,1250, 1, 200L)
+                    animacionAnchoLinear(opcionesVigi,1130, 1, 200L)
                 }
                 if (altura in 2501..3000){
-                    animacionAnchoLinear(opciones,825, 1, 200L)
+                    animacionAnchoLinear(opcionesVigi,705, 1, 200L)
                 }
                 if (altura in 1301..2500){
-                    animacionAnchoLinear(opciones,890,1, 200L)
+                    animacionAnchoLinear(opcionesVigi,770,1, 200L)
                 }
                 if (altura in 1081..1300){
-                    animacionAnchoLinear(opciones,510,1, 200L)
+                    animacionAnchoLinear(opcionesVigi,390,1, 200L)
                 }
                 if (altura<=1080){
-                    animacionAnchoLinear(opciones,390,1 , 200L)
+                    animacionAnchoLinear(opcionesVigi,270,1 , 200L)
                 }
             }
             cambioAnimacion = !cambioAnimacion
@@ -236,6 +245,10 @@ class Home_vigilante : AppCompatActivity() {
         }
 
         // Otros botones
+        consultaVigi.setOnClickListener {
+            startActivity(Intent(this, QrActivity::class.java))
+        }
+
         entrada_vigi.setOnClickListener {
             startActivity(Intent(this, EntradaQrParqueadero::class.java))
         }
