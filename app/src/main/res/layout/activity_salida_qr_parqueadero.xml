@@ -4,47 +4,61 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#FFFFFF"
+    android:background="#000000"
     tools:context=".SalidaQrParqueadero">
 
-    <ImageView
-        android:id="@+id/CodigoSalidaParqu"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:background="#FFFFFF"
-        app:layout_constraintBottom_toTopOf="@+id/etentradaParqu"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-
-    <EditText
-        android:id="@+id/etentradaParqu"
-        android:layout_width="348dp"
-        android:layout_height="46dp"
-
-        android:layout_marginBottom="20dp"
-        android:textColor="#090909"
-        android:textColorHint="#000000"
-        app:layout_constraintBottom_toTopOf="@+id/btnSalidaParqu"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.492"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="1.0" />
-
-    <Button
-        android:id="@+id/btnSalidaParqu"
-        android:layout_width="391dp"
-        android:layout_height="44dp"
-        android:backgroundTint="#0027FF"
-        android:text="Generar QR"
-        android:textColor="#000000"
+    <androidx.camera.view.PreviewView
+        android:id="@+id/ScannerSalida"
+        android:layout_width="373dp"
+        android:layout_height="405dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.976" />
+        app:scaleType="fitCenter" >
+    </androidx.camera.view.PreviewView>
 
+    <EditText
+        android:id="@+id/Marco_NUMVigiSalida"
+        android:layout_width="171dp"
+        android:layout_height="48dp"
+        android:ems="10"
+        android:hint="@string/num_marco_placa"
+        android:inputType="number"
+        android:textColor="#FFFFFF"
+        android:textColorHint="#FFFFFF"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.079"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.846" />
+
+    <Spinner
+        android:id="@+id/Tipos_SpinnerVigiSalida"
+        android:layout_width="127dp"
+        android:layout_height="49dp"
+        android:popupBackground="#2F2F2F"
+        android:textColor="#FFFFFF"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.943"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.846" />
+
+    <Button
+        android:id="@+id/exitScannerSalida"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/Botones"
+        android:text="Salida"
+        android:textColor="@color/black"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.557"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.942" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

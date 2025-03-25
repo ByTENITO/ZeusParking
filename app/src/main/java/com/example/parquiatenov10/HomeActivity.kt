@@ -53,11 +53,16 @@ class HomeActivity : AppCompatActivity() {
         // Obtener datos del intent
         val bundle: Bundle? = intent.extras
         val email: String? = bundle?.getString("email")
+        val inputCorreo: String? = bundle?.getString("inputCorreo")
         val provider = bundle?.getString("provider")
         val fotoPerfilUrl: String? = bundle?.getString("foto_perfil_url")
         val sharedPref = getSharedPreferences("MisDatos", MODE_PRIVATE)
         with(sharedPref.edit()) {
-            putString("nombreUsuario", email)
+            if (inputCorreo == "vigilante@uniminuto.edu.co") {
+                putString("nombreUsuario", inputCorreo)
+            }else{
+                putString("nombreUsuario", email)
+            }
             apply()
         }
         val ancho = resources.displayMetrics.widthPixels
@@ -275,7 +280,10 @@ class HomeActivity : AppCompatActivity() {
 
             // Cerrar sesión en Firebase y finalizar la actividad
             FirebaseAuth.getInstance().signOut()
-            //se reemplazo esta accion ya que si se utiliza el funcion finish() esta volvera a la anterior actiidad utilizada, por lo que esta volvera a la actividad que le apuntamos
+            /*se reemplazo esta accion ya que si se utiliza el funcion finish() esta
+            volvera a la anterior actiidad utilizada, por lo que esta volvera a la actividad
+            que le apuntamos
+             */
             val intent = Intent(this, AuthActivity::class.java)
             startActivity(intent)
         }

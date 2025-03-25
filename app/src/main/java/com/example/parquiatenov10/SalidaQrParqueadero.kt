@@ -1,60 +1,159 @@
 package com.example.parquiatenov10
 
-import android.graphics.Bitmap
+import android.content.Intent
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
+import android.text.InputFilter
+import android.text.InputType
+import android.util.Log
 import android.view.View
-import android.view.animation.AnimationUtils
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.EditText
-import android.widget.ImageView
+import android.widget.Spinner
+import android.widget.Toast
+import androidx.annotation.OptIn
 import androidx.appcompat.app.AppCompatActivity
-import com.google.zxing.BarcodeFormat
-import com.journeyapps.barcodescanner.BarcodeEncoder
-import java.lang.Exception
+import androidx.camera.core.*
+import androidx.camera.lifecycle.ProcessCameraProvider
+import androidx.camera.view.PreviewView
+import androidx.core.content.ContextCompat
+import com.google.mlkit.vision.barcode.BarcodeScanning
+import com.google.mlkit.vision.common.InputImage
+import com.google.zxing.client.android.Intents
+import java.util.concurrent.ExecutorService
+import java.util.concurrent.Executors
 
 class SalidaQrParqueadero : AppCompatActivity() {
-    private lateinit var CodigoQRParqu: ImageView
-    private lateinit var DatosParqu: EditText
-    private lateinit var btnGenerarParqu: Button
+    private lateinit var camaraEjecutarSalida: ExecutorService
+    private lateinit var tiposSpinnerSalida: Spinner
+    private lateinit var Salir: Button
+    private lateinit var marcoNumSalida: EditText
+
+    data class Usuario(
+        val nombre: String? = null,
+        val correo: String? = null
+    )
+
     override fun onCreate(savedInstanceState: Bundle?) {
-        startAnimationsWithDelay()
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_salida_qr_parqueadero)
-        overridePendingTransition(0, 0)
+        tiposSpinnerSalida = findViewById(R.id.Tipos_SpinnerVigiSalida)
+        marcoNumSalida = findViewById(R.id.Marco_NUMVigiSalida)
+        Salir = findViewById(R.id.exitScannerSalida)
+        camaraEjecutarSalida = Executors.newSingleThreadExecutor()
+        empezarCamara()
+        val adapter = ArrayAdapter.createFromResource(this, R.array.items, R.layout.estilo_spinner)
+        adapter.setDropDownViewResource(R.layout.estilo_spinner)
+        tiposSpinnerSalida.adapter = adapter
 
-        CodigoQRParqu = findViewById(R.id.CodigoSalidaParqu)
-        DatosParqu = findViewById(R.id.etentradaParqu)
-        btnGenerarParqu = findViewById(R.id.btnSalidaParqu)
+        tiposSpinnerSalida.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(
+                parent: AdapterView<*>,
+                view: View?,
+                position: Int,
+                id: Long
+            ) {
+                when (position) {
+                    1 -> {
+                        marcoNumSalida.hint = "Número de Marco"
+                        marcoNumSalida.inputType = InputType.TYPE_CLASS_NUMBER
+                        marcoNumSalida.filters = arrayOf(InputFilter.LengthFilter(20))
+                    }
 
-        btnGenerarParqu.setOnClickListener(View.OnClickListener {
-            try {
-                val barcodeEncoder = BarcodeEncoder()
-                val bitmap: Bitmap = barcodeEncoder.encodeBitmap(
-                    DatosParqu.text.toString(),
-                    BarcodeFormat.QR_CODE,
-                    750,
-                    750
-                )
+                    2, 3, 4 -> {
+                        marcoNumSalida.hint = when (position) {
+                            2 -> "Placa (Ej. ABC-123)"
+                            3 -> "Placa (Ej. ABC-123)"
+                            4 -> "Numero de Furgon"
+                            else -> "Numero de Marco"
+                        }
+                        marcoNumSalida.inputType =
+                            InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD
+                        marcoNumSalida.filters = arrayOf(InputFilter.LengthFilter(7))
+                    }
 
-                CodigoQRParqu.setImageBitmap(bitmap)
-            } catch (e: Exception) {
-                e.printStackTrace()
+                    else -> {
+                        marcoNumSalida.hint = ""
+                        marcoNumSalida.inputType =
+                            InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD
+                        marcoNumSalida.filters = arrayOf(InputFilter.LengthFilter(20))
+                    }
+                }
             }
-        })
+
+            override fun onNothingSelected(parent: AdapterView<*>) {}
+        }
+        Salir.setOnClickListener {
+            finish()
+        }
     }
 
-    private fun startAnimationsWithDelay() {
-        val fadeIn = AnimationUtils.loadAnimation(this, R.anim.fade_in)
-        Handler(Looper.getMainLooper()).postDelayed({
-            listOf(
-                CodigoQRParqu,
-                DatosParqu,
-                btnGenerarParqu
-            ).forEach { view ->
-                view.startAnimation(fadeIn)
+    private fun empezarCamara() {
+        val camaraProvedorFuturo = ProcessCameraProvider.getInstance(this)
+
+        camaraProvedorFuturo.addListener({
+            val cameraProvedor: ProcessCameraProvider = camaraProvedorFuturo.get()
+            val preview = Preview.Builder()
+                .build()
+                .also {
+                    it.setSurfaceProvider(findViewById<PreviewView>(R.id.ScannerSalida).surfaceProvider)
+                }
+            val imaenAnalizada = ImageAnalysis.Builder()
+                .setBackpressureStrategy(ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST)
+                .setOutputImageFormat(ImageAnalysis.OUTPUT_IMAGE_FORMAT_YUV_420_888)
+                .build()
+
+            imaenAnalizada.setAnalyzer(camaraEjecutarSalida, { imageProxy ->
+                processImage(imageProxy)
+            })
+            val camaraSelectora = CameraSelector.Builder()
+                .requireLensFacing(CameraSelector.LENS_FACING_BACK)
+                .build()
+
+            try {
+                cameraProvedor.unbindAll()
+                cameraProvedor.bindToLifecycle(this, camaraSelectora, preview, imaenAnalizada)
+            } catch (exc: Exception) {
+                Log.e("QRScanner", "Error al iniciar la camara", exc)
             }
-        }, 0) // Ajusta el tiempo de retraso si es necesario
+        }, ContextCompat.getMainExecutor(this))
+    }
+
+    @OptIn(ExperimentalGetImage::class)
+    private fun processImage(imageProxy: ImageProxy) {
+        val mediaImage = imageProxy.image ?: return
+        val image = InputImage.fromMediaImage(mediaImage, imageProxy.imageInfo.rotationDegrees)
+        val scanner = BarcodeScanning.getClient()
+
+        scanner.process(image)
+            .addOnSuccessListener { barcodes ->
+                for (barcode in barcodes) {
+                    val tiposSpinner = tiposSpinnerSalida.selectedItem.toString()
+                    val id = marcoNumSalida.text.toString()
+                    val qrText = barcode.displayValue
+                    qrText?.let {
+                        Log.d("QRScanner", "Código QR detectado: $qrText")
+                        val intent = Intent(this, DatosUsuarioSalida::class.java).apply {
+                            putExtra("correo",qrText)
+                            putExtra("tipo",tiposSpinner)
+                            putExtra("id",id)
+                        }
+                        Log.d("IntentData","Correo:$qrText, Tipo $tiposSpinner, ID: $id")
+                        startActivity(intent)
+                    }
+                }
+            }
+            .addOnFailureListener { e ->
+                Log.e("QRScanner", "Error al leer QR", e)
+            }
+            .addOnCompleteListener {
+                imageProxy.close()
+            }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        camaraEjecutarSalida.shutdown()
     }
 }

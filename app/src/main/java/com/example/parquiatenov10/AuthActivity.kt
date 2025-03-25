@@ -25,6 +25,7 @@ import com.google.firebase.auth.GoogleAuthProvider
 import android.util.Patterns
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
+import com.google.firebase.FirebaseApp
 
 enum class ProviderType {
     GOOGLE,
@@ -49,6 +50,7 @@ class AuthActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.activity_auth)
+        FirebaseApp.initializeApp(this)
 
         val Google_BTN = findViewById<Button>(R.id.Google_BTN)
         val Acceder_BTN = findViewById<Button>(R.id.Acceder_BTN)
@@ -130,16 +132,16 @@ class AuthActivity : AppCompatActivity() {
     }
 
     private fun session() {
-        val prefs = getSharedPreferences(getString(R.string.prefs_file), Context.MODE_PRIVATE)
+        val prefs = getSharedPreferences("Sesion", MODE_PRIVATE)
         val email = prefs.getString("email", null)
         val inputCorreo = prefs.getString("inputCorreo", null)
         val provider = prefs.getString("provider", null)
 
+        if (inputCorreo != null && provider != null ) {
+            showHome_vigi(inputCorreo, ProviderType.valueOf(provider))
+        }
         if (email != null && provider != null) {
             showHome(email, ProviderType.valueOf(provider))
-        }
-        if (inputCorreo != null && provider != null) {
-            showHome_vigi(inputCorreo, ProviderType.valueOf(provider))
         }
     }
 
@@ -283,7 +285,7 @@ class AuthActivity : AppCompatActivity() {
         return if (password.matches(simbolos)) {
             true
         } else {
-            Toast.makeText(this, "La contraseña debe tener al menos 8 caracteres, una mayúscula, una minúscula, un número y un carácter especial.", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "La contraseña debe tener al menos 8 caracteres, una mayúscula, una minúscula, un número y un carácter especial.", Toast.LENGTH_LONG).show()
             false
         }
     }
@@ -308,6 +310,7 @@ class AuthActivity : AppCompatActivity() {
         },5000)
     }
     private fun showHome_vigi(inputCorreo: String, provider: ProviderType) {
+        enableEdgeToEdge()
         setContentView(R.layout.activity_splash_home)
         val user_vigi = auth.currentUser
         val fotoUrl = user_vigi?.photoUrl?.toString()

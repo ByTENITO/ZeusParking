@@ -36,7 +36,7 @@ class RegistrarBiciActivity : AppCompatActivity() {
     private val db = FirebaseFirestore.getInstance()
     private val storage = FirebaseStorage.getInstance()
 
-    // Definición de la clase BiciData fuera de cualquier método
+    // Definición de la clase BiciData fuera de cualquier métdo
     data class BiciData(
         val nombre: String,
         val apellidos: String,
@@ -175,7 +175,7 @@ class RegistrarBiciActivity : AppCompatActivity() {
         // Creación de la instancia de BiciData
         val biciData = BiciData(nombre, apellidos, color, cedula, marco, tipoVehiculo, correo.toString())
 
-        db.collection("Bici Usuarios").add(biciData)
+        db.collection("Bici_Usuarios").add(biciData)
             .addOnSuccessListener { documentReference ->
                 subirFoto(fotoUri1, "foto_perfil", documentReference.id)
                 subirFoto(fotoUri2, "foto_bici", documentReference.id)

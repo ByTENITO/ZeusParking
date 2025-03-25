@@ -53,12 +53,17 @@ class Home_vigilante : AppCompatActivity() {
         // Obtener datos del intent
         val bundle: Bundle? = intent.extras
         val inputCorreo: String? = bundle?.getString("inputCorreo")
+        val email: String? = bundle?.getString("email")
         val provider = bundle?.getString("provider")
         val fotoPerfilUrl: String? = bundle?.getString("foto_perfil_url")
         val sharedPref = getSharedPreferences("MisDatos", MODE_PRIVATE)
         with(sharedPref.edit()) {
-            putString("nombreUsuario", inputCorreo)
-            apply()
+            if (inputCorreo == "vigilante@uniminuto.edu.co") {
+                putString("nombreUsuario", inputCorreo)
+            }else{
+                putString("nombreUsuario", email)
+            }
+                apply()
         }
         val alto = resources.displayMetrics.heightPixels
         overridePendingTransition( 0,0)
@@ -241,7 +246,9 @@ class Home_vigilante : AppCompatActivity() {
 
             // Cerrar sesión en Firebase y finalizar la actividad
             FirebaseAuth.getInstance().signOut()
-            finish()
+            //se reemplazo esta accion ya que si se utiliza el funcion finish() esta volvera a la anterior actiidad utilizada, por lo que esta volvera a la actividad que le apuntamos
+            val intent = Intent(this, AuthActivity::class.java)
+            startActivity(intent)
         }
 
         // Otros botones
