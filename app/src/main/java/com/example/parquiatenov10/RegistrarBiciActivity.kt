@@ -52,7 +52,7 @@ class RegistrarBiciActivity : AppCompatActivity() {
         enableEdgeToEdge()
         startAnimationsWithDelay()
         setContentView(R.layout.activity_registrar_bici)
-        overridePendingTransition( 0,0)
+        overridePendingTransition(0, 0)
 
         // Configuración de los elementos de la interfaz
         nombreEd = findViewById(R.id.Nombre_ED)
@@ -72,13 +72,19 @@ class RegistrarBiciActivity : AppCompatActivity() {
         tiposSpinner.adapter = adapter
 
         tiposSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
+            override fun onItemSelected(
+                parent: AdapterView<*>,
+                view: View?,
+                position: Int,
+                id: Long
+            ) {
                 when (position) {
                     1 -> {
                         marcoNum.hint = "Número de Marco"
                         marcoNum.inputType = InputType.TYPE_CLASS_NUMBER
                         marcoNum.filters = arrayOf(InputFilter.LengthFilter(20))
                     }
+
                     2, 3, 4 -> {
                         marcoNum.hint = when (position) {
                             2 -> "Placa (Ej. ABC-123)"
@@ -86,9 +92,11 @@ class RegistrarBiciActivity : AppCompatActivity() {
                             4 -> "Número de Furgón"
                             else -> "Número de Marco"
                         }
-                        marcoNum.inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD
+                        marcoNum.inputType =
+                            InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD
                         marcoNum.filters = arrayOf(InputFilter.LengthFilter(7))
                     }
+
                     else -> {
                         marcoNum.hint = ""
                         marcoNum.inputType = InputType.TYPE_CLASS_NUMBER
@@ -115,6 +123,7 @@ class RegistrarBiciActivity : AppCompatActivity() {
             guardarDatosEnFirestore()
         }
     }
+
     private fun startAnimationsWithDelay() {
         val fadeIn = AnimationUtils.loadAnimation(this, R.anim.fade_in)
         Handler(Looper.getMainLooper()).postDelayed({
@@ -147,11 +156,14 @@ class RegistrarBiciActivity : AppCompatActivity() {
             when (requestCode) {
                 1 -> {
                     fotoUri1 = data.data
-                    Toast.makeText(this, "Primera Foto Guardada Con Éxito", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, "Primera Foto Guardada Con Éxito", Toast.LENGTH_SHORT)
+                        .show()
                 }
+
                 2 -> {
                     fotoUri2 = data.data
-                    Toast.makeText(this, "Segunda Foto Guardada Con Éxito", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, "Segunda Foto Guardada Con Éxito", Toast.LENGTH_SHORT)
+                        .show()
                 }
             }
         }
@@ -173,7 +185,8 @@ class RegistrarBiciActivity : AppCompatActivity() {
         }
 
         // Creación de la instancia de BiciData
-        val biciData = BiciData(nombre, apellidos, color, cedula, marco, tipoVehiculo, correo.toString())
+        val biciData =
+            BiciData(nombre, apellidos, color, cedula, marco, tipoVehiculo, correo.toString())
 
         db.collection("Bici_Usuarios").add(biciData)
             .addOnSuccessListener { documentReference ->

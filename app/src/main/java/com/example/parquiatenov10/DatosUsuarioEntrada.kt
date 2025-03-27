@@ -65,6 +65,7 @@ class DatosUsuarioEntrada : AppCompatActivity() {
                                 "FireStore,${document.id}=>${document.data}",
                                 Toast.LENGTH_LONG
                             ).show()
+                            Log.d("FireStore", "Se pudo hacer la consulta: $correo")
                         }
                     }
                     if (tipoTXT.text == "Furgon") {
@@ -75,17 +76,17 @@ class DatosUsuarioEntrada : AppCompatActivity() {
                                 if (!document.exists()) {
                                     Log.d("FireStore", "No se encontraron documentos:$vehiculo")
                                 } else {
-                                    val espacios = document.getLong(vehiculo)?:0L
-                                    if (espacios.toInt() == 0) {
+                                    val espacios = document.getLong(vehiculo)
+                                    if ( espacios?.toInt() ?: 0 <= 0) {
                                         Toast.makeText(
                                             this,
                                             "No es posible realizar ingresos, porque se llenaron los espacios posibles",
                                             Toast.LENGTH_LONG
                                         ).show()
                                     } else {
-                                        val Ref = database.collection("Disponibilidad")
+                                        database.collection("Disponibilidad")
                                             .document("0ctYNlFXwtVw9ylURFXi")
-                                        Ref.update("Furgon", FieldValue.increment(-1))
+                                            .update("Furgon", FieldValue.increment(-1))
                                             .addOnSuccessListener {
                                                 Log.d("FireStore", "Campo 'Furgon' incremento")
                                             }
@@ -99,7 +100,8 @@ class DatosUsuarioEntrada : AppCompatActivity() {
                                     }
                                 }
                             }
-                    } else if (tipoTXT.text == "Vehiculo Particular") {
+                    }
+                    if (tipoTXT.text == "Vehiculo Particular") {
                         database.collection("Disponibilidad")
                             .document("UF0tfabGHGitcj7En6Wy")
                             .get()
@@ -107,8 +109,8 @@ class DatosUsuarioEntrada : AppCompatActivity() {
                                 if (!document.exists()) {
                                     Log.d("FireStore", "No se encontraron documentos:$vehiculo")
                                 } else {
-                                    val espacios = document.getLong(vehiculo)?:0L
-                                    if (espacios.toInt() == 0)  {
+                                    val espacios = document.getLong(vehiculo)
+                                    if (espacios?.toInt() ?: 0 <= 0) {
                                         Toast.makeText(
                                             this,
                                             "No es posible realizar ingresos, porque se superaron los espacios posibles",
@@ -134,16 +136,17 @@ class DatosUsuarioEntrada : AppCompatActivity() {
                                     }
                                 }
                             }
-                    } else if (tipoTXT.text == "Bicicleta") {
+                    }
+                    if (tipoTXT.text == "Bicicleta") {
                         database.collection("Disponibilidad")
-                            .document("XZLnv4sWJJ4M4h9KK1dc")
+                            .document("IuDC5XlTyhxhqU4It8SD")
                             .get()
                             .addOnSuccessListener { document ->
                                 if (!document.exists()) {
                                     Log.d("FireStore", "No se encontraron documentos:$vehiculo")
                                 } else {
-                                    val espacios = document.getLong(vehiculo)?:0L
-                                    if (espacios?.toInt() == 0)  {
+                                    val espacios = document.getLong(vehiculo)
+                                    if (espacios?.toInt() ?: 0 <= 0) {
                                         Toast.makeText(
                                             this,
                                             "No es posible realizar ingresos, porque se superaron los espacios posibles",
@@ -151,7 +154,7 @@ class DatosUsuarioEntrada : AppCompatActivity() {
                                         ).show()
                                     } else {
                                         val Ref = database.collection("Disponibilidad")
-                                            .document("XZLnv4sWJJ4M4h9KK1dc")
+                                            .document("IuDC5XlTyhxhqU4It8SD")
                                         Ref.update("Bicicleta", FieldValue.increment(-1))
                                             .addOnSuccessListener {
                                                 Log.d("FireStore", "Campo 'Bicicleta' incremento")
@@ -166,7 +169,8 @@ class DatosUsuarioEntrada : AppCompatActivity() {
                                     }
                                 }
                             }
-                    } else if (tipoTXT.text == "Motocicleta") {
+                    }
+                    if (tipoTXT.text == "Motocicleta") {
                         database.collection("Disponibilidad")
                             .document("ntHgnXs4Qbz074siOrvz")
                             .get()
@@ -174,8 +178,8 @@ class DatosUsuarioEntrada : AppCompatActivity() {
                                 if (!document.exists()) {
                                     Log.d("FireStore", "No se encontraron documentos:$vehiculo")
                                 } else {
-                                    val espacios = document.getLong(vehiculo)?:0L
-                                    if (espacios.toInt() == 0)  {
+                                    val espacios = document.getLong(vehiculo)
+                                    if (espacios?.toInt() ?: 0 <= 0) {
                                         Toast.makeText(
                                             this,
                                             "No es posible realizar ingresos, porque se superaron los espacios posibles",

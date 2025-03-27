@@ -1,11 +1,17 @@
 package com.example.parquiatenov10
 
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.content.Context
+import android.graphics.Color
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.NotificationCompat
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 
@@ -69,130 +75,220 @@ class DatosUsuarioSalida : AppCompatActivity() {
                         if (tipoTXT.text == "Furgon") {
                             database.collection("Disponibilidad")
                                 .document("0ctYNlFXwtVw9ylURFXi")
-                                .get()
-                                .addOnSuccessListener { document ->
-                                    if (!document.exists()) {
+                                .addSnapshotListener { document, e ->
+                                    if (e != null) {
                                         Log.d("FireStore", "No se encontraron documentos:$vehiculo")
+                                        return@addSnapshotListener
                                     } else {
-                                        val espacios = document.getLong(vehiculo)?:5L
-                                        if (espacios.toInt() == 5) {
-                                            Toast.makeText(
-                                                this,
-                                                "No es posible realizar ingresos, porque se superaron los espacios posibles en la base de datos",
-                                                Toast.LENGTH_LONG
-                                            ).show()
-                                        } else {
-                                            val Ref = database.collection("Disponibilidad")
-                                                .document("0ctYNlFXwtVw9ylURFXi")
-                                            Ref.update("Furgon", FieldValue.increment(1))
-                                                .addOnSuccessListener {
-                                                    Log.d("FireStore", "Campo 'Furgon' incremento")
-                                                }
-                                                .addOnFailureListener { e ->
-                                                    Log.e(
-                                                        "FireStore",
-                                                        "Error al actualizar el campo",
-                                                        e
-                                                    )
+                                        if (document != null && document.exists()) {
+                                            val espacios = document.getLong(vehiculo)
+                                            database.collection("EspaciosFijos")
+                                                .document("NLRmedawc0M0nrpDt9Ci")
+                                                .get()
+                                                .addOnSuccessListener { document ->
+                                                    if (!document.exists()) {
+                                                        Log.w(
+                                                            "FireStore",
+                                                            "No se encontraron los espacios fijos 'Teno' volvio a borrar la base de datos: NLRmedawc0M0nrpDt9Ci "
+                                                        )
+                                                    } else {
+                                                        val espaciosFijos =
+                                                            document.getLong("Furgon")
+
+                                                        if (espacios?.toInt() ?: 0 >= espaciosFijos?.toInt() ?: 0) {
+                                                            Toast.makeText(
+                                                                this,
+                                                                "No es posible realizar salidas, porque se superaron los espacios posibles en la base de datos",
+                                                                Toast.LENGTH_LONG
+                                                            ).show()
+                                                        } else {
+                                                            database.collection("Disponibilidad")
+                                                                .document("0ctYNlFXwtVw9ylURFXi")
+                                                                .update(
+                                                                    "Furgon",
+                                                                    FieldValue.increment(1)
+                                                                )
+                                                                .addOnSuccessListener {
+                                                                    Log.d(
+                                                                        "FireStore",
+                                                                        "Campo 'Furgon' incremento"
+                                                                    )
+                                                                }
+                                                                .addOnFailureListener { e ->
+                                                                    Log.e(
+                                                                        "FireStore",
+                                                                        "Error al actualizar el campo",
+                                                                        e
+                                                                    )
+                                                                }
+                                                        }
+                                                    }
                                                 }
                                         }
                                     }
                                 }
-                        } else if (tipoTXT.text == "Vehiculo Particular") {
+                        }
+                        if (tipoTXT.text == "Vehiculo Particular") {
                             database.collection("Disponibilidad")
                                 .document("UF0tfabGHGitcj7En6Wy")
-                                .get()
-                                .addOnSuccessListener { document ->
-                                    if (!document.exists()) {
+                                .addSnapshotListener { document, e ->
+                                    if (e != null) {
                                         Log.d("FireStore", "No se encontraron documentos:$vehiculo")
+                                        return@addSnapshotListener
                                     } else {
-                                        val espacios = document.getLong(vehiculo)?:15L
-                                        if (espacios.toInt() == 15) {
-                                            Toast.makeText(
-                                                this,
-                                                "No es posible realizar ingresos, porque se superaron los espacios posibles en la base de datos",
-                                                Toast.LENGTH_LONG
-                                            ).show()
-                                        } else {
-                                            val Ref = database.collection("Disponibilidad")
-                                                .document("UF0tfabGHGitcj7En6Wy")
-                                            Ref.update("Vehiculo Particular", FieldValue.increment(1))
-                                                .addOnSuccessListener {
-                                                    Log.d(
-                                                        "FireStore",
-                                                        "Campo 'Vehiculo Particular' incremento"
-                                                    )
-                                                }
-                                                .addOnFailureListener { e ->
-                                                    Log.e(
-                                                        "FireStore",
-                                                        "Error al actualizar el campo",
-                                                        e
-                                                    )
+                                        if (document != null && document.exists()) {
+                                            val espacios = document.getLong(vehiculo)
+                                            database.collection("EspaciosFijos")
+                                                .document("edYUNbYSmPtvu1H6dI93")
+                                                .get()
+                                                .addOnSuccessListener { document ->
+                                                    if (!document.exists()) {
+                                                        Log.w(
+                                                            "FireStore",
+                                                            "No se encontraron los espacios fijos 'Teno' volvio a borrar la base de datos: edYUNbYSmPtvu1H6dI93 "
+                                                        )
+                                                    } else {
+                                                        val espaciosFijos =
+                                                            document.getLong("Vehiculo Particular")
+
+                                                        if (espacios?.toInt() ?: 0 >= espaciosFijos?.toInt() ?: 0) {
+                                                            Toast.makeText(
+                                                                this,
+                                                                "No es posible realizar salidas, porque se superaron los espacios posibles en la base de datos",
+                                                                Toast.LENGTH_LONG
+                                                            ).show()
+                                                        } else {
+                                                            database.collection("Disponibilidad")
+                                                                .document("UF0tfabGHGitcj7En6Wy")
+                                                                .update(
+                                                                    "Vehiculo Particular",
+                                                                    FieldValue.increment(1)
+                                                                )
+                                                                .addOnSuccessListener {
+                                                                    Log.d(
+                                                                        "FireStore",
+                                                                        "Campo 'Vehiculo Particular' incremento"
+                                                                    )
+                                                                }
+                                                                .addOnFailureListener { e ->
+                                                                    Log.e(
+                                                                        "FireStore",
+                                                                        "Error al actualizar el campo",
+                                                                        e
+                                                                    )
+                                                                }
+                                                        }
+                                                    }
                                                 }
                                         }
                                     }
                                 }
-                        } else if (tipoTXT.text == "Bicicleta") {
+                        }
+                        if (tipoTXT.text == "Bicicleta") {
                             database.collection("Disponibilidad")
-                                .document("XZLnv4sWJJ4M4h9KK1dc")
-                                .get()
-                                .addOnSuccessListener { document ->
-                                    if (!document.exists()) {
+                                .document("IuDC5XlTyhxhqU4It8SD")
+                                .addSnapshotListener { document, e ->
+                                    if (e != null) {
                                         Log.d("FireStore", "No se encontraron documentos:$vehiculo")
                                     } else {
-                                        val espacios = document.getLong(vehiculo)?:50L
-                                        if (espacios.toInt() == 50) {
-                                            Toast.makeText(
-                                                this,
-                                                "No es posible realizar ingresos, porque se superaron los espacios posibles en la base de datos",
-                                                Toast.LENGTH_LONG
-                                            ).show()
-                                        } else {
-                                            val Ref = database.collection("Disponibilidad")
-                                                .document("XZLnv4sWJJ4M4h9KK1dc")
-                                            Ref.update("Bicicleta", FieldValue.increment(1))
-                                                .addOnSuccessListener {
-                                                    Log.d("FireStore", "Campo 'Bicicleta' incremento")
-                                                }
-                                                .addOnFailureListener { e ->
-                                                    Log.e(
-                                                        "FireStore",
-                                                        "Error al actualizar el campo",
-                                                        e
-                                                    )
+                                        if (document != null && document.exists()) {
+                                            val espacios = document.getLong(vehiculo)
+                                            database.collection("EspaciosFijos")
+                                                .document("sPcLdzFgRF2eAY5BWvFC")
+                                                .get()
+                                                .addOnSuccessListener { document ->
+                                                    if (!document.exists()) {
+                                                        Log.w(
+                                                            "FireStore",
+                                                            "No se encontraron los espacios fijos 'Teno' volvio a borrar la base de datos: sPcLdzFgRF2eAY5BWvFC "
+                                                        )
+                                                    } else {
+                                                        val espaciosFijos =
+                                                            document.getLong("Bicicleta")
+
+                                                        if (espacios?.toInt() ?: 0 >= espaciosFijos?.toInt() ?: 0) {
+                                                            Toast.makeText(
+                                                                this,
+                                                                "No es posible realizar salidas, porque se superaron los espacios posibles en la base de datos",
+                                                                Toast.LENGTH_LONG
+                                                            ).show()
+                                                        } else {
+                                                            database.collection("Disponibilidad")
+                                                                .document("IuDC5XlTyhxhqU4It8SD")
+                                                                .update(
+                                                                    "Bicicleta",
+                                                                    FieldValue.increment(1)
+                                                                )
+                                                                .addOnSuccessListener {
+                                                                    Log.d(
+                                                                        "FireStore",
+                                                                        "Campo 'Bicicleta' incremento"
+                                                                    )
+                                                                }
+                                                                .addOnFailureListener { e ->
+                                                                    Log.e(
+                                                                        "FireStore",
+                                                                        "Error al actualizar el campo",
+                                                                        e
+                                                                    )
+                                                                }
+                                                        }
+                                                    }
                                                 }
                                         }
                                     }
                                 }
-                        } else if (tipoTXT.text == "Motocicleta") {
+                        }
+                        if (tipoTXT.text == "Motocicleta") {
                             database.collection("Disponibilidad")
                                 .document("ntHgnXs4Qbz074siOrvz")
-                                .get()
-                                .addOnSuccessListener { document ->
-                                    if (!document.exists()) {
+                                .addSnapshotListener { document, e ->
+                                    if (e != null) {
                                         Log.d("FireStore", "No se encontraron documentos:$vehiculo")
                                     } else {
-                                        val espacios = document.getLong(vehiculo)?:0L
-                                        if (espacios.toInt() == 10) {
-                                            Toast.makeText(
-                                                this,
-                                                "No es posible realizar ingresos, porque se superaron los espacios posibles en la base de datos",
-                                                Toast.LENGTH_LONG
-                                            ).show()
-                                        } else {
-                                            val Ref = database.collection("Disponibilidad")
-                                                .document("ntHgnXs4Qbz074siOrvz")
-                                            Ref.update("Motocicleta", FieldValue.increment(1))
-                                                .addOnSuccessListener {
-                                                    Log.d("FireStore", "Campo 'Motocicleta' incremento")
-                                                }
-                                                .addOnFailureListener { e ->
-                                                    Log.e(
-                                                        "FireStore",
-                                                        "Error al actualizar el campo",
-                                                        e
-                                                    )
+                                        if (document != null && document.exists()) {
+                                            val espacios = document.getLong(vehiculo)
+                                            database.collection("EspaciosFijos")
+                                                .document("AQjYvV224T01lrSEeQQY")
+                                                .get()
+                                                .addOnSuccessListener { document ->
+                                                    if (!document.exists()) {
+                                                        Log.w(
+                                                            "FireStore",
+                                                            "No se encontraron los espacios fijos 'Teno' volvio a borrar la base de datos: AQjYvV224T01lrSEeQQY "
+                                                        )
+                                                    } else {
+                                                        val espaciosFijos =
+                                                            document.getLong("Motocicleta")
+
+                                                        if (espacios?.toInt() ?: 0 >= espaciosFijos?.toInt() ?: 0) {
+                                                            Toast.makeText(
+                                                                this,
+                                                                "No es posible realizar ingresos, porque se superaron los espacios posibles en la base de datos",
+                                                                Toast.LENGTH_LONG
+                                                            ).show()
+                                                        } else {
+                                                            database.collection("Disponibilidad")
+                                                                .document("ntHgnXs4Qbz074siOrvz")
+                                                                .update(
+                                                                    "Motocicleta",
+                                                                    FieldValue.increment(1)
+                                                                )
+                                                                .addOnSuccessListener {
+                                                                    Log.d(
+                                                                        "FireStore",
+                                                                        "Campo 'Motocicleta' incremento"
+                                                                    )
+                                                                }
+                                                                .addOnFailureListener { e ->
+                                                                    Log.e(
+                                                                        "FireStore",
+                                                                        "Error al actualizar el campo",
+                                                                        e
+                                                                    )
+                                                                }
+                                                        }
+                                                    }
                                                 }
                                         }
                                     }

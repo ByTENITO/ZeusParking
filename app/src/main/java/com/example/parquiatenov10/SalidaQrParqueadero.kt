@@ -11,7 +11,6 @@ import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Spinner
-import android.widget.Toast
 import androidx.annotation.OptIn
 import androidx.appcompat.app.AppCompatActivity
 import androidx.camera.core.*
@@ -20,7 +19,6 @@ import androidx.camera.view.PreviewView
 import androidx.core.content.ContextCompat
 import com.google.mlkit.vision.barcode.BarcodeScanning
 import com.google.mlkit.vision.common.InputImage
-import com.google.zxing.client.android.Intents
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 
@@ -29,11 +27,7 @@ class SalidaQrParqueadero : AppCompatActivity() {
     private lateinit var tiposSpinnerSalida: Spinner
     private lateinit var Salir: Button
     private lateinit var marcoNumSalida: EditText
-
-    data class Usuario(
-        val nombre: String? = null,
-        val correo: String? = null
-    )
+    private var escaneoRealizado: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -91,7 +85,6 @@ class SalidaQrParqueadero : AppCompatActivity() {
 
     private fun empezarCamara() {
         val camaraProvedorFuturo = ProcessCameraProvider.getInstance(this)
-
         camaraProvedorFuturo.addListener({
             val cameraProvedor: ProcessCameraProvider = camaraProvedorFuturo.get()
             val preview = Preview.Builder()
@@ -110,7 +103,6 @@ class SalidaQrParqueadero : AppCompatActivity() {
             val camaraSelectora = CameraSelector.Builder()
                 .requireLensFacing(CameraSelector.LENS_FACING_BACK)
                 .build()
-
             try {
                 cameraProvedor.unbindAll()
                 cameraProvedor.bindToLifecycle(this, camaraSelectora, preview, imaenAnalizada)
@@ -122,6 +114,10 @@ class SalidaQrParqueadero : AppCompatActivity() {
 
     @OptIn(ExperimentalGetImage::class)
     private fun processImage(imageProxy: ImageProxy) {
+        if (escaneoRealizado) {
+            imageProxy.close()
+            return
+        }
         val mediaImage = imageProxy.image ?: return
         val image = InputImage.fromMediaImage(mediaImage, imageProxy.imageInfo.rotationDegrees)
         val scanner = BarcodeScanning.getClient()
@@ -134,12 +130,13 @@ class SalidaQrParqueadero : AppCompatActivity() {
                     val qrText = barcode.displayValue
                     qrText?.let {
                         Log.d("QRScanner", "Código QR detectado: $qrText")
+                        escaneoRealizado = true
                         val intent = Intent(this, DatosUsuarioSalida::class.java).apply {
-                            putExtra("correo",qrText)
-                            putExtra("tipo",tiposSpinner)
-                            putExtra("id",id)
+                            putExtra("correo", qrText)
+                            putExtra("tipo", tiposSpinner)
+                            putExtra("id", id)
                         }
-                        Log.d("IntentData","Correo:$qrText, Tipo $tiposSpinner, ID: $id")
+                        Log.d("IntentData", "Correo:$qrText, Tipo $tiposSpinner, ID: $id")
                         startActivity(intent)
                     }
                 }
@@ -150,6 +147,11 @@ class SalidaQrParqueadero : AppCompatActivity() {
             .addOnCompleteListener {
                 imageProxy.close()
             }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        escaneoRealizado = false // Permitir nuevo escaneo al volver a esta actividad
     }
 
     override fun onDestroy() {

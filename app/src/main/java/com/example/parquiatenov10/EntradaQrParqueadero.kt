@@ -2,10 +2,15 @@ package com.example.parquiatenov10
 
 import android.content.Intent
 import android.os.Bundle
-import android.text.*
+import android.text.InputFilter
+import android.text.InputType
 import android.util.Log
 import android.view.View
-import android.widget.*
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
+import android.widget.Button
+import android.widget.EditText
+import android.widget.Spinner
 import androidx.annotation.OptIn
 import androidx.appcompat.app.AppCompatActivity
 import androidx.camera.core.*
@@ -14,13 +19,15 @@ import androidx.camera.view.PreviewView
 import androidx.core.content.ContextCompat
 import com.google.mlkit.vision.barcode.BarcodeScanning
 import com.google.mlkit.vision.common.InputImage
-import java.util.concurrent.*
+import java.util.concurrent.ExecutorService
+import java.util.concurrent.Executors
 
 class EntradaQrParqueadero : AppCompatActivity() {
     private lateinit var camaraEjecutarEntrada: ExecutorService
     private lateinit var tiposSpinnerEntrada: Spinner
     private lateinit var Salir: Button
     private lateinit var marcoNumEntrada: EditText
+    private var escaneoRealizado: Boolean = false
 
     data class Usuario(
         val nombre: String? = null,
@@ -116,6 +123,10 @@ class EntradaQrParqueadero : AppCompatActivity() {
 
     @OptIn(ExperimentalGetImage::class)
     private fun processImage(imageProxy: ImageProxy) {
+        if (escaneoRealizado) {
+            imageProxy.close()
+            return
+        }
         val mediaImage = imageProxy.image ?: return
         val image = InputImage.fromMediaImage(mediaImage, imageProxy.imageInfo.rotationDegrees)
         val scanner = BarcodeScanning.getClient()
@@ -128,6 +139,7 @@ class EntradaQrParqueadero : AppCompatActivity() {
                     val qrText = barcode.displayValue
                     qrText?.let {
                         Log.d("QRScanner", "Código QR detectado: $qrText")
+                        escaneoRealizado = true
                         val intent = Intent(this, DatosUsuarioEntrada::class.java).apply {
                             putExtra("correo", qrText)
                             putExtra("tipo",tiposSpinner)
@@ -144,6 +156,11 @@ class EntradaQrParqueadero : AppCompatActivity() {
             .addOnCompleteListener {
                 imageProxy.close()
             }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        escaneoRealizado = false // Permitir nuevo escaneo al volver a esta actividad
     }
 
     override fun onDestroy() {

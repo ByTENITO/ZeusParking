@@ -15,15 +15,15 @@ import com.google.zxing.MultiFormatWriter
 import com.google.zxing.WriterException
 
 class QrActivity : AppCompatActivity() {
-    private lateinit var CodSalida:ImageView
-    private lateinit var Salida:Button
+    private lateinit var CodSalida: ImageView
+    private lateinit var Salida: Button
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         startAnimationsWithDelay()
         setContentView(R.layout.activity_entrada_qr)
         CodSalida = findViewById(R.id.ivCodigoSalida)
         Salida = findViewById(R.id.Buttonsalir)
-        overridePendingTransition( 0,0)
+        overridePendingTransition(0, 0)
         val ivCodigoQR: ImageView = findViewById(R.id.ivCodigoSalida)
         val sharedPref = getSharedPreferences("MisDatos", MODE_PRIVATE)
         val correo = sharedPref.getString("nombreUsuario", "Desconocido")
@@ -35,7 +35,7 @@ class QrActivity : AppCompatActivity() {
         //    e.printStackTrace()
         //}
         ivCodigoQR.setBackgroundColor(Color.TRANSPARENT)
-        ivCodigoQR.setImageBitmap(generateQRCodeTransparent(correo,750))
+        ivCodigoQR.setImageBitmap(generateQRCodeTransparent(correo, 750))
         Salida.setOnClickListener {
             finish()
         }

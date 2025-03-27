@@ -64,15 +64,6 @@
             android:src="@drawable/salida"/>
 
         <ImageView
-            android:id="@+id/Disponibilidad_vigi"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:backgroundTint="@drawable/c_boton"
-            android:clickable="true"
-            android:focusable="true"
-            android:src="@drawable/disponibilidad"/>
-
-        <ImageView
             android:id="@+id/CerrarSesion_vigi"
             android:layout_width="50dp"
             android:layout_height="50dp"

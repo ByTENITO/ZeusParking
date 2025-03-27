@@ -3,12 +3,10 @@ package com.example.parquiatenov10
 import android.animation.ValueAnimator
 import android.content.Context
 import android.content.Intent
-import android.content.pm.ActivityInfo
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.text.InputType
-import android.util.Log
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import android.widget.Button
@@ -80,27 +78,27 @@ class AuthActivity : AppCompatActivity() {
         bundle.putString("message", "Integración de Firebase completa")
         analytics.logEvent("InitScreen", bundle)
 
-        if (alto>=3001){
+        if (alto >= 3001) {
             val params = logo.layoutParams
             params.width = 1160 // Ancho en píxeles
             params.height = 1160 // Alto en píxeles
             logo.layoutParams = params
         }
 
-        if (alto in 1301..2500){
-            if (alto>=2400) {
+        if (alto in 1301..2500) {
+            if (alto >= 2400) {
                 val params = logo.layoutParams
                 params.width = 761 // Ancho en píxeles
                 params.height = 761 // Alto en píxeles
                 logo.layoutParams = params
             }
-            if (alto in 1841..2399){
+            if (alto in 1841..2399) {
                 val params = logo.layoutParams
                 params.width = 870 // Ancho en píxeles
                 params.height = 870 // Alto en píxeles
                 logo.layoutParams = params
             }
-            if (alto<=1840){
+            if (alto <= 1840) {
                 val params = logo.layoutParams
                 params.width = 761 // Ancho en píxeles
                 params.height = 761 // Alto en píxeles
@@ -108,19 +106,19 @@ class AuthActivity : AppCompatActivity() {
             }
         }
 
-        if (alto in 1081..1300){
+        if (alto in 1081..1300) {
             val params = logo.layoutParams
             params.width = 500 // Ancho en píxeles
             params.height = 500 // Alto en píxeles
             logo.layoutParams = params
         }
-        if (alto<=1080){
+        if (alto <= 1080) {
             val params = logo.layoutParams
             params.width = 300 // Ancho en píxeles
             params.height = 300 // Alto en píxeles
             logo.layoutParams = params
         }
-        overridePendingTransition( 0,0)
+        overridePendingTransition(0, 0)
         auth = FirebaseAuth.getInstance()
         setup()
         session()
@@ -137,7 +135,7 @@ class AuthActivity : AppCompatActivity() {
         val inputCorreo = prefs.getString("inputCorreo", null)
         val provider = prefs.getString("provider", null)
 
-        if (inputCorreo != null && provider != null ) {
+        if (inputCorreo != null && provider != null) {
             showHome_vigi(inputCorreo, ProviderType.valueOf(provider))
         }
         if (email != null && provider != null) {
@@ -170,7 +168,7 @@ class AuthActivity : AppCompatActivity() {
         Contraseña_ED = findViewById(R.id.Contraseña_ED)
         ForgotPassword_TV = findViewById(R.id.OlvidasteContrasena_TV)
 
-        tamaños(Google_BTN,tamañoGoogle)
+        tamaños(Google_BTN, tamañoGoogle)
 
         Google_BTN.setOnClickListener {
             val googleConf = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -190,7 +188,8 @@ class AuthActivity : AppCompatActivity() {
                 Contraseña_ED.inputType = InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD
                 ocultar.setImageResource(R.drawable.eyeopen)
             } else {
-                Contraseña_ED.inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
+                Contraseña_ED.inputType =
+                    InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
                 ocultar.setImageResource(R.drawable.eyeclose)
             }
             Contraseña_ED.setSelection(Contraseña_ED.text.length)
@@ -215,11 +214,19 @@ class AuthActivity : AppCompatActivity() {
                             saveSession(email, ProviderType.EMAIL)
                             showHome(user.email ?: "", ProviderType.EMAIL)
                         } else {
-                            Toast.makeText(this, "Por favor, verifica tu correo electrónico.", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(
+                                this,
+                                "Por favor, verifica tu correo electrónico.",
+                                Toast.LENGTH_SHORT
+                            ).show()
                             Acceder_BTN.isEnabled = true
                         }
                     } else {
-                        Toast.makeText(this, "Error en la autenticación. Revisa los datos.", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(
+                            this,
+                            "Error en la autenticación. Revisa los datos.",
+                            Toast.LENGTH_SHORT
+                        ).show()
                         Acceder_BTN.isEnabled = true
                     }
                 }
@@ -235,15 +242,24 @@ class AuthActivity : AppCompatActivity() {
                         val user = auth.currentUser
                         user?.sendEmailVerification()?.addOnCompleteListener {
                             if (it.isSuccessful) {
-                                Toast.makeText(this, "Registro exitoso, ingresa estos mismos datos para iniciar sesión.", Toast.LENGTH_SHORT).show()
+                                Toast.makeText(
+                                    this,
+                                    "Registro exitoso, ingresa estos mismos datos para iniciar sesión.",
+                                    Toast.LENGTH_SHORT
+                                ).show()
                                 Correo_ED.text.clear()
                                 Contraseña_ED.text.clear()
                             } else {
-                                Toast.makeText(this, "Ups, hubo un problema.", Toast.LENGTH_SHORT).show()
+                                Toast.makeText(this, "Ups, hubo un problema.", Toast.LENGTH_SHORT)
+                                    .show()
                             }
                         }
                     } else {
-                        Toast.makeText(this, "Error en el registro. Revisa los datos.", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(
+                            this,
+                            "Error en el registro. Revisa los datos.",
+                            Toast.LENGTH_SHORT
+                        ).show()
                     }
                 }
             }
@@ -255,9 +271,17 @@ class AuthActivity : AppCompatActivity() {
                 ForgotPassword_TV.isEnabled = true
                 auth.sendPasswordResetEmail(email).addOnCompleteListener {
                     if (it.isSuccessful) {
-                        Toast.makeText(this, "Se ha enviado un enlace para restablecer la contraseña a tu correo.", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(
+                            this,
+                            "Se ha enviado un enlace para restablecer la contraseña a tu correo.",
+                            Toast.LENGTH_SHORT
+                        ).show()
                     } else {
-                        Toast.makeText(this, "Error al enviar el correo de restablecimiento.", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(
+                            this,
+                            "Error al enviar el correo de restablecimiento.",
+                            Toast.LENGTH_SHORT
+                        ).show()
                     }
                 }
             }
@@ -265,7 +289,8 @@ class AuthActivity : AppCompatActivity() {
     }
 
     private fun saveSession(email: String, provider: ProviderType) {
-        val prefs = getSharedPreferences(getString(R.string.prefs_file), Context.MODE_PRIVATE).edit()
+        val prefs =
+            getSharedPreferences(getString(R.string.prefs_file), Context.MODE_PRIVATE).edit()
         prefs.putString("email", email)
         prefs.putString("provider", provider.name)
         prefs.apply()
@@ -275,17 +300,26 @@ class AuthActivity : AppCompatActivity() {
         return if (email.isNotEmpty() && Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
             true
         } else {
-            Toast.makeText(this, "Por favor, ingresa un correo electrónico válido.", Toast.LENGTH_SHORT).show()
+            Toast.makeText(
+                this,
+                "Por favor, ingresa un correo electrónico válido.",
+                Toast.LENGTH_SHORT
+            ).show()
             false
         }
     }
 
     private fun validatePassword(password: String): Boolean {
-        val simbolos = "^(?=.*[A-Z])(?=.*[a-z])(?=.*\\d)(?=.*[@\$!%*?&])[A-Za-z\\d@\$!%*?&]{8,}$".toRegex()
+        val simbolos =
+            "^(?=.*[A-Z])(?=.*[a-z])(?=.*\\d)(?=.*[@\$!%*?&])[A-Za-z\\d@\$!%*?&]{8,}$".toRegex()
         return if (password.matches(simbolos)) {
             true
         } else {
-            Toast.makeText(this, "La contraseña debe tener al menos 8 caracteres, una mayúscula, una minúscula, un número y un carácter especial.", Toast.LENGTH_LONG).show()
+            Toast.makeText(
+                this,
+                "La contraseña debe tener al menos 8 caracteres, una mayúscula, una minúscula, un número y un carácter especial.",
+                Toast.LENGTH_LONG
+            ).show()
             false
         }
     }
@@ -300,15 +334,16 @@ class AuthActivity : AppCompatActivity() {
         transicionC.startAnimation(fadeOutC)
 
         Handler(Looper.getMainLooper()).postDelayed({
-        val homeIntent = Intent(this, HomeActivity::class.java).apply {
-            putExtra("email", email)
-            putExtra("provider", provider.name)
-            putExtra("foto_perfil_url", fotoUrl)
-        }
-        startActivity(homeIntent)
-            overridePendingTransition( 0,0)
-        },5000)
+            val homeIntent = Intent(this, HomeActivity::class.java).apply {
+                putExtra("email", email)
+                putExtra("provider", provider.name)
+                putExtra("foto_perfil_url", fotoUrl)
+            }
+            startActivity(homeIntent)
+            overridePendingTransition(0, 0)
+        }, 5000)
     }
+
     private fun showHome_vigi(inputCorreo: String, provider: ProviderType) {
         enableEdgeToEdge()
         setContentView(R.layout.activity_splash_home)
@@ -319,15 +354,15 @@ class AuthActivity : AppCompatActivity() {
         transicionC.startAnimation(fadeOutC)
 
         Handler(Looper.getMainLooper()).postDelayed({
-        val homeIntent = Intent(this, Home_vigilante::class.java).apply {
-            putExtra("inputCorreo", inputCorreo)
-            putExtra("provider", provider.name)
-            putExtra("foto_perfil_url", fotoUrl)
-        }
-        Acceder_BTN.isEnabled = true
-        startActivity(homeIntent)
-            overridePendingTransition( 0,0)
-        },5000)
+            val homeIntent = Intent(this, Home_vigilante::class.java).apply {
+                putExtra("inputCorreo", inputCorreo)
+                putExtra("provider", provider.name)
+                putExtra("foto_perfil_url", fotoUrl)
+            }
+            Acceder_BTN.isEnabled = true
+            startActivity(homeIntent)
+            overridePendingTransition(0, 0)
+        }, 5000)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -342,11 +377,16 @@ class AuthActivity : AppCompatActivity() {
                         saveSession(authResult.email ?: "", ProviderType.GOOGLE)
                         showHome(authResult.email ?: "", ProviderType.GOOGLE)
                     } else {
-                        Toast.makeText(this, "Error de autenticación con Google", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(
+                            this,
+                            "Error de autenticación con Google",
+                            Toast.LENGTH_SHORT
+                        ).show()
                     }
                 }
             } catch (e: ApiException) {
-                Toast.makeText(this, "Error de Google Sign-In: ${e.message}", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Error de Google Sign-In: ${e.message}", Toast.LENGTH_SHORT)
+                    .show()
             }
         }
     }
