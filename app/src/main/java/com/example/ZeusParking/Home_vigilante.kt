@@ -17,27 +17,22 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.auth.FirebaseAuth
 import android.widget.TextView
-import android.widget.Button
 import android.widget.ImageView
-import android.widget.LinearLayout
 import androidx.core.app.NotificationCompat
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.firestore.FirebaseFirestore
-import com.squareup.picasso.Picasso  // Si usas Picasso
+import com.squareup.picasso.Picasso
 
 class Home_vigilante : AppCompatActivity() {
     // Variables y vistas
     private var database = FirebaseFirestore.getInstance()
     private lateinit var cerrarSesion_vigi: ImageView
-    private lateinit var entrada_vigi: ImageView
-    private lateinit var salida_vigi: ImageView
     private lateinit var perfil_vigi: ImageView
     private lateinit var menuVig: ImageView
-    private lateinit var consultaVigi: ImageView
     private lateinit var Bienvenida_vigi: TextView
     private lateinit var usuario_vigi: TextView
     private lateinit var texto: TextView
-    private lateinit var opcionesVigi: LinearLayout
-    private var cambioAnimacion = true
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,12 +44,7 @@ class Home_vigilante : AppCompatActivity() {
         Bienvenida_vigi = findViewById(R.id.Bienvenida_vigi)
         usuario_vigi = findViewById(R.id.Usuario_vigi)
         texto = findViewById(R.id.textView2_vigi)
-        consultaVigi = findViewById(R.id.consulta)
-        entrada_vigi = findViewById(R.id.Entrada_vigi)
-        salida_vigi = findViewById(R.id.Salida_vigi)
-        cerrarSesion_vigi = findViewById(R.id.CerrarSesion_vigi)
         menuVig = findViewById(R.id.menuVigi)
-        opcionesVigi = findViewById(R.id.menuOpcionesVigi)
         crearCanalNotificacion(this)
 
         database.collection("Disponibilidad")
@@ -222,6 +212,25 @@ class Home_vigilante : AppCompatActivity() {
         val editor = prefs.edit()
         editor.putString("email", inputCorreo)
         editor.apply()
+
+        val bottomNavigationView = findViewById<BottomNavigationView>(R.id.bottom_navigation)
+
+        bottomNavigationView.setOnItemSelectedListener { item ->
+            if (item.itemId == bottomNavigationView.selectedItemId) {
+                return@setOnItemSelectedListener true  // Evita recargar la misma vista
+            }
+
+            when (item.itemId) {
+                R.id.Entrada -> {
+                    setContentView(R.layout.activity_entrada_qr_parqueadero)  // Cambia al layout de entrada
+                }
+                R.id.Salida -> {
+                    setContentView(R.layout.activity_salida_qr_parqueadero)  // Cambia al layout de salida
+                }
+            }
+            true
+        }
+
     }
 
     private fun startAnimationsWithDelay() {
@@ -293,98 +302,44 @@ class Home_vigilante : AppCompatActivity() {
             Bienvenida_vigi.text = "Bienvenido, Bici Usuario"
         }
 
-        menuVig.setOnClickListener {
-            val altura = resources.displayMetrics.heightPixels
-            val pequeño = 60
-            val mediano = 80
-            val medianoAlto = 140
-            val Alto = 200
-            val grande = 200
-            if (cambioAnimacion) {
-                if (altura >= 3001) {
-                    animacionAnchoLinear(opcionesVigi, 1, 930, 200L)
-                    responsividad(consultaVigi, grande, grande)
-                    responsividad(entrada_vigi, grande, grande)
-                    responsividad(salida_vigi, grande, grande)
-                    responsividad(cerrarSesion_vigi, grande, grande)
+        //Menu de Navegaion
+        val bottomNavigationView = findViewById<BottomNavigationView>(R.id.bottom_navigation)
+
+        bottomNavigationView.setOnItemSelectedListener { item ->
+            if (item.itemId == bottomNavigationView.selectedItemId) {
+                return@setOnItemSelectedListener true  // Evita recargar la misma actividad
+            }
+
+            when (item.itemId) {
+
+                R.id.home -> {
+                    startActivity(Intent(this, HomeActivity::class.java))
+                    overridePendingTransition(0, 0)  // Evita la animación de transición
+                    finish()  // Finaliza la actividad actual para evitar que quede en la pila
                 }
-                if (altura in 2501..3000) {
-                    animacionAnchoLinear(opcionesVigi, 1, 505, 200L)
-                    responsividad(consultaVigi, Alto, Alto)
-                    responsividad(entrada_vigi, Alto, Alto)
-                    responsividad(salida_vigi, Alto, Alto)
-                    responsividad(cerrarSesion_vigi, Alto, Alto)
+                R.id.localizacion -> {
+                    startActivity(Intent(this, Localizacion::class.java))
+                    overridePendingTransition(0, 0)
+                    finish()
                 }
-                if (altura in 1301..2500) {
-                    animacionAnchoLinear(opcionesVigi, 1, 630, 200L)
-                    responsividad(consultaVigi, medianoAlto, medianoAlto)
-                    responsividad(entrada_vigi, medianoAlto, medianoAlto)
-                    responsividad(salida_vigi, medianoAlto, medianoAlto)
-                    responsividad(cerrarSesion_vigi, medianoAlto, medianoAlto)
+                R.id.registro -> {
+                    startActivity(Intent(this, RegistrarBiciActivity::class.java))
+                    overridePendingTransition(0, 0)
+                    finish()
                 }
-                if (altura in 1081..1300) {
-                    animacionAnchoLinear(opcionesVigi, 1, 310, 200L)
-                    responsividad(consultaVigi, mediano, mediano)
-                    responsividad(entrada_vigi, mediano, mediano)
-                    responsividad(salida_vigi, mediano, mediano)
-                    responsividad(cerrarSesion_vigi, mediano, mediano)
-                }
-                if (altura <= 1080) {
-                    animacionAnchoLinear(opcionesVigi, 1, 210, 200L)
-                    responsividad(consultaVigi, pequeño, pequeño)
-                    responsividad(entrada_vigi, pequeño, pequeño)
-                    responsividad(salida_vigi, pequeño, pequeño)
-                    responsividad(cerrarSesion_vigi, pequeño, pequeño)
+                R.id.qr -> {
+                    startActivity(Intent(this, QrActivity::class.java))
+                    overridePendingTransition(0, 0)
+                    finish()
                 }
             }
-            if (!cambioAnimacion) {
-                if (altura >= 3001) {
-                    animacionAnchoLinear(opcionesVigi, 930, 1, 200L)
-                }
-                if (altura in 2501..3000) {
-                    animacionAnchoLinear(opcionesVigi, 505, 1, 200L)
-                }
-                if (altura in 1301..2500) {
-                    animacionAnchoLinear(opcionesVigi, 630, 1, 200L)
-                }
-                if (altura in 1081..1300) {
-                    animacionAnchoLinear(opcionesVigi, 310, 1, 200L)
-                }
-                if (altura <= 1080) {
-                    animacionAnchoLinear(opcionesVigi, 210, 1, 200L)
-                }
-            }
-            cambioAnimacion = !cambioAnimacion
-        }
-
-        // Configuración de los botones
-        cerrarSesion_vigi.setOnClickListener {
-            // Borrar datos guardados
-            val prefs = getSharedPreferences(getString(R.string.prefs_file), Context.MODE_PRIVATE)
-            val editor = prefs.edit()
-            editor.clear()
-            editor.apply()
-
-            // Cerrar sesión en Firebase y finalizar la actividad
-            FirebaseAuth.getInstance().signOut()
-            //se reemplazo esta accion ya que si se utiliza el funcion finish() esta volvera a la anterior actiidad utilizada, por lo que esta volvera a la actividad que le apuntamos
-            val intent = Intent(this, AuthActivity::class.java)
-            startActivity(intent)
+            true
         }
 
 
-        // Otros botones
-        consultaVigi.setOnClickListener {
-            startActivity(Intent(this, QrActivity::class.java))
-        }
 
-        entrada_vigi.setOnClickListener {
-            startActivity(Intent(this, EntradaQrParqueadero::class.java))
-        }
 
-        salida_vigi.setOnClickListener {
-            startActivity(Intent(this, SalidaQrParqueadero::class.java))
-        }
+
     }
 
     fun crearCanalNotificacion(context: Context) {

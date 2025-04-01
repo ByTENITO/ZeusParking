@@ -17,6 +17,7 @@ import com.google.firebase.storage.FirebaseStorage
 import android.text.InputType
 import android.text.InputFilter
 import android.view.animation.AnimationUtils
+import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class RegistrarBiciActivity : AppCompatActivity() {
     private lateinit var nombreEd: EditText
@@ -65,6 +66,40 @@ class RegistrarBiciActivity : AppCompatActivity() {
         tiposSpinner = findViewById(R.id.Tipos_Spinner)
         Guardar = findViewById(R.id.Guardar_BTN)
         texto = findViewById(R.id.textView3)
+
+        //Menu de Navegaion
+        val bottomNavigationView = findViewById<BottomNavigationView>(R.id.bottom_navigation)
+
+        bottomNavigationView.setOnItemSelectedListener { item ->
+            if (item.itemId == bottomNavigationView.selectedItemId) {
+                return@setOnItemSelectedListener true  // Evita recargar la misma actividad
+            }
+
+            when (item.itemId) {
+
+                R.id.home -> {
+                    startActivity(Intent(this, HomeActivity::class.java))
+                    overridePendingTransition(0, 0)  // Evita la animación de transición
+                    finish()  // Finaliza la actividad actual para evitar que quede en la pila
+                }
+                R.id.localizacion -> {
+                    startActivity(Intent(this, Localizacion::class.java))
+                    overridePendingTransition(0, 0)
+                    finish()
+                }
+                R.id.registro -> {
+                    startActivity(Intent(this, RegistrarBiciActivity::class.java))
+                    overridePendingTransition(0, 0)
+                    finish()
+                }
+                R.id.qr -> {
+                    startActivity(Intent(this, QrActivity::class.java))
+                    overridePendingTransition(0, 0)
+                    finish()
+                }
+            }
+            true
+        }
 
         // Configuración del Spinner
         val adapter = ArrayAdapter.createFromResource(this, R.array.items, R.layout.estilo_spinner)

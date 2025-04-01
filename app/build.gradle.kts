@@ -83,7 +83,10 @@ dependencies {
     implementation ("androidx.camera:camera-lifecycle:1.3.0")
     implementation ("androidx.camera:camera-view:1.3.0")
 
+    //Material Design
+    implementation ("com.google.android.material:material:1.10.0")
 
+    
     //Android Studio
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)

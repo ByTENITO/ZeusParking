@@ -48,6 +48,8 @@ class AuthActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.activity_auth)
+
+
         FirebaseApp.initializeApp(this)
 
         val Google_BTN = findViewById<Button>(R.id.Google_BTN)
@@ -64,6 +66,10 @@ class AuthActivity : AppCompatActivity() {
         val bundle = Bundle()
         val fadeIn = AnimationUtils.loadAnimation(this, R.anim.fade_in)
         val alto = resources.displayMetrics.heightPixels
+
+
+
+
 
         Google_BTN.startAnimation(fadeIn)
         Acceder_BTN.startAnimation(fadeIn)
@@ -123,6 +129,8 @@ class AuthActivity : AppCompatActivity() {
         setup()
         session()
     }
+
+
 
     private fun tamañoPantalla(porcentaje: Float): Int {
         val alto = resources.displayMetrics.heightPixels
@@ -326,12 +334,10 @@ class AuthActivity : AppCompatActivity() {
 
     private fun showHome(email: String, provider: ProviderType) {
         enableEdgeToEdge()
-        setContentView(R.layout.activity_splash_home)
         val user = auth.currentUser
         val fotoUrl = user?.photoUrl?.toString()
-        val transicionC = findViewById<ImageView>(R.id.carga)
         val fadeOutC = AnimationUtils.loadAnimation(this, R.anim.fade_out_c)
-        transicionC.startAnimation(fadeOutC)
+
 
         Handler(Looper.getMainLooper()).postDelayed({
             val homeIntent = Intent(this, HomeActivity::class.java).apply {
@@ -346,12 +352,8 @@ class AuthActivity : AppCompatActivity() {
 
     private fun showHome_vigi(inputCorreo: String, provider: ProviderType) {
         enableEdgeToEdge()
-        setContentView(R.layout.activity_splash_home)
         val user_vigi = auth.currentUser
         val fotoUrl = user_vigi?.photoUrl?.toString()
-        val transicionC = findViewById<ImageView>(R.id.carga)
-        val fadeOutC = AnimationUtils.loadAnimation(this, R.anim.fade_out_c)
-        transicionC.startAnimation(fadeOutC)
 
         Handler(Looper.getMainLooper()).postDelayed({
             val homeIntent = Intent(this, Home_vigilante::class.java).apply {
@@ -391,3 +393,7 @@ class AuthActivity : AppCompatActivity() {
         }
     }
 }
+
+
+
+

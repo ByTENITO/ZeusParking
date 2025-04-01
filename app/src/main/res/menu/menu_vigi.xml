@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/Entrada"
+        android:icon="@drawable/ic_entrada"
+        android:title="Entrada" />
+
+    <item
+        android:id="@+id/Salida"
+        android:icon="@drawable/ic_salida"
+        android:title="Salida" />
+
+</menu>

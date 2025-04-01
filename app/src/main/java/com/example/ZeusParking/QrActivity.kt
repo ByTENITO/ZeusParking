@@ -1,5 +1,6 @@
 package com.example.parquiatenov10
 
+import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.Color
 import android.os.Bundle
@@ -9,6 +10,7 @@ import android.view.animation.AnimationUtils
 import android.widget.Button
 import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.zxing.BarcodeFormat
 import com.google.zxing.EncodeHintType
 import com.google.zxing.MultiFormatWriter
@@ -38,6 +40,40 @@ class QrActivity : AppCompatActivity() {
         ivCodigoQR.setImageBitmap(generateQRCodeTransparent(correo, 750))
         Salida.setOnClickListener {
             finish()
+        }
+
+        //Menu de Navegaion
+        val bottomNavigationView = findViewById<BottomNavigationView>(R.id.bottom_navigation)
+
+        bottomNavigationView.setOnItemSelectedListener { item ->
+            if (item.itemId == bottomNavigationView.selectedItemId) {
+                return@setOnItemSelectedListener true  // Evita recargar la misma actividad
+            }
+
+            when (item.itemId) {
+
+                R.id.home -> {
+                    startActivity(Intent(this, HomeActivity::class.java))
+                    overridePendingTransition(0, 0)  // Evita la animación de transición
+                    finish()  // Finaliza la actividad actual para evitar que quede en la pila
+                }
+                R.id.localizacion -> {
+                    startActivity(Intent(this, Localizacion::class.java))
+                    overridePendingTransition(0, 0)
+                    finish()
+                }
+                R.id.registro -> {
+                    startActivity(Intent(this, RegistrarBiciActivity::class.java))
+                    overridePendingTransition(0, 0)
+                    finish()
+                }
+                R.id.qr -> {
+                    startActivity(Intent(this, QrActivity::class.java))
+                    overridePendingTransition(0, 0)
+                    finish()
+                }
+            }
+            true
         }
     }
 
@@ -73,7 +109,7 @@ class QrActivity : AppCompatActivity() {
             ).forEach { view ->
                 view.startAnimation(fadeIn)
             }
-        }, 0) // Ajusta el tiempo de retraso si es necesario
+        }, 0)
     }
 
 }

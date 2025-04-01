@@ -22,7 +22,8 @@ import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.core.app.NotificationCompat
 import com.google.firebase.firestore.FirebaseFirestore
-import com.squareup.picasso.Picasso  // Si usas Picasso
+import com.squareup.picasso.Picasso
+import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class HomeActivity : AppCompatActivity() {
     // Variables y vistas
@@ -44,6 +45,7 @@ class HomeActivity : AppCompatActivity() {
         enableEdgeToEdge()
         startAnimationsWithDelay()
         setContentView(R.layout.activity_home)
+
         // Setup de vistas
         Correo_TV = findViewById(R.id.Correo_TV)
         Usuario = findViewById(R.id.textView2)
@@ -56,6 +58,44 @@ class HomeActivity : AppCompatActivity() {
         opciones = findViewById(R.id.menuOpciones)
         menuOp = findViewById(R.id.menu)
         crearCanalNotificacion(this)
+
+
+        //Menu de Navegaion
+        val bottomNavigationView = findViewById<BottomNavigationView>(R.id.bottom_navigation)
+
+        bottomNavigationView.setOnItemSelectedListener { item ->
+            if (item.itemId == bottomNavigationView.selectedItemId) {
+                return@setOnItemSelectedListener true  // Evita recargar la misma actividad
+            }
+
+            when (item.itemId) {
+
+                R.id.home -> {
+                    startActivity(Intent(this, HomeActivity::class.java))  // Llama a AuthActivity
+                    overridePendingTransition(0, 0)  // Evita la animación de transición
+                    finish()  // Finaliza la actividad actual si no deseas que quede en la pila
+                }
+                R.id.localizacion -> {
+                    startActivity(Intent(this, Localizacion::class.java))
+                    overridePendingTransition(0, 0)
+                    finish()
+                }
+                R.id.registro -> {
+                    startActivity(Intent(this, RegistrarBiciActivity::class.java))
+                    overridePendingTransition(0, 0)
+                    finish()
+                }
+                R.id.qr -> {
+                    startActivity(Intent(this, QrActivity::class.java))
+                    overridePendingTransition(0, 0)
+                    finish()
+                }
+            }
+            true
+        }
+
+
+
 
         // Obtener datos del intent
         val bundle: Bundle? = intent.extras
@@ -477,18 +517,7 @@ class HomeActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
-        // Otros botones
-        entradaButton.setOnClickListener {
-            startActivity(Intent(this, QrActivity::class.java))
-        }
 
-        registrarBiciButton.setOnClickListener {
-            startActivity(Intent(this, RegistrarBiciActivity::class.java))
-        }
-
-        localizacionButton.setOnClickListener {
-            startActivity(Intent(this, Localizacion::class.java))
-        }
     }
 
     fun crearCanalNotificacion(context: Context) {

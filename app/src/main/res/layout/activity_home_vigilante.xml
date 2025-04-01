@@ -23,56 +23,6 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.964" />
 
-    <LinearLayout
-        android:id="@+id/menuOpcionesVigi"
-        android:layout_width="wrap_content"
-        android:layout_height="1dp"
-        android:layout_marginBottom="1dp"
-        android:background="@drawable/borde_menu"
-        android:gravity="bottom"
-        android:orientation="vertical"
-        app:layout_constraintBottom_toTopOf="@+id/menuVigi"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.185"
-        app:layout_constraintStart_toStartOf="parent">
-
-        <ImageView
-            android:id="@+id/consulta"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:backgroundTint="@drawable/c_boton"
-            android:clickable="true"
-            android:focusable="true"
-            android:src="@drawable/usuarios"/>
-
-        <ImageView
-            android:id="@+id/Entrada_vigi"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:backgroundTint="@drawable/c_boton"
-            android:clickable="true"
-            android:focusable="true"
-            android:src="@drawable/entrada"/>
-
-        <ImageView
-            android:id="@+id/Salida_vigi"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:backgroundTint="@drawable/c_boton"
-            android:clickable="true"
-            android:focusable="true"
-            android:src="@drawable/salida"/>
-
-        <ImageView
-            android:id="@+id/CerrarSesion_vigi"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:backgroundTint="@drawable/c_cambio"
-            android:clickable="true"
-            android:focusable="true"
-            android:src="@drawable/cerrar_sesion" />
-
-    </LinearLayout>
 
 
     <TextView
@@ -131,6 +81,15 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.175" />
+
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottom_navigation"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        app:menu="@menu/menu_vigi"
+        app:labelVisibilityMode="labeled"
+        app:layout_constraintBottom_toBottomOf="parent"/>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

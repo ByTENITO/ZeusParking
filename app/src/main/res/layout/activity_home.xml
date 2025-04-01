@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
@@ -9,126 +9,135 @@
     android:background="@drawable/fondo"
     tools:context=".HomeActivity">
 
-
-    <ImageView
-        android:id="@+id/menu"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:clickable="true"
-        android:focusable="true"
-        android:src="@drawable/menu"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.199"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.964" />
-
+    <!-- Menú de Opciones -->
     <LinearLayout
         android:id="@+id/menuOpciones"
         android:layout_width="wrap_content"
-        android:layout_height="1dp"
-        android:layout_marginBottom="1dp"
+        android:layout_height="wrap_content"
         android:background="@drawable/borde_menu"
         android:gravity="bottom"
         android:orientation="vertical"
-        app:layout_constraintBottom_toTopOf="@+id/menu"
+        android:visibility="gone"
+        app:layout_constraintBottom_toTopOf="@id/menu"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.185"
         app:layout_constraintStart_toStartOf="parent">
-
 
         <ImageView
             android:id="@+id/Entrada_BTN"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:backgroundTint="@drawable/c_boton"
+            android:src="@drawable/qr"
             android:clickable="true"
-            android:focusable="true"
-            android:src="@drawable/qr"/>
+            android:focusable="true"/>
 
         <ImageView
             android:id="@+id/Localizacion_BTN"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:backgroundTint="@drawable/c_boton"
+            android:src="@drawable/localizacion"
             android:clickable="true"
-            android:focusable="true"
-            android:src="@drawable/localizacion" />
+            android:focusable="true"/>
 
         <ImageView
             android:id="@+id/RegistrarBici_BTN"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:backgroundTint="@drawable/c_boton"
+            android:src="@drawable/registro"
             android:clickable="true"
-            android:focusable="true"
-            android:src="@drawable/registro" />
+            android:focusable="true"/>
 
         <ImageView
             android:id="@+id/CerrarSesion"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:backgroundTint="@drawable/c_cambio"
+            android:src="@drawable/cerrar_sesion"
             android:clickable="true"
-            android:focusable="true"
-            android:src="@drawable/cerrar_sesion" />
-
+            android:focusable="true"/>
     </LinearLayout>
+
+    <!-- Botón para abrir el menú -->
+    <ImageView
+        android:id="@+id/menu"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:src="@drawable/menu"
+        android:clickable="true"
+        android:focusable="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintHorizontal_bias="0.199"
+        app:layout_constraintVertical_bias="0.964"/>
+
 
     <TextView
         android:id="@+id/Bienvenida_TV"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
+        android:layout_marginTop="72dp"
         android:text="@string/bienvenido"
         android:textColor="@color/white"
         android:textSize="24sp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/bottom_navigation"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.125"
+        app:layout_constraintHorizontal_bias="0.088"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.045" />
-
-    <TextView
-        android:id="@+id/Correo_TV"
-        android:layout_width="1dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="4dp"
-        android:text="@string/textview"
-        android:textColor="#FFFFFF"
-        android:textSize="15sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/textView2"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.176" />
-
-    <ImageView
-        android:id="@+id/FotoPerfil_ImageView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:contentDescription="@string/todo"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.876"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.034"
-        tools:srcCompat="@tools:sample/avatars" />
+        app:layout_constraintVertical_bias="0.102" />
 
     <TextView
         android:id="@+id/textView2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="148dp"
         android:text="@string/usuario"
         android:textColor="#FFFFFF"
         android:textSize="14sp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/bottom_navigation"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.058"
+        app:layout_constraintHorizontal_bias="0.127"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.176" />
+        app:layout_constraintVertical_bias="0.074" />
+
+    <TextView
+        android:id="@+id/Correo_TV"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="160dp"
+        android:layout_marginTop="180dp"
+        android:text="@string/textview"
+        android:textColor="#FFFFFF"
+        android:textSize="15sp"
+        app:layout_constraintBottom_toTopOf="@+id/bottom_navigation"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toEndOf="@id/textView2"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.05" />
+
+    <!-- Bottom Navigation -->
+    <ImageView
+        android:id="@+id/FotoPerfil_ImageView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:contentDescription="@string/todo"
+        app:layout_constraintBottom_toTopOf="@+id/bottom_navigation"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.858"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.156"
+        tools:srcCompat="@tools:sample/avatars" />
+
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottom_navigation"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        app:menu="@menu/bottom_nav_menu"
+        app:labelVisibilityMode="labeled"
+        app:layout_constraintBottom_toBottomOf="parent"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

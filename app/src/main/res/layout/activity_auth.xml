@@ -21,7 +21,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.444"
-        app:srcCompat="@drawable/logoo"
+        app:srcCompat="@drawable/logo"
         android:animateLayoutChanges="true"/>
     <Button
         android:id="@+id/Google_BTN"
@@ -80,6 +80,7 @@
         android:padding="5dp"
         android:text="Acceder"
         android:textColor="#000000"
+        style="@style/Widget.MaterialComponents.Button"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.247"
@@ -92,7 +93,7 @@
         android:id="@+id/OlvidasteContrasena_TV"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="84dp"
+        android:layout_marginTop="92dp"
         android:animateLayoutChanges="true"
         android:clickable="true"
         android:focusable="true"
@@ -137,6 +138,7 @@
         android:animateLayoutChanges="true"/>
 
     <Button
+
         android:id="@+id/Registrarse_BTN"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -144,6 +146,7 @@
         android:padding="5dp"
         android:text="Regístrate"
         android:textColor="#000000"
+        style="@style/Widget.MaterialComponents.Button"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.758"
@@ -185,3 +188,6 @@
         android:animateLayoutChanges="true"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
