@@ -10,5 +10,4 @@
         android:id="@+id/Salida"
         android:icon="@drawable/ic_salida"
         android:title="Salida" />
-
 </menu>

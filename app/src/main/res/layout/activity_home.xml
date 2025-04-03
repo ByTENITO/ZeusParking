@@ -115,8 +115,8 @@
     <!-- Botón para abrir el menú -->
     <ImageView
         android:id="@+id/menu"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
+        android:layout_width="1dp"
+        android:layout_height="1dp"
         android:src="@drawable/menu"
         android:clickable="true"
         android:focusable="true"

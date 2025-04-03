@@ -110,8 +110,6 @@ class HomeActivity : AppCompatActivity() {
         }
 
 
-
-
         // Obtener datos del intent
         val bundle: Bundle? = intent.extras
         val email: String? = bundle?.getString("email")

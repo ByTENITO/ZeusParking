@@ -144,7 +144,7 @@ class AuthActivity : AppCompatActivity() {
         val provider = prefs.getString("provider", null)
 
         if (inputCorreo != null && provider != null) {
-            showHome_vigi(inputCorreo, ProviderType.valueOf(provider))
+            showHomevigi(inputCorreo, ProviderType.valueOf(provider))
         }
         if (email != null && provider != null) {
             showHome(email, ProviderType.valueOf(provider))
@@ -211,31 +211,32 @@ class AuthActivity : AppCompatActivity() {
                 Acceder_BTN.isEnabled = false
                 if (email == inputCorreo && password == contraseña) {
                     saveSession(inputCorreo, ProviderType.EMAIL)
-                    showHome_vigi(inputCorreo, ProviderType.EMAIL)
+                    showHomevigi(inputCorreo, ProviderType.EMAIL)
                     return@setOnClickListener
-                }
+                }else {
 
-                auth.signInWithEmailAndPassword(email, password).addOnCompleteListener {
-                    if (it.isSuccessful) {
-                        val user = auth.currentUser
-                        if (user != null && user.isEmailVerified) {
-                            saveSession(email, ProviderType.EMAIL)
-                            showHome(user.email ?: "", ProviderType.EMAIL)
+                    auth.signInWithEmailAndPassword(email, password).addOnCompleteListener {
+                        if (it.isSuccessful) {
+                            val user = auth.currentUser
+                            if (user != null && user.isEmailVerified) {
+                                saveSession(email, ProviderType.EMAIL)
+                                showHome(user.email ?: "", ProviderType.EMAIL)
+                            } else {
+                                Toast.makeText(
+                                    this,
+                                    "Por favor, verifica tu correo electrónico.",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                                Acceder_BTN.isEnabled = true
+                            }
                         } else {
                             Toast.makeText(
                                 this,
-                                "Por favor, verifica tu correo electrónico.",
+                                "Error en la autenticación. Revisa los datos.",
                                 Toast.LENGTH_SHORT
                             ).show()
                             Acceder_BTN.isEnabled = true
                         }
-                    } else {
-                        Toast.makeText(
-                            this,
-                            "Error en la autenticación. Revisa los datos.",
-                            Toast.LENGTH_SHORT
-                        ).show()
-                        Acceder_BTN.isEnabled = true
                     }
                 }
             }
@@ -336,8 +337,6 @@ class AuthActivity : AppCompatActivity() {
         enableEdgeToEdge()
         val user = auth.currentUser
         val fotoUrl = user?.photoUrl?.toString()
-        val fadeOutC = AnimationUtils.loadAnimation(this, R.anim.fade_out_c)
-
 
         Handler(Looper.getMainLooper()).postDelayed({
             val homeIntent = Intent(this, HomeActivity::class.java).apply {
@@ -350,7 +349,7 @@ class AuthActivity : AppCompatActivity() {
         }, 5000)
     }
 
-    private fun showHome_vigi(inputCorreo: String, provider: ProviderType) {
+    private fun showHomevigi(inputCorreo: String, provider: ProviderType) {
         enableEdgeToEdge()
         val user_vigi = auth.currentUser
         val fotoUrl = user_vigi?.photoUrl?.toString()

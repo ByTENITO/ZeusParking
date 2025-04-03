@@ -4,7 +4,6 @@ import android.animation.ValueAnimator
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
-import android.content.Intent
 import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
@@ -28,16 +27,10 @@ import com.squareup.picasso.Picasso
 class Home_vigilante : AppCompatActivity() {
     // Variables y vistas
     private var database = FirebaseFirestore.getInstance()
-    private lateinit var cerrarSesion_vigi: ImageView
-    private lateinit var entrada_vigi: ImageView
-    private lateinit var salida_vigi: ImageView
     private lateinit var perfil_vigi: ImageView
-    private lateinit var menuVig: ImageView
-    private lateinit var consultaVigi: ImageView
     private lateinit var Bienvenida_vigi: TextView
     private lateinit var usuario_vigi: TextView
     private lateinit var texto: TextView
-    private lateinit var opcionesVigi: LinearLayout
     private lateinit var notificacionLinear: LinearLayout
     private lateinit var notificaciones: ImageView
     private lateinit var notifiFurgon: TextView
@@ -46,7 +39,6 @@ class Home_vigilante : AppCompatActivity() {
     private lateinit var notifiMotocicleta: TextView
 
     private var cambioAnimacionNoti = true
-    private var cambioAnimacion = true
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -58,8 +50,7 @@ class Home_vigilante : AppCompatActivity() {
         Bienvenida_vigi = findViewById(R.id.Bienvenida_vigi)
         usuario_vigi = findViewById(R.id.Usuario_vigi)
         texto = findViewById(R.id.textView2_vigi)
-        menuVig = findViewById(R.id.menuVigi)
-        notificacionLinear = findViewById(R.id.notificacionVigi)
+        notificacionLinear = findViewById(R.id.notificacionesVigi)
         notificaciones = findViewById(R.id.notiVigi)
         notifiFurgon = findViewById(R.id.notiFurgon)
         notifiVehiculoParticular = findViewById(R.id.notiVehiculo)
@@ -154,6 +145,23 @@ class Home_vigilante : AppCompatActivity() {
                     }
                     if (espacios.toInt() >= 6 && espacios.toInt() <= 10) {
                         mostrarNotificacion(this, "ZeusParking", "Hola, quedan $espacios espacios para Bicicleta")
+                        val bottomNavigationView = findViewById<BottomNavigationView>(R.id.bottom_navigation)
+
+                        bottomNavigationView.setOnItemSelectedListener { item ->
+                            if (item.itemId == bottomNavigationView.selectedItemId) {
+                                return@setOnItemSelectedListener true  // Evita recargar la misma vista
+                            }
+
+                            when (item.itemId) {
+                                R.id.Entrada -> {
+                                    setContentView(R.layout.activity_entrada_qr_parqueadero)  // Cambia al layout de entrada
+                                }
+                                R.id.Salida -> {
+                                    setContentView(R.layout.activity_salida_qr_parqueadero)  // Cambia al layout de salida
+                                }
+                            }
+                            true
+                        }
                     }
                     notifiBicicleta.text = "Quedan $espacios espacios para Bicicleta"
                 }
@@ -205,25 +213,6 @@ class Home_vigilante : AppCompatActivity() {
             apply()
         }
 
-        val alto = resources.displayMetrics.heightPixels
-        overridePendingTransition(0, 0)
-
-        if (alto >= 3001) {
-            responsividad(menuVig, 200, 200)
-        }
-        if (alto in 2501..3000) {
-            responsividad(menuVig, 200, 200)
-        }
-        if (alto in 1301..2500) {
-            responsividad(menuVig, 140, 140)
-        }
-        if (alto in 1081..1300) {
-            responsividad(menuVig, 80, 80)
-        }
-        if (alto <= 1080) {
-            responsividad(menuVig, 60, 60)
-        }
-
         // Comprobar si el proveedor es Google
         if (provider == ProviderType.GOOGLE.name && inputCorreo != null && fotoPerfilUrl != null) {
             setup_vigi(inputCorreo)
@@ -238,7 +227,7 @@ class Home_vigilante : AppCompatActivity() {
         editor.putString("email", inputCorreo)
         editor.apply()
 
-        val bottomNavigationView = findViewById<BottomNavigationView>(R.id.bottom_navigation)
+        val bottomNavigationView = findViewById<BottomNavigationView>(R.id.bottom_navigation_vigi)
 
         bottomNavigationView.setOnItemSelectedListener { item ->
             if (item.itemId == bottomNavigationView.selectedItemId) {
@@ -265,7 +254,6 @@ class Home_vigilante : AppCompatActivity() {
                 usuario_vigi,
                 texto,
                 Bienvenida_vigi,
-                menuVig,
                 notificaciones
             ).forEach { view ->
                 view.startAnimation(fadeIn)
@@ -328,43 +316,6 @@ class Home_vigilante : AppCompatActivity() {
             Bienvenida_vigi.text = "Bienvenido, Bici Usuario"
         }
 
-        //Menu de Navegaion
-        val bottomNavigationView = findViewById<BottomNavigationView>(R.id.bottom_navigation)
-
-        bottomNavigationView.setOnItemSelectedListener { item ->
-            if (item.itemId == bottomNavigationView.selectedItemId) {
-                return@setOnItemSelectedListener true  // Evita recargar la misma actividad
-            }
-
-            when (item.itemId) {
-
-                R.id.home -> {
-                    startActivity(Intent(this, HomeActivity::class.java))
-                    overridePendingTransition(0, 0)  // Evita la animación de transición
-                    finish()  // Finaliza la actividad actual para evitar que quede en la pila
-                }
-
-                R.id.localizacion -> {
-                    startActivity(Intent(this, Localizacion::class.java))
-                    overridePendingTransition(0, 0)
-                    finish()
-                }
-
-                R.id.registro -> {
-                    startActivity(Intent(this, RegistrarBiciActivity::class.java))
-                    overridePendingTransition(0, 0)
-                    finish()
-                }
-
-                R.id.qr -> {
-                    startActivity(Intent(this, QrActivity::class.java))
-                    overridePendingTransition(0, 0)
-                    finish()
-                }
-            }
-            true
-        }
-
         notificaciones.setOnClickListener {
             val altura = resources.displayMetrics.heightPixels
             if (cambioAnimacionNoti) {
@@ -407,27 +358,6 @@ class Home_vigilante : AppCompatActivity() {
                 }
             }
             cambioAnimacionNoti = !cambioAnimacionNoti
-        }
-
-        // Configuración de los botones
-        cerrarSesion_vigi.setOnClickListener {
-            // Borrar datos guardados
-            val prefs = getSharedPreferences(getString(R.string.prefs_file), Context.MODE_PRIVATE)
-            val editor = prefs.edit()
-            editor.clear()
-            editor.apply()
-
-            // Cerrar sesión en Firebase y finalizar la actividad
-            FirebaseAuth.getInstance().signOut()
-            //se reemplazo esta accion ya que si se utiliza el funcion finish() esta volvera a la anterior actiidad utilizada, por lo que esta volvera a la actividad que le apuntamos
-            val intent = Intent(this, AuthActivity::class.java)
-            startActivity(intent)
-        }
-
-
-        // Otros botones
-        consultaVigi.setOnClickListener {
-            startActivity(Intent(this, QrActivity::class.java))
         }
 
     }
