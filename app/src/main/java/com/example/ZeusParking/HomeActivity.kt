@@ -163,14 +163,14 @@ class HomeActivity : AppCompatActivity() {
                                                     "Hola, no quedan espacios para $tipoVehiculo "
                                                 )
                                             }
-                                            if (espacios.toInt() >= 1 && espacios.toInt() <= 2) {
+                                            if (espacios.toInt() in 1 .. 2) {
                                                 mostrarNotificacion(
                                                     this,
                                                     "ZeusParking",
                                                     "Hola, quedan pocos espacios en el parquedero para $tipoVehiculo, quedan: $espacios"
                                                 )
                                             }
-                                            if (espacios.toInt() >= 3 && espacios.toInt() <= 4) {
+                                            if (espacios.toInt() in 3 .. 4) {
                                                 mostrarNotificacion(
                                                     this,
                                                     "ZeusParking",
@@ -206,14 +206,14 @@ class HomeActivity : AppCompatActivity() {
                                                     "Hola, no quedan espacios para $tipoVehiculo "
                                                 )
                                             }
-                                            if (espacios.toInt() >= 1 && espacios.toInt() <= 4) {
+                                            if (espacios.toInt() in 1 .. 4) {
                                                 mostrarNotificacion(
                                                     this,
                                                     "ZeusParking",
                                                     "Hola, quedan pocos espacios en el parquedero para $tipoVehiculo, quedan: $espacios"
                                                 )
                                             }
-                                            if (espacios.toInt() >= 5 && espacios.toInt() <= 7) {
+                                            if (espacios.toInt() in 5 .. 7) {
                                                 mostrarNotificacion(
                                                     this,
                                                     "ZeusParking",
@@ -249,14 +249,14 @@ class HomeActivity : AppCompatActivity() {
                                                     "Hola, no quedan espacios para $tipoVehiculo "
                                                 )
                                             }
-                                            if (espacios.toInt() >= 1 && espacios.toInt() <= 4) {
+                                            if (espacios.toInt() in 1 .. 4) {
                                                 mostrarNotificacion(
                                                     this,
                                                     "ZeusParking",
                                                     "Hola, corre quedan pocos espacios en el parquedero para $tipoVehiculo, quedan: $espacios"
                                                 )
                                             }
-                                            if (espacios.toInt() >= 5 && espacios.toInt() <= 8) {
+                                            if (espacios.toInt() in 5 .. 8) {
                                                 mostrarNotificacion(
                                                     this,
                                                     "ZeusParking",
@@ -292,14 +292,14 @@ class HomeActivity : AppCompatActivity() {
                                                     "Hola, no quedan espacios para $tipoVehiculo "
                                                 )
                                             }
-                                            if (espacios.toInt() >= 1 && espacios.toInt() <= 4) {
+                                            if (espacios.toInt() in 1 .. 4) {
                                                 mostrarNotificacion(
                                                     this,
                                                     "ZeusParking",
                                                     "Hola, quedan pocos espacios en el parquedero para $tipoVehiculo, quedan: $espacios"
                                                 )
                                             }
-                                            if (espacios.toInt() >= 5 && espacios.toInt() <= 8) {
+                                            if (espacios.toInt() in 5 .. 8) {
                                                 mostrarNotificacion(
                                                     this,
                                                     "ZeusParking",
