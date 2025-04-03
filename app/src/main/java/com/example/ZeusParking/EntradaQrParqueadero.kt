@@ -29,11 +29,6 @@ class EntradaQrParqueadero : AppCompatActivity() {
     private lateinit var marcoNumEntrada: EditText
     private var escaneoRealizado: Boolean = false
 
-    data class Usuario(
-        val nombre: String? = null,
-        val correo: String? = null
-    )
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_entrada_qr_parqueadero)

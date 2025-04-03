@@ -18,6 +18,8 @@ import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.auth.FirebaseAuth
 import android.widget.TextView
 import android.widget.ImageView
+import android.widget.LinearLayout
+import android.widget.Toast
 import androidx.core.app.NotificationCompat
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.firestore.FirebaseFirestore
@@ -27,12 +29,24 @@ class Home_vigilante : AppCompatActivity() {
     // Variables y vistas
     private var database = FirebaseFirestore.getInstance()
     private lateinit var cerrarSesion_vigi: ImageView
+    private lateinit var entrada_vigi: ImageView
+    private lateinit var salida_vigi: ImageView
     private lateinit var perfil_vigi: ImageView
     private lateinit var menuVig: ImageView
+    private lateinit var consultaVigi: ImageView
     private lateinit var Bienvenida_vigi: TextView
     private lateinit var usuario_vigi: TextView
     private lateinit var texto: TextView
+    private lateinit var opcionesVigi: LinearLayout
+    private lateinit var notificacionLinear: LinearLayout
+    private lateinit var notificaciones: ImageView
+    private lateinit var notifiFurgon: TextView
+    private lateinit var notifiVehiculoParticular: TextView
+    private lateinit var notifiBicicleta: TextView
+    private lateinit var notifiMotocicleta: TextView
 
+    private var cambioAnimacionNoti = true
+    private var cambioAnimacion = true
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,6 +59,13 @@ class Home_vigilante : AppCompatActivity() {
         usuario_vigi = findViewById(R.id.Usuario_vigi)
         texto = findViewById(R.id.textView2_vigi)
         menuVig = findViewById(R.id.menuVigi)
+        notificacionLinear = findViewById(R.id.notificacionVigi)
+        notificaciones = findViewById(R.id.notiVigi)
+        notifiFurgon = findViewById(R.id.notiFurgon)
+        notifiVehiculoParticular = findViewById(R.id.notiVehiculo)
+        notifiBicicleta = findViewById(R.id.notiBicicleta)
+        notifiMotocicleta = findViewById(R.id.notiMoto)
+
         crearCanalNotificacion(this)
 
         database.collection("Disponibilidad")
@@ -68,12 +89,13 @@ class Home_vigilante : AppCompatActivity() {
                         mostrarNotificacion(
                             this,
                             "ZeusParking",
-                            "Hola, quedan pocos espacios en el parquedero de Furgon\n quedan: $espacios"
+                            "Hola, quedan pocos espacios en el parquedero de Furgon quedan: $espacios"
                         )
                     }
                     if (espacios.toInt() >= 3 && espacios.toInt() <= 4) {
                         mostrarNotificacion(this, "ZeusParking", "Hola, quedan $espacios espacios para Furgon")
                     }
+                    notifiFurgon.text = "Quedan " +espacios+ " espacios para Furgon"
                 }
             }
         database.collection("Disponibilidad")
@@ -97,12 +119,13 @@ class Home_vigilante : AppCompatActivity() {
                         mostrarNotificacion(
                             this,
                             "ZeusParking",
-                            "Hola, quedan pocos espacios en el parquedero de Vehiculo Particular\n quedan: $espacios"
+                            "Hola, quedan pocos espacios en el parquedero de Vehiculo Particular quedan: $espacios"
                         )
                     }
                     if (espacios.toInt() >= 5 && espacios.toInt() <= 8) {
                         mostrarNotificacion(this, "ZeusParking", "Hola, quedan $espacios espacios para Vehiculo Particular")
                     }
+                    notifiVehiculoParticular.text = "Quedan $espacios espacios para Vehiculo Particular"
                 }
             }
         database.collection("Disponibilidad")
@@ -132,6 +155,7 @@ class Home_vigilante : AppCompatActivity() {
                     if (espacios.toInt() >= 6 && espacios.toInt() <= 10) {
                         mostrarNotificacion(this, "ZeusParking", "Hola, quedan $espacios espacios para Bicicleta")
                     }
+                    notifiBicicleta.text = "Quedan $espacios espacios para Bicicleta"
                 }
             }
         database.collection("Disponibilidad")
@@ -161,6 +185,7 @@ class Home_vigilante : AppCompatActivity() {
                     if (espacios.toInt() >= 4 && espacios.toInt() <= 7) {
                         mostrarNotificacion(this, "ZeusParking", "Hola, quedan $espacios espacios para Motocicleta")
                     }
+                    notifiMotocicleta.text = "Quedan $espacios espacios para Motocicleta"
                 }
             }
 
@@ -240,7 +265,8 @@ class Home_vigilante : AppCompatActivity() {
                 usuario_vigi,
                 texto,
                 Bienvenida_vigi,
-                menuVig
+                menuVig,
+                notificaciones
             ).forEach { view ->
                 view.startAnimation(fadeIn)
             }
@@ -317,16 +343,19 @@ class Home_vigilante : AppCompatActivity() {
                     overridePendingTransition(0, 0)  // Evita la animación de transición
                     finish()  // Finaliza la actividad actual para evitar que quede en la pila
                 }
+
                 R.id.localizacion -> {
                     startActivity(Intent(this, Localizacion::class.java))
                     overridePendingTransition(0, 0)
                     finish()
                 }
+
                 R.id.registro -> {
                     startActivity(Intent(this, RegistrarBiciActivity::class.java))
                     overridePendingTransition(0, 0)
                     finish()
                 }
+
                 R.id.qr -> {
                     startActivity(Intent(this, QrActivity::class.java))
                     overridePendingTransition(0, 0)
@@ -336,10 +365,92 @@ class Home_vigilante : AppCompatActivity() {
             true
         }
 
+        notificaciones.setOnClickListener {
+            val altura = resources.displayMetrics.heightPixels
+            if (cambioAnimacionNoti) {
+                if (altura >= 3001) {
+                    animacionAnchoLinear(notificacionLinear, 1, 725, 200L)
+                    mostrarVista(notifiFurgon,notifiVehiculoParticular,notifiMotocicleta,notifiBicicleta)
+                }
+                if (altura in 2501..3000) {
+                    animacionAnchoLinear(notificacionLinear, 1, 520, 200L)
+                    mostrarVista(notifiFurgon,notifiVehiculoParticular,notifiMotocicleta,notifiBicicleta)
+                }
+                if (altura in 1301..2500) {
+                    animacionAnchoLinear(notificacionLinear, 1, 500, 200L)
+                    mostrarVista(notifiFurgon,notifiVehiculoParticular,notifiMotocicleta,notifiBicicleta)
+                }
+                if (altura in 1081..1300) {
+                    animacionAnchoLinear(notificacionLinear, 1, 260, 200L)
+                    mostrarVista(notifiFurgon,notifiVehiculoParticular,notifiMotocicleta,notifiBicicleta)
+                }
+                if (altura <= 1080) {
+                    animacionAnchoLinear(notificacionLinear, 1, 260, 200L)
+                    mostrarVista(notifiFurgon,notifiVehiculoParticular,notifiMotocicleta,notifiBicicleta)
+                }
+            }
+            if (!cambioAnimacionNoti) {
+                if (altura >= 3001) {
+                    animacionAnchoLinear(notificacionLinear, 725, 1, 200L)
+                }
+                if (altura in 2501..3000) {
+                    animacionAnchoLinear(notificacionLinear, 520, 1, 200L)
+                }
+                if (altura in 1301..2500) {
+                    animacionAnchoLinear(notificacionLinear, 520, 1, 200L)
+                }
+                if (altura in 1081..1300) {
+                    animacionAnchoLinear(notificacionLinear, 260, 1, 200L)
+                }
+                if (altura <= 1080) {
+                    animacionAnchoLinear(notificacionLinear, 260, 1, 200L)
+                }
+            }
+            cambioAnimacionNoti = !cambioAnimacionNoti
+        }
+
+        // Configuración de los botones
+        cerrarSesion_vigi.setOnClickListener {
+            // Borrar datos guardados
+            val prefs = getSharedPreferences(getString(R.string.prefs_file), Context.MODE_PRIVATE)
+            val editor = prefs.edit()
+            editor.clear()
+            editor.apply()
+
+            // Cerrar sesión en Firebase y finalizar la actividad
+            FirebaseAuth.getInstance().signOut()
+            //se reemplazo esta accion ya que si se utiliza el funcion finish() esta volvera a la anterior actiidad utilizada, por lo que esta volvera a la actividad que le apuntamos
+            val intent = Intent(this, AuthActivity::class.java)
+            startActivity(intent)
+        }
 
 
+        // Otros botones
+        consultaVigi.setOnClickListener {
+            startActivity(Intent(this, QrActivity::class.java))
+        }
 
+    }
 
+    fun mostrarVista(vararg views: View) {
+        val anchor = resources.displayMetrics.widthPixels
+        views.forEach { view ->
+            if (anchor <= 590) {
+                view.layoutParams.width = 300
+                view.layoutParams.height = 60
+                view.requestLayout()
+            }
+            if (anchor in 591 .. 1300) {
+                view.layoutParams.width = 600
+                view.layoutParams.height = 110
+                view.requestLayout()
+            }
+            if (anchor >= 1301) {
+                view.layoutParams.width = 650
+                view.layoutParams.height = 155
+                view.requestLayout()
+            }
+        }
     }
 
     fun crearCanalNotificacion(context: Context) {

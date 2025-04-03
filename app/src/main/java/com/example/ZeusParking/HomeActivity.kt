@@ -38,7 +38,15 @@ class HomeActivity : AppCompatActivity() {
     private lateinit var BienvenidaTextView: TextView
     private lateinit var opciones: LinearLayout
     private lateinit var menuOp: ImageView
+    private lateinit var notificacionLinear: LinearLayout
+    private lateinit var notificaciones: ImageView
+    private lateinit var notifiFurgon: TextView
+    private lateinit var notifiVehiculoParticular: TextView
+    private lateinit var notifiBicicleta: TextView
+    private lateinit var notifiMotocicleta: TextView
+
     private var cambioAnimacion = true
+    private var cambioAnimacionNoti = true
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -57,6 +65,13 @@ class HomeActivity : AppCompatActivity() {
         BienvenidaTextView = findViewById(R.id.Bienvenida_TV)
         opciones = findViewById(R.id.menuOpciones)
         menuOp = findViewById(R.id.menu)
+        notificacionLinear = findViewById(R.id.notificaciones)
+        notificaciones = findViewById(R.id.notificacionVC)
+        notifiFurgon = findViewById(R.id.notificacionFurgon)
+        notifiVehiculoParticular = findViewById(R.id.notificacionVehiculoParticular)
+        notifiBicicleta = findViewById(R.id.notificacionBicicleta)
+        notifiMotocicleta = findViewById(R.id.notificacionMotocicleta)
+
         crearCanalNotificacion(this)
 
 
@@ -138,12 +153,12 @@ class HomeActivity : AppCompatActivity() {
                                             return@addSnapshotListener
                                         }
                                         if (document != null && document.exists()) {
-                                            val espacios = document.getLong("Furgon") ?: 0
+                                            val espacios = document.getLong(tipoVehiculo) ?: 0
                                             Log.d(
                                                 "FireStore",
                                                 "Valor modificado:'$tipoVehiculo -> $espacios'"
                                             )
-                                            if (espacios.toInt() == 0 ) {
+                                            if (espacios.toInt() == 0) {
                                                 mostrarNotificacion(
                                                     this,
                                                     "ZeusParking",
@@ -164,6 +179,7 @@ class HomeActivity : AppCompatActivity() {
                                                     "Hola, quedan $espacios espacios para $tipoVehiculo"
                                                 )
                                             }
+                                            notifiFurgon.text = "Quedan " +espacios+ " espacios para $tipoVehiculo"
                                         }
                                     }
                             }
@@ -180,8 +196,7 @@ class HomeActivity : AppCompatActivity() {
                                             return@addSnapshotListener
                                         }
                                         if (document != null && document.exists()) {
-                                            val espacios =
-                                                document.getLong(tipoVehiculo) ?: 0
+                                            val espacios = document.getLong(tipoVehiculo) ?: 0
                                             Log.d(
                                                 "FireStore",
                                                 "Valor modificado:'$tipoVehiculo -> $espacios'"
@@ -207,6 +222,7 @@ class HomeActivity : AppCompatActivity() {
                                                     "Hola, quedan $espacios espacios para $tipoVehiculo"
                                                 )
                                             }
+                                            notifiVehiculoParticular.text = "Quedan $espacios espacios para $tipoVehiculo"
                                         }
                                     }
                             }
@@ -249,6 +265,7 @@ class HomeActivity : AppCompatActivity() {
                                                     "Hola, quedan $espacios espacios para $tipoVehiculo"
                                                 )
                                             }
+                                            notifiBicicleta.text = "Quedan $espacios espacios para $tipoVehiculo"
                                         }
                                     }
                             }
@@ -270,7 +287,7 @@ class HomeActivity : AppCompatActivity() {
                                                 "FireStore",
                                                 "Valor modificado:'$tipoVehiculo -> $espacios'"
                                             )
-                                            if (espacios.toInt() == 0 ) {
+                                            if (espacios.toInt() == 0) {
                                                 mostrarNotificacion(
                                                     this,
                                                     "ZeusParking",
@@ -291,6 +308,7 @@ class HomeActivity : AppCompatActivity() {
                                                     "Hola, quedan $espacios espacios para $tipoVehiculo"
                                                 )
                                             }
+                                            notifiMotocicleta.text = "Quedan $espacios espacios para $tipoVehiculo"
                                         }
                                     }
                             }
@@ -363,7 +381,8 @@ class HomeActivity : AppCompatActivity() {
                 Correo_TV,
                 Usuario,
                 BienvenidaTextView,
-                menuOp
+                menuOp,
+                notificaciones
             ).forEach { view ->
                 view.startAnimation(fadeIn)
             }
@@ -445,35 +464,35 @@ class HomeActivity : AppCompatActivity() {
             val grande = 200
             if (cambioAnimacion) {
                 if (altura >= 3001) {
-                    animacionAnchoLinear(opciones, 1, 930, 200L)
+                    animacionAnchoLinear(opciones, 1, 900, 100L)
                     responsividad(entradaButton, grande, grande)
                     responsividad(localizacionButton, grande, grande)
                     responsividad(registrarBiciButton, grande, grande)
                     responsividad(cerrarSesion, grande, grande)
                 }
                 if (altura in 2501..3000) {
-                    animacionAnchoLinear(opciones, 1, 505, 200L)
+                    animacionAnchoLinear(opciones, 1, 860, 100L)
                     responsividad(entradaButton, Alto, Alto)
                     responsividad(localizacionButton, Alto, Alto)
                     responsividad(registrarBiciButton, Alto, Alto)
                     responsividad(cerrarSesion, Alto, Alto)
                 }
                 if (altura in 1301..2500) {
-                    animacionAnchoLinear(opciones, 1, 630, 200L)
+                    animacionAnchoLinear(opciones, 1, 630, 100L)
                     responsividad(entradaButton, medianoAlto, medianoAlto)
                     responsividad(localizacionButton, medianoAlto, medianoAlto)
                     responsividad(registrarBiciButton, medianoAlto, medianoAlto)
                     responsividad(cerrarSesion, medianoAlto, medianoAlto)
                 }
                 if (altura in 1081..1300) {
-                    animacionAnchoLinear(opciones, 1, 310, 200L)
+                    animacionAnchoLinear(opciones, 1, 350, 100L)
                     responsividad(entradaButton, mediano, mediano)
                     responsividad(localizacionButton, mediano, mediano)
                     responsividad(registrarBiciButton, mediano, mediano)
                     responsividad(cerrarSesion, mediano, mediano)
                 }
                 if (altura <= 1080) {
-                    animacionAnchoLinear(opciones, 1, 210, 200L)
+                    animacionAnchoLinear(opciones, 1, 270, 100L)
                     responsividad(entradaButton, pequeño, pequeño)
                     responsividad(localizacionButton, pequeño, pequeño)
                     responsividad(registrarBiciButton, pequeño, pequeño)
@@ -482,22 +501,73 @@ class HomeActivity : AppCompatActivity() {
             }
             if (!cambioAnimacion) {
                 if (altura >= 3001) {
-                    animacionAnchoLinear(opciones, 930, 1, 200L)
+                    animacionAnchoLinear(opciones, 900, 1, 100L)
                 }
                 if (altura in 2501..3000) {
-                    animacionAnchoLinear(opciones, 505, 1, 200L)
+                    animacionAnchoLinear(opciones, 860, 1, 100L)
                 }
                 if (altura in 1301..2500) {
-                    animacionAnchoLinear(opciones, 630, 1, 200L)
+                    animacionAnchoLinear(opciones, 630, 1, 100L)
                 }
                 if (altura in 1081..1300) {
-                    animacionAnchoLinear(opciones, 310, 1, 200L)
+                    animacionAnchoLinear(opciones, 350, 1, 100L)
                 }
                 if (altura <= 1080) {
-                    animacionAnchoLinear(opciones, 210, 1, 200L)
+                    animacionAnchoLinear(opciones, 270, 1, 100L)
                 }
             }
             cambioAnimacion = !cambioAnimacion
+        }
+
+        notificaciones.setOnClickListener {
+            val altura = resources.displayMetrics.heightPixels
+            val pequeño1Noti = 80
+            val pequeño2Noti = 140
+            val pequeño3Noti = 195
+            val pequeño4Noti = 260
+            val mediano1Noti = 140
+            val mediano2Noti = 265
+            val medinao3Noti = 390
+            val mediano4Noti = 520
+            val grande1Noti = 230
+            val grande2Noti = 430
+            val grande3Noti = 500
+            val grande4Noti = 725
+            if (cambioAnimacionNoti) {
+                if (altura >= 3001) {
+                    notifiDesplegue(grande1Noti, grande2Noti, grande3Noti, grande4Noti)
+                }
+                if (altura in 2501..3000) {
+                    notifiDesplegue(mediano1Noti, mediano2Noti, medinao3Noti, mediano4Noti)
+                }
+                if (altura in 1301..2500) {
+                    notifiDesplegue(mediano1Noti, mediano2Noti, medinao3Noti, mediano4Noti)
+                }
+                if (altura in 1081..1300) {
+                    notifiDesplegue(pequeño1Noti, pequeño2Noti, pequeño3Noti, pequeño4Noti)
+                }
+                if (altura <= 1080) {
+                    notifiDesplegue(pequeño1Noti, pequeño2Noti, pequeño3Noti, pequeño4Noti)
+                }
+            }
+            if (!cambioAnimacionNoti) {
+                if (altura >= 3001) {
+                    notifiRepliegue(grande1Noti, grande2Noti, grande3Noti, grande4Noti)
+                }
+                if (altura in 2501..3000) {
+                    notifiRepliegue(mediano1Noti, mediano2Noti, medinao3Noti, mediano4Noti)
+                }
+                if (altura in 1301..2500) {
+                    notifiRepliegue(mediano1Noti, mediano2Noti, medinao3Noti, mediano4Noti)
+                }
+                if (altura in 1081..1300) {
+                    notifiRepliegue(pequeño1Noti, pequeño2Noti, pequeño3Noti, pequeño4Noti)
+                }
+                if (altura <= 1080) {
+                    notifiRepliegue(pequeño1Noti, pequeño2Noti, pequeño3Noti, pequeño4Noti)
+                }
+            }
+            cambioAnimacionNoti = !cambioAnimacionNoti
         }
 
         cerrarSesion.setOnClickListener {
@@ -518,6 +588,367 @@ class HomeActivity : AppCompatActivity() {
         }
 
 
+    }
+
+    fun notifiRepliegue(notiUno: Int, notiDos: Int, notiTres: Int, notiCuatro: Int) {
+        database.collection("Bici_Usuarios")
+            .whereEqualTo("correo", Correo_TV.text.toString())
+            .addSnapshotListener { documents, e ->
+                if (e != null) {
+                    Toast.makeText(
+                        this,
+                        "El usuario no tiene vinculados vehiculos",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                } else {
+                    if (documents != null && !documents.isEmpty) {
+                        val tiposUsuario = mutableSetOf<String>()
+                        for (document in documents) {
+                            if (document.exists()) {
+                                document.getString("tipo")?.let { tiposUsuario.add(it) }
+                            }
+                        }
+                        if (tiposUsuario.isEmpty()) {
+                            notifiFurgon.text = "No tiene un vehiculo asignado"
+                            mostrarVista(notifiFurgon)
+                            animacionAnchoLinear(notificacionLinear, notiUno, 1, 100L)
+                        }
+                        val heigth = when {
+                            tiposUsuario.containsAll(
+                                setOf(
+                                    "Furgon",
+                                    "Vehiculo Particular",
+                                    "Bicicleta",
+                                    "Motocicleta"
+                                )
+                            ) -> notiCuatro
+
+                            tiposUsuario.containsAll(
+                                setOf(
+                                    "Furgon",
+                                    "Vehiculo Particular",
+                                    "Bicicleta"
+                                )
+                            ) -> notiTres
+
+                            tiposUsuario.containsAll(
+                                setOf(
+                                    "Furgon",
+                                    "Vehiculo Particular",
+                                    "Motocicleta"
+                                )
+                            ) -> {
+                                ocultarVista(notifiBicicleta)
+                                notiTres
+                            }
+
+                            tiposUsuario.containsAll(
+                                setOf(
+                                    "Furgon",
+                                    "Bicicleta",
+                                    "Motocicleta"
+                                )
+                            ) -> {
+                                ocultarVista(notifiVehiculoParticular)
+                                notiTres
+                            }
+
+                            tiposUsuario.containsAll(
+                                setOf(
+                                    "Vehiculo Particular",
+                                    "Bicicleta",
+                                    "Motocicleta"
+                                )
+                            ) -> {
+                                ocultarVista(notifiFurgon)
+                                notiTres
+                            }
+
+                            tiposUsuario.containsAll(
+                                setOf(
+                                    "Furgon",
+                                    "Vehiculo Particular"
+                                )
+                            ) -> notiDos
+
+                            tiposUsuario.containsAll(
+                                setOf(
+                                "Furgon",
+                                "Bicicleta"
+                                )
+                            ) -> {
+                                ocultarVista(notifiVehiculoParticular)
+                                notiDos
+                            }
+
+                            tiposUsuario.containsAll(
+                                setOf(
+                                    "Furgon",
+                                    "Motocicleta"
+                                )
+                            ) -> {
+                                ocultarVista(notifiBicicleta, notifiVehiculoParticular)
+                                notiDos
+                            }
+
+                            tiposUsuario.containsAll(
+                                setOf(
+                                    "Vehiculo Particular",
+                                    "Bicicleta"
+                                )
+                            ) -> {
+                                ocultarVista(notifiFurgon)
+                                notiDos
+                            }
+
+                            tiposUsuario.containsAll(
+                                setOf(
+                                    "Vehiculo Particular",
+                                    "Motocicleta"
+                                )
+                            ) -> {
+                                ocultarVista(notifiFurgon, notifiBicicleta)
+                                notiDos
+                            }
+
+                            tiposUsuario.containsAll(setOf("Bicicleta", "Motocicleta")) -> {
+                                ocultarVista(notifiFurgon, notifiVehiculoParticular)
+                                notiDos
+                            }
+
+                            tiposUsuario.contains("Furgon") -> {
+                                mostrarVista(notifiFurgon)
+                                notiUno
+                            }
+
+                            tiposUsuario.contains("Vehiculo Particular") -> {
+                                mostrarVista(notifiVehiculoParticular)
+                                notiUno
+                            }
+
+                            tiposUsuario.contains("Motocicleta") -> {
+                                mostrarVista(notifiMotocicleta)
+                                notiUno
+                            }
+
+                            tiposUsuario.contains("Bicicleta") -> {
+                                mostrarVista(notifiBicicleta)
+                                notiUno
+                            }
+
+                            else -> 0
+                        }
+                        if (heigth > 0) {
+                            animacionAnchoLinear(
+                                notificacionLinear,
+                                heigth,
+                                1,
+                                100L
+                            )
+                        }
+                        Log.d("FireStore", "Tipos de vehiculos: $Usuario, Ancho:$heigth")
+                    }
+                }
+            }
+    }
+
+    fun notifiDesplegue(notiUno: Int, notiDos: Int, notiTres: Int, notiCuatro: Int) {
+        database.collection("Bici_Usuarios")
+            .whereEqualTo("correo", Correo_TV.text.toString())
+            .addSnapshotListener { documents, e ->
+                if(e != null){
+                    Toast.makeText(
+                        this,
+                        "El usuario no tiene vinculados vehiculos",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }else {
+                    if (documents != null && !documents.isEmpty) {
+                        val tiposUsuario = mutableSetOf<String>()
+                        for (document in documents) {
+                            if (document.exists()) {
+                                document.getString("tipo")?.let { tiposUsuario.add(it) }
+                            }
+                        }
+                        if (tiposUsuario.isEmpty()) {
+                            notifiFurgon.text = "No tiene un vehiculo asignado"
+                            mostrarVista(notifiFurgon)
+                            animacionAnchoLinear(notificacionLinear, 1, notiUno, 100L)
+                            return@addSnapshotListener
+                        }
+                        val heigth = when {
+                            tiposUsuario.containsAll(
+                                setOf(
+                                    "Furgon",
+                                    "Vehiculo Particular",
+                                    "Bicicleta",
+                                    "Motocicleta"
+                                )
+                            ) -> notiCuatro
+
+                            tiposUsuario.containsAll(
+                                setOf(
+                                    "Furgon",
+                                    "Vehiculo Particular",
+                                    "Bicicleta"
+                                )
+                            ) -> notiTres
+
+                            tiposUsuario.containsAll(
+                                setOf(
+                                    "Furgon",
+                                    "Vehiculo Particular",
+                                    "Motocicleta"
+                                )
+                            ) -> {
+                                ocultarVista(notifiBicicleta)
+                                notiTres
+                            }
+
+                            tiposUsuario.containsAll(
+                                setOf(
+                                    "Furgon",
+                                    "Bicicleta",
+                                    "Motocicleta"
+                                )
+                            ) -> {
+                                ocultarVista(notifiVehiculoParticular)
+                                notiTres
+                            }
+
+                            tiposUsuario.containsAll(
+                                setOf(
+                                    "Vehiculo Particular",
+                                    "Bicicleta",
+                                    "Motocicleta"
+                                )
+                            ) -> {
+                                ocultarVista(notifiFurgon)
+                                notiTres
+                            }
+
+                            tiposUsuario.containsAll(
+                                setOf(
+                                    "Furgon",
+                                    "Vehiculo Particular"
+                                )
+                            ) -> notiDos
+
+                            tiposUsuario.containsAll(
+                                setOf(
+                                    "Furgon",
+                                    "Bicicleta"
+                                )
+                            ) -> {
+                                ocultarVista(notifiVehiculoParticular)
+                                notiDos
+                            }
+
+                            tiposUsuario.containsAll(
+                                setOf(
+                                    "Furgon",
+                                    "Motocicleta")
+                            ) -> {
+                                ocultarVista(notifiBicicleta, notifiVehiculoParticular)
+                                notiDos
+                            }
+
+                            tiposUsuario.containsAll(
+                                setOf(
+                                    "Vehiculo Particular",
+                                    "Bicicleta"
+                                )
+                            ) -> {
+                                ocultarVista(notifiFurgon)
+                                notiDos
+                            }
+
+                            tiposUsuario.containsAll(
+                                setOf(
+                                    "Vehiculo Particular",
+                                    "Motocicleta"
+                                )
+                            ) -> {
+                                ocultarVista(notifiFurgon, notifiBicicleta)
+                                notiDos
+                            }
+
+                            tiposUsuario.containsAll(
+                                setOf(
+                                    "Bicicleta",
+                                    "Motocicleta"
+                                )
+                            ) -> {
+                                ocultarVista(notifiFurgon, notifiVehiculoParticular)
+                                notiDos
+                            }
+
+                            tiposUsuario.containsAll(
+                                setOf(
+                                    "Bicicleta",
+                                    "Motocicleta"
+                                )
+                            ) -> {
+                                ocultarVista(notifiFurgon, notifiVehiculoParticular)
+                                notiDos
+                            }
+
+                            tiposUsuario.contains("Furgon") -> {
+                                mostrarVista(notifiFurgon)
+                                notiUno
+                            }
+
+                            tiposUsuario.contains("Vehiculo Particular") -> {
+                                mostrarVista(notifiVehiculoParticular)
+                                notiUno
+                            }
+
+                            tiposUsuario.contains("Motocicleta") -> {
+                                mostrarVista(notifiMotocicleta)
+                                notiUno
+                            }
+
+                            tiposUsuario.contains("Bicicleta") -> {
+                                mostrarVista(notifiBicicleta)
+                                notiUno
+                            }
+                            else -> 0
+                        }
+                        if (heigth > 0) {
+                            animacionAnchoLinear(notificacionLinear, 1, heigth, 100L)
+                        }
+                    }
+                }
+            }
+    }
+
+    fun ocultarVista(vararg views: View) {
+        views.forEach { view ->
+            view.layoutParams.width = 0
+            view.layoutParams.height = 0
+            view.requestLayout()
+        }
+    }
+
+    fun mostrarVista(vararg views: View) {
+        val anchor = resources.displayMetrics.widthPixels
+        views.forEach { view ->
+            if (anchor <= 590) {
+                view.layoutParams.width = 300
+                view.layoutParams.height = 55
+                view.requestLayout()
+            }
+            if (anchor in 591 .. 1300) {
+                view.layoutParams.width = 600
+                view.layoutParams.height = 105
+                view.requestLayout()
+            }
+            if (anchor >= 1301) {
+                view.layoutParams.width = 650
+                view.layoutParams.height = 150
+                view.requestLayout()
+            }
+        }
     }
 
     fun crearCanalNotificacion(context: Context) {
