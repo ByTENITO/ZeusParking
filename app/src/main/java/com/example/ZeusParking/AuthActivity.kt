@@ -1,3 +1,5 @@
+@file:Suppress("DEPRECATION")
+
 package com.example.parquiatenov10
 
 import android.animation.ValueAnimator
@@ -24,6 +26,12 @@ import android.util.Patterns
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
 import com.google.firebase.FirebaseApp
+import android.Manifest
+import android.content.pm.PackageManager
+import android.os.Build
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
+
 
 enum class ProviderType {
     GOOGLE,
@@ -33,7 +41,7 @@ enum class ProviderType {
 class AuthActivity : AppCompatActivity() {
 
     private val GOOGLE_SIGN_IN = 100
-    private val inputCorreo = "vigilante@uniminuto.edu.co" // Entrada simulada para correo
+    private val inputCorreo = "vigilante@uniminuto.edu.co" //Correo para ingreso a modulo de vigilante
     private val contraseña = "Vigilante123*"
     private lateinit var Google_BTN: Button
     private lateinit var Acceder_BTN: Button
@@ -48,7 +56,6 @@ class AuthActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.activity_auth)
-
 
         FirebaseApp.initializeApp(this)
 
@@ -68,9 +75,6 @@ class AuthActivity : AppCompatActivity() {
         val alto = resources.displayMetrics.heightPixels
 
 
-
-
-
         Google_BTN.startAnimation(fadeIn)
         Acceder_BTN.startAnimation(fadeIn)
         Registrarse_BTN.startAnimation(fadeIn)
@@ -83,6 +87,23 @@ class AuthActivity : AppCompatActivity() {
 
         bundle.putString("message", "Integración de Firebase completa")
         analytics.logEvent("InitScreen", bundle)
+
+        // Solicitar permisos al abrir la app
+        if (
+            ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED ||
+            ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED ||
+            (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU &&
+                    ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED)
+        ) {
+            val permisos = mutableListOf<String>()
+            permisos.add(Manifest.permission.CAMERA)
+            permisos.add(Manifest.permission.ACCESS_FINE_LOCATION)
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                permisos.add(Manifest.permission.POST_NOTIFICATIONS)
+            }
+
+            ActivityCompat.requestPermissions(this, permisos.toTypedArray(), 123)
+        }
 
         if (alto >= 3001) {
             val params = logo.layoutParams
@@ -129,7 +150,6 @@ class AuthActivity : AppCompatActivity() {
         setup()
         session()
     }
-
 
 
     private fun tamañoPantalla(porcentaje: Float): Int {
