@@ -80,34 +80,39 @@ class HomeActivity : AppCompatActivity() {
 
         bottomNavigationView.setOnItemSelectedListener { item ->
             if (item.itemId == bottomNavigationView.selectedItemId) {
-                return@setOnItemSelectedListener true  // Evita recargar la misma actividad
+                return@setOnItemSelectedListener true
             }
 
             when (item.itemId) {
-
                 R.id.home -> {
-                    startActivity(Intent(this, HomeActivity::class.java))  // Llama a AuthActivity
-                    overridePendingTransition(0, 0)  // Evita la animación de transición
-                    finish()  // Finaliza la actividad actual si no deseas que quede en la pila
+                    if (this::class.java != HomeActivity::class.java as Class<*>) {
+                        startActivity(Intent(this, HomeActivity::class.java))
+                        overridePendingTransition(0, 0)
+                    }
                 }
                 R.id.localizacion -> {
-                    startActivity(Intent(this, Localizacion::class.java))
-                    overridePendingTransition(0, 0)
-                    finish()
+                    if (this::class.java != Localizacion::class.java as Class<*>) {
+                        startActivity(Intent(this, Localizacion::class.java))
+                        overridePendingTransition(0, 0)
+                    }
                 }
                 R.id.registro -> {
-                    startActivity(Intent(this, RegistrarBiciActivity::class.java))
-                    overridePendingTransition(0, 0)
-                    finish()
+                    if (this::class.java != RegistrarBiciActivity::class.java as Class<*>) {
+                        startActivity(Intent(this, RegistrarBiciActivity::class.java))
+                        overridePendingTransition(0, 0)
+                    }
                 }
                 R.id.qr -> {
-                    startActivity(Intent(this, QrActivity::class.java))
-                    overridePendingTransition(0, 0)
-                    finish()
+                    if (this::class.java != QrActivity::class.java as Class<*>) {
+                        startActivity(Intent(this, QrActivity::class.java))
+                        overridePendingTransition(0, 0)
+                    }
                 }
             }
+
             true
         }
+
 
 
         // Obtener datos del intent

@@ -4,6 +4,7 @@ import android.animation.ValueAnimator
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
+import android.content.Intent
 import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
@@ -59,20 +60,22 @@ class Home_vigilante : AppCompatActivity() {
 
         crearCanalNotificacion(this)
 
+        //Menu de Navegacion
         val bottomNavigationView = findViewById<BottomNavigationView>(R.id.bottom_navigation_vigi)
 
         bottomNavigationView.setOnItemSelectedListener { item ->
             if (item.itemId == bottomNavigationView.selectedItemId) {
-                return@setOnItemSelectedListener true  // Evita recargar la misma vista
+                return@setOnItemSelectedListener true
             }
 
             when (item.itemId) {
                 R.id.Entrada -> {
-                    setContentView(R.layout.activity_entrada_qr_parqueadero)  // Cambia al layout de entrada
+                    val intent = Intent(this, EntradaQrParqueadero::class.java)
+                    startActivity(intent)
                 }
-
                 R.id.Salida -> {
-                    setContentView(R.layout.activity_salida_qr_parqueadero)  // Cambia al layout de salida
+                    val intent = Intent(this, SalidaQrParqueadero::class.java)
+                    startActivity(intent)
                 }
             }
             true
