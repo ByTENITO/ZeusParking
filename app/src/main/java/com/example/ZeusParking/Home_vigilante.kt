@@ -26,6 +26,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.squareup.picasso.Picasso
 
 class Home_vigilante : AppCompatActivity() {
+
     // Variables y vistas
     private var database = FirebaseFirestore.getInstance()
     private lateinit var perfil_vigi: ImageView
@@ -46,6 +47,7 @@ class Home_vigilante : AppCompatActivity() {
         enableEdgeToEdge()
         startAnimationsWithDelay()
         setContentView(R.layout.activity_home_vigilante)
+
         // Setup de vistas
         perfil_vigi = findViewById(R.id.FotoPerfil_vigi)
         Bienvenida_vigi = findViewById(R.id.Bienvenida_vigi)

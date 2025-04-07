@@ -84,9 +84,12 @@ dependencies {
     implementation ("androidx.camera:camera-view:1.3.0")
 
     //Material Design
-    implementation ("com.google.android.material:material:1.10.0")
+    implementation ("com.google.android.material:material:1.11.0")
 
-    
+    //Lottie json gif - animaciones
+    implementation ("com.airbnb.android:lottie:6.0.0")
+
+
     //Android Studio
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
