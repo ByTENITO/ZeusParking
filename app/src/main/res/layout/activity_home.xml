@@ -68,8 +68,8 @@
 
     <LinearLayout
         android:id="@+id/menuOpciones"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="45dp"
+        android:layout_height="60dp"
         android:background="@drawable/borde_menu"
         android:gravity="bottom"
         android:orientation="vertical"
@@ -83,33 +83,33 @@
             android:id="@+id/Entrada_BTN"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:src="@drawable/qr"
             android:clickable="true"
-            android:focusable="true"/>
+            android:focusable="true"
+            android:src="@drawable/qr" />
 
         <ImageView
             android:id="@+id/Localizacion_BTN"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:src="@drawable/localizacion"
             android:clickable="true"
-            android:focusable="true"/>
+            android:focusable="true"
+            android:src="@drawable/localizacion" />
 
         <ImageView
             android:id="@+id/RegistrarBici_BTN"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:src="@drawable/registro"
             android:clickable="true"
-            android:focusable="true"/>
+            android:focusable="true"
+            android:src="@drawable/registro" />
 
         <ImageView
             android:id="@+id/CerrarSesion"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:src="@drawable/cerrar_sesion"
             android:clickable="true"
-            android:focusable="true"/>
+            android:focusable="true"
+            android:src="@drawable/cerrar_sesion" />
     </LinearLayout>
 
 

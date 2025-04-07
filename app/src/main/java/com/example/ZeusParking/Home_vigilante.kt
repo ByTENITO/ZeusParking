@@ -73,6 +73,7 @@ class Home_vigilante : AppCompatActivity() {
                     val intent = Intent(this, EntradaQrParqueadero::class.java)
                     startActivity(intent)
                 }
+
                 R.id.Salida -> {
                     val intent = Intent(this, SalidaQrParqueadero::class.java)
                     startActivity(intent)
@@ -96,147 +97,46 @@ class Home_vigilante : AppCompatActivity() {
             }
             apply()
         }
-        database.collection("Disponibilidad")
-            .document("0ctYNlFXwtVw9ylURFXi")
-            .addSnapshotListener { document, e ->
-                if (e != null) {
-                    Log.d(
-                        "FireStore",
-                        "Error al escuchar los datos: 0ctYNlFXwtVw9ylURFXi",
-                        e
-                    )
-                    return@addSnapshotListener
-                }
-                if (document != null && document.exists()) {
-                    val espacios = document.getLong("Furgon") ?: 0
-                    Log.d("FireStore", "Valor modificado:'Furgon -> $espacios'")
-                    if (espacios.toInt() == 0) {
-                        mostrarNotificacion(
-                            this,
-                            "ZeusParking",
-                            "Hola, no quedan espacios para Furgon"
-                        )
-                    }
-                    if (espacios.toInt() in 1 ..  2) {
-                        mostrarNotificacion(
-                            this,
-                            "ZeusParking",
-                            "Hola, quedan pocos espacios en el parquedero de Furgon quedan: $espacios"
-                        )
-                    }
-                    if (espacios.toInt() in 3 .. 4) {
-                        mostrarNotificacion(
-                            this,
-                            "ZeusParking",
-                            "Hola, quedan $espacios espacios para Furgon"
-                        )
-                    }
-                    notifiFurgon.text = "Quedan " + espacios + " espacios para Furgon"
-                }
-            }
-        database.collection("Disponibilidad")
-            .document("UF0tfabGHGitcj7En6Wy")
-            .addSnapshotListener { document, e ->
-                if (e != null) {
-                    Log.d("FireStore", "Error al escuchar los datos: UF0tfabGHGitcj7En6Wy", e)
-                    return@addSnapshotListener
-                }
-                if (document != null && document.exists()) {
-                    val espacios = document.getLong("Vehiculo Particular") ?: 0
-                    Log.d("FireStore", "Valor modificado:'Vehiculo Particular -> $espacios'")
-                    if (espacios.toInt() == 0) {
-                        mostrarNotificacion(
-                            this,
-                            "ZeusParking",
-                            "Hola, no quedan espacios para Vehiculos Particulares"
-                        )
-                    }
-                    if (espacios.toInt() in 1 .. 4) {
-                        mostrarNotificacion(
-                            this,
-                            "ZeusParking",
-                            "Hola, quedan pocos espacios en el parquedero de Vehiculo Particular quedan: $espacios"
-                        )
-                    }
-                    if (espacios.toInt() in 5 .. 8) {
-                        mostrarNotificacion(
-                            this,
-                            "ZeusParking",
-                            "Hola, quedan $espacios espacios para Vehiculo Particular"
-                        )
-                    }
-                    notifiVehiculoParticular.text = "Quedan $espacios espacios para Vehiculo Particular"
-                }
-            }
-        database.collection("Disponibilidad")
-            .document("IuDC5XlTyhxhqU4It8SD")
-            .addSnapshotListener { document, e ->
-                if (e != null) {
-                    Log.d("FireStore", "Error al escuchar los datos: IuDC5XlTyhxhqU4It8SD", e)
-                    return@addSnapshotListener
-                }
-                if (document != null && document.exists()) {
-                    val espacios = document.getLong("Bicicleta") ?: 0
-                    Log.d("FireStore", "Valor modificado:'Bicicleta -> $espacios'")
-                    if (espacios.toInt() == 0) {
-                        mostrarNotificacion(
-                            this,
-                            "ZeusParking",
-                            "Hola, no quedan espacios para Bicicleta, quedan: $espacios"
-                        )
-                    }
-                    if (espacios.toInt() in 1 .. 5) {
-                        mostrarNotificacion(
-                            this,
-                            "ZeusParking",
-                            "Hola, corre quedan pocos espacios en el parquedero de Bicicleta, quedan: $espacios"
-                        )
-                    }
-                    if (espacios.toInt() in 6 .. 10) {
-                        mostrarNotificacion(
-                            this,
-                            "ZeusParking",
-                            "Hola, quedan $espacios espacios para Bicicleta"
-                        )
-                    }
-                    notifiBicicleta.text = "Quedan $espacios espacios para Bicicleta"
-                }
-            }
-        database.collection("Disponibilidad")
-            .document("ntHgnXs4Qbz074siOrvz")
-            .addSnapshotListener { document, e ->
-                if (e != null) {
-                    Log.d("FireStore", "Error al escuchar los datos: ntHgnXs4Qbz074siOrvz", e)
-                    return@addSnapshotListener
-                }
-                if (document != null && document.exists()) {
-                    val espacios = document.getLong("Motocicleta") ?: 0
-                    Log.d("FireStore", "Valor modificado:'Motocicleta -> $espacios'")
-                    if (espacios.toInt() == 0) {
-                        mostrarNotificacion(
-                            this,
-                            "ZeusParking",
-                            "Hola, no quedan espacios para Motocicletas, quedan: $espacios"
-                        )
-                    }
-                    if (espacios.toInt() in 1 .. 3) {
-                        mostrarNotificacion(
-                            this,
-                            "ZeusParking",
-                            "Hola, quedan pocos espacios en el parquedero de Motocicleta, quedan: $espacios"
-                        )
-                    }
-                    if (espacios.toInt() in 4 .. 7) {
-                        mostrarNotificacion(
-                            this,
-                            "ZeusParking",
-                            "Hola, quedan $espacios espacios para Motocicleta"
-                        )
-                    }
-                    notifiMotocicleta.text = "Quedan $espacios espacios para Motocicleta"
-                }
-            }
-
+        escucharDisponibilidad(
+            "0ctYNlFXwtVw9ylURFXi",
+            "Furgon",
+            notifiFurgon,
+            listOf(
+                (0..0) to "Hola, no quedan espacios para Furgon",
+                (1..2) to "Hola, quedan pocos espacios en el parqueadero de Furgon, quedan: {espacios}",
+                (3..4) to "Hola, quedan {espacios} espacios para Furgon"
+            )
+        )
+        escucharDisponibilidad(
+            "UF0tfabGHGitcj7En6Wy",
+            "Vehiculo Particular",
+            notifiVehiculoParticular,
+            listOf(
+                (0..0) to "Hola, no quedan espacios para Vehiculo Particular",
+                (1..5) to "Hola, quedan pocos espacios en el parqueadero de Vehiculo Particular, quedan: {espacios}",
+                (6..10) to "Hola, quedan {espacios} espacios para Vehiculo Particular"
+            )
+        )
+        escucharDisponibilidad(
+            "IuDC5XlTyhxhqU4It8SD",
+            "Bicicleta",
+            notifiBicicleta,
+            listOf(
+                (0..0) to "Hola, no quedan espacios para Bicicleta",
+                (1..5) to "Hola, quedan pocos espacios en el parqueadero de Bicicleta, quedan: {espacios}",
+                (6..10) to "Hola, quedan {espacios} espacios para Bicicleta"
+            )
+        )
+        escucharDisponibilidad(
+            "ntHgnXs4Qbz074siOrvz",
+            "Motocicleta",
+            notifiMotocicleta,
+            listOf(
+                (0..0) to "Hola, no quedan espacios para Motocicleta",
+                (1..5) to "Hola, quedan pocos espacios en el parqueadero de Motocicleta, quedan: {espacios}",
+                (6..10) to "Hola, quedan {espacios} espacios para Motocicleta"
+            )
+        )
 
         // Comprobar si el proveedor es Google
         if (provider == ProviderType.GOOGLE.name && inputCorreo != null && fotoPerfilUrl != null) {
@@ -451,11 +351,38 @@ class Home_vigilante : AppCompatActivity() {
             .setContentTitle(titulo)
             .setContentText(mensaje)
             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-            .setColor(Color.BLUE)
             .setAutoCancel(true)
 
-        val notificationId =
-            System.currentTimeMillis().toInt() // Genera un ID único basado en el tiempo
-        notificationManager.notify(notificationId, builder.build())
+        notificationManager.notify(System.currentTimeMillis().toInt(), builder.build())
     }
+
+    fun escucharDisponibilidad(
+        documentId: String,
+        campo: String,
+        textoView: TextView,
+        umbrales: List<Pair<IntRange, String>>
+    ) {
+        database.collection("Disponibilidad")
+            .document(documentId)
+            .addSnapshotListener { document, e ->
+                if (e != null) {
+                    Log.d("Firestore", "Error al escuchar: $documentId", e)
+                    return@addSnapshotListener
+                }
+                val espacios = document?.getLong(campo)?.toInt() ?: 0
+                Log.d("Firestore", "Actualizado $campo -> $espacios")
+                textoView.text = "Quedan $espacios espacios para $campo"
+                for ((rango, mensaje) in umbrales) {
+                    if (espacios in rango) {
+                        mostrarNotificacion(
+                            this,
+                            "ZeusParking",
+                            mensaje.replace("{espacios}", espacios.toString())
+                        )
+                        break
+                    }
+                }
+            }
+    }
+
 }
