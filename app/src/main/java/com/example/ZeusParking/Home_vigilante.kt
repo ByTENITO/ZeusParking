@@ -240,67 +240,61 @@ class Home_vigilante : AppCompatActivity() {
         notificaciones.setOnClickListener {
             val altura = resources.displayMetrics.heightPixels
             if (cambioAnimacionNoti) {
-                if (altura >= 3001) {
-                    animacionAnchoLinear(notificacionLinear, 1, 725, 200L)
-                    mostrarVista(
-                        notifiFurgon,
-                        notifiVehiculoParticular,
-                        notifiMotocicleta,
-                        notifiBicicleta
-                    )
-                }
-                if (altura in 2501..3000) {
-                    animacionAnchoLinear(notificacionLinear, 1, 520, 200L)
-                    mostrarVista(
-                        notifiFurgon,
-                        notifiVehiculoParticular,
-                        notifiMotocicleta,
-                        notifiBicicleta
-                    )
-                }
-                if (altura in 1301..2500) {
-                    animacionAnchoLinear(notificacionLinear, 1, 500, 200L)
-                    mostrarVista(
-                        notifiFurgon,
-                        notifiVehiculoParticular,
-                        notifiMotocicleta,
-                        notifiBicicleta
-                    )
-                }
-                if (altura in 1081..1300) {
-                    animacionAnchoLinear(notificacionLinear, 1, 260, 200L)
-                    mostrarVista(
-                        notifiFurgon,
-                        notifiVehiculoParticular,
-                        notifiMotocicleta,
-                        notifiBicicleta
-                    )
-                }
-                if (altura <= 1080) {
-                    animacionAnchoLinear(notificacionLinear, 1, 260, 200L)
-                    mostrarVista(
-                        notifiFurgon,
-                        notifiVehiculoParticular,
-                        notifiMotocicleta,
-                        notifiBicicleta
-                    )
+                when {
+                    altura >= 3001 ->{
+                        animacionAnchoLinear(notificacionLinear, 1, 725, 200L)
+                        mostrarVista(
+                            notifiFurgon,
+                            notifiVehiculoParticular,
+                            notifiMotocicleta,
+                            notifiBicicleta
+                        )
+                    }
+                    altura in 2501..3000 -> {
+                        animacionAnchoLinear(notificacionLinear, 1, 520, 200L)
+                        mostrarVista(
+                            notifiFurgon,
+                            notifiVehiculoParticular,
+                            notifiMotocicleta,
+                            notifiBicicleta
+                        )
+                    }
+                    altura in 1301..2500 -> {
+                        animacionAnchoLinear(notificacionLinear, 1, 500, 200L)
+                        mostrarVista(
+                            notifiFurgon,
+                            notifiVehiculoParticular,
+                            notifiMotocicleta,
+                            notifiBicicleta
+                        )
+                    }
+                    altura in 1081..1300 -> {
+                        animacionAnchoLinear(notificacionLinear, 1, 260, 200L)
+                        mostrarVista(
+                            notifiFurgon,
+                            notifiVehiculoParticular,
+                            notifiMotocicleta,
+                            notifiBicicleta
+                        )
+                    }
+                    altura in 0..1080 -> {
+                        animacionAnchoLinear(notificacionLinear, 1, 260, 200L)
+                        mostrarVista(
+                            notifiFurgon,
+                            notifiVehiculoParticular,
+                            notifiMotocicleta,
+                            notifiBicicleta
+                        )
+                    }
                 }
             }
             if (!cambioAnimacionNoti) {
-                if (altura >= 3001) {
-                    animacionAnchoLinear(notificacionLinear, 725, 1, 200L)
-                }
-                if (altura in 2501..3000) {
-                    animacionAnchoLinear(notificacionLinear, 520, 1, 200L)
-                }
-                if (altura in 1301..2500) {
-                    animacionAnchoLinear(notificacionLinear, 520, 1, 200L)
-                }
-                if (altura in 1081..1300) {
-                    animacionAnchoLinear(notificacionLinear, 260, 1, 200L)
-                }
-                if (altura <= 1080) {
-                    animacionAnchoLinear(notificacionLinear, 260, 1, 200L)
+                when{
+                    altura >= 3001 -> animacionAnchoLinear(notificacionLinear, 725, 1, 200L)
+                    altura in 2501..3000 -> animacionAnchoLinear(notificacionLinear, 520, 1, 200L)
+                    altura in 1301..2500 -> animacionAnchoLinear(notificacionLinear, 520, 1, 200L)
+                    altura in 1081..1300 -> animacionAnchoLinear(notificacionLinear, 260, 1, 200L)
+                    altura in 0..1080 -> animacionAnchoLinear(notificacionLinear, 260, 1, 200L)
                 }
             }
             cambioAnimacionNoti = !cambioAnimacionNoti
@@ -311,20 +305,23 @@ class Home_vigilante : AppCompatActivity() {
     fun mostrarVista(vararg views: View) {
         val anchor = resources.displayMetrics.widthPixels
         views.forEach { view ->
-            if (anchor <= 590) {
-                view.layoutParams.width = 300
-                view.layoutParams.height = 60
-                view.requestLayout()
-            }
-            if (anchor in 591..1300) {
-                view.layoutParams.width = 600
-                view.layoutParams.height = 110
-                view.requestLayout()
-            }
-            if (anchor >= 1301) {
-                view.layoutParams.width = 650
-                view.layoutParams.height = 155
-                view.requestLayout()
+            when{
+                anchor <= 590 -> {
+                    view.layoutParams.width = 300
+                    view.layoutParams.height = 60
+                    view.requestLayout()
+                }
+                anchor in 591 .. 1300 -> {
+                    view.layoutParams.width = 600
+                    view.layoutParams.height = 110
+                    view.requestLayout()
+                }
+                anchor in 0..1301 -> {
+                    view.layoutParams.width = 650
+                    view.layoutParams.height = 155
+                    view.requestLayout()
+                }
+                else -> return
             }
         }
     }

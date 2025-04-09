@@ -65,9 +65,8 @@ dependencies {
     implementation("com.google.firebase:firebase-auth")
 
     //Codigos de Barras
-    implementation ("com.google.firebase:firebase-ml-vision:24.0.3")
     implementation ("com.journeyapps:zxing-android-embedded:4.3.0")
-    implementation ("com.google.zxing:core:3.4.1")
+    implementation ("com.google.zxing:core:3.5.2")
 
     //Imagen de Perfil
     implementation ("com.squareup.picasso:picasso:2.71828")

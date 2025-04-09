@@ -199,36 +199,21 @@ class HomeActivity : AppCompatActivity() {
 
         overridePendingTransition(0, 0)
 
-        if (alto >= 3001) {
-            responsividad(menuOp, 200, 200)
-        }
-        if (alto in 2501..3000) {
-            responsividad(menuOp, 200, 200)
-        }
-        if (alto in 1301..2500) {
-            responsividad(menuOp, 140, 140)
-        }
-        if (alto in 1081..1300) {
-            responsividad(menuOp, 80, 80)
-        }
-        if (alto <= 1080) {
-            responsividad(menuOp, 60, 60)
+        when {
+            alto >= 3001 -> responsividad(menuOp, 200, 200)
+            alto in 2501..3000 -> responsividad(menuOp, 200, 200)
+            alto in 1301..2500 -> responsividad(menuOp, 140, 140)
+            alto in 1081..1300 -> responsividad(menuOp, 80, 80)
+            alto in 0..1080 -> responsividad(menuOp, 60, 60)
+            else -> return
         }
 
-        if (ancho >= 3001) {
-            responsividadText(Correo_TV, 3500)
-        }
-        if (ancho in 2501..3000) {
-            responsividadText(Correo_TV, 2500)
-        }
-        if (ancho in 1081..2500) {
-            responsividadText(Correo_TV, 2000)
-        }
-        if (ancho in 721..1080) {
-            responsividadText(Correo_TV, 900)
-        }
-        if (ancho <= 720) {
-            responsividadText(Correo_TV, 580)
+        when{
+            ancho >= 3001 -> responsividadText(Correo_TV, 3500)
+            ancho in 2501..3000 -> responsividadText(Correo_TV, 2500)
+            ancho in 1081..2500 -> responsividadText(Correo_TV, 2000)
+            ancho in 721..1080 -> responsividadText(Correo_TV, 900)
+            ancho in 0..720 -> responsividadText(Correo_TV, 580)
         }
 
         // Comprobar si el proveedor es Google
@@ -340,57 +325,51 @@ class HomeActivity : AppCompatActivity() {
             val Alto = 200
             val grande = 200
             if (cambioAnimacion) {
-                if (altura >= 3001) {
-                    animacionAnchoLinear(opciones, 1, 900, 100L)
-                    responsividad(entradaButton, grande, grande)
-                    responsividad(localizacionButton, grande, grande)
-                    responsividad(registrarBiciButton, grande, grande)
-                    responsividad(cerrarSesion, grande, grande)
-                }
-                if (altura in 2501..3000) {
-                    animacionAnchoLinear(opciones, 1, 860, 100L)
-                    responsividad(entradaButton, Alto, Alto)
-                    responsividad(localizacionButton, Alto, Alto)
-                    responsividad(registrarBiciButton, Alto, Alto)
-                    responsividad(cerrarSesion, Alto, Alto)
-                }
-                if (altura in 1301..2500) {
-                    animacionAnchoLinear(opciones, 1, 630, 100L)
-                    responsividad(entradaButton, medianoAlto, medianoAlto)
-                    responsividad(localizacionButton, medianoAlto, medianoAlto)
-                    responsividad(registrarBiciButton, medianoAlto, medianoAlto)
-                    responsividad(cerrarSesion, medianoAlto, medianoAlto)
-                }
-                if (altura in 1081..1300) {
-                    animacionAnchoLinear(opciones, 1, 350, 100L)
-                    responsividad(entradaButton, mediano, mediano)
-                    responsividad(localizacionButton, mediano, mediano)
-                    responsividad(registrarBiciButton, mediano, mediano)
-                    responsividad(cerrarSesion, mediano, mediano)
-                }
-                if (altura <= 1080) {
-                    animacionAnchoLinear(opciones, 1, 270, 100L)
-                    responsividad(entradaButton, pequeño, pequeño)
-                    responsividad(localizacionButton, pequeño, pequeño)
-                    responsividad(registrarBiciButton, pequeño, pequeño)
-                    responsividad(cerrarSesion, pequeño, pequeño)
+                when {
+                    altura >= 3001 ->{
+                        animacionAnchoLinear(opciones, 1, 900, 100L)
+                        responsividad(entradaButton, grande, grande)
+                        responsividad(localizacionButton, grande, grande)
+                        responsividad(registrarBiciButton, grande, grande)
+                        responsividad(cerrarSesion, grande, grande)
+                    }
+                    altura in 2501..3000 -> {
+                        animacionAnchoLinear(opciones, 1, 860, 100L)
+                        responsividad(entradaButton, Alto, Alto)
+                        responsividad(localizacionButton, Alto, Alto)
+                        responsividad(registrarBiciButton, Alto, Alto)
+                        responsividad(cerrarSesion, Alto, Alto)
+                    }
+                    altura in 1301..2500 -> {
+                        animacionAnchoLinear(opciones, 1, 630, 100L)
+                        responsividad(entradaButton, medianoAlto, medianoAlto)
+                        responsividad(localizacionButton, medianoAlto, medianoAlto)
+                        responsividad(registrarBiciButton, medianoAlto, medianoAlto)
+                        responsividad(cerrarSesion, medianoAlto, medianoAlto)
+                    }
+                    altura in 1081..1300 -> {
+                        animacionAnchoLinear(opciones, 1, 350, 100L)
+                        responsividad(entradaButton, mediano, mediano)
+                        responsividad(localizacionButton, mediano, mediano)
+                        responsividad(registrarBiciButton, mediano, mediano)
+                        responsividad(cerrarSesion, mediano, mediano)
+                    }
+                    altura in 0..1080 -> {
+                        animacionAnchoLinear(opciones, 1, 270, 100L)
+                        responsividad(entradaButton, pequeño, pequeño)
+                        responsividad(localizacionButton, pequeño, pequeño)
+                        responsividad(registrarBiciButton, pequeño, pequeño)
+                        responsividad(cerrarSesion, pequeño, pequeño)
+                    }
                 }
             }
             if (!cambioAnimacion) {
-                if (altura >= 3001) {
-                    animacionAnchoLinear(opciones, 900, 1, 100L)
-                }
-                if (altura in 2501..3000) {
-                    animacionAnchoLinear(opciones, 860, 1, 100L)
-                }
-                if (altura in 1301..2500) {
-                    animacionAnchoLinear(opciones, 630, 1, 100L)
-                }
-                if (altura in 1081..1300) {
-                    animacionAnchoLinear(opciones, 350, 1, 100L)
-                }
-                if (altura <= 1080) {
-                    animacionAnchoLinear(opciones, 270, 1, 100L)
+                when{
+                    altura >= 3001 -> animacionAnchoLinear(opciones, 900, 1, 100L)
+                    altura in 2501..3000 -> animacionAnchoLinear(opciones, 860, 1, 100L)
+                    altura in 1301..2500 -> animacionAnchoLinear(opciones, 630, 1, 100L)
+                    altura in 1081..1300 -> animacionAnchoLinear(opciones, 350, 1, 100L)
+                    altura in 0..1080 -> animacionAnchoLinear(opciones, 270, 1, 100L)
                 }
             }
             cambioAnimacion = !cambioAnimacion
@@ -398,50 +377,25 @@ class HomeActivity : AppCompatActivity() {
 
         notificaciones.setOnClickListener {
             val altura = resources.displayMetrics.heightPixels
-            val pequeño1Noti = 80
-            val pequeño2Noti = 140
-            val pequeño3Noti = 195
-            val pequeño4Noti = 260
-            val mediano1Noti = 140
-            val mediano2Noti = 265
-            val medinao3Noti = 390
-            val mediano4Noti = 520
-            val grande1Noti = 230
-            val grande2Noti = 430
-            val grande3Noti = 500
-            val grande4Noti = 725
+            val pequeñoNoti = listOf(80,140,195,260)
+            val medianoNoti = listOf(140,265,390,520)
+            val grandeNoti = listOf(230,430,500,725)
             if (cambioAnimacionNoti) {
-                if (altura >= 3001) {
-                    notifiDesplegue(grande1Noti, grande2Noti, grande3Noti, grande4Noti)
-                }
-                if (altura in 2501..3000) {
-                    notifiDesplegue(mediano1Noti, mediano2Noti, medinao3Noti, mediano4Noti)
-                }
-                if (altura in 1301..2500) {
-                    notifiDesplegue(mediano1Noti, mediano2Noti, medinao3Noti, mediano4Noti)
-                }
-                if (altura in 1081..1300) {
-                    notifiDesplegue(pequeño1Noti, pequeño2Noti, pequeño3Noti, pequeño4Noti)
-                }
-                if (altura <= 1080) {
-                    notifiDesplegue(pequeño1Noti, pequeño2Noti, pequeño3Noti, pequeño4Noti)
+                when{
+                    altura >= 3001 -> notifiDesplegue(grandeNoti[0],grandeNoti[1],grandeNoti[2],grandeNoti[3])
+                    altura in 2501..3000 -> notifiDesplegue(medianoNoti[0], medianoNoti[1], medianoNoti[2], medianoNoti[3])
+                    altura in 1301..2500 -> notifiDesplegue(medianoNoti[0], medianoNoti[1], medianoNoti[2], medianoNoti[3])
+                    altura in 1081..1300 -> notifiDesplegue(pequeñoNoti[0], pequeñoNoti[1], pequeñoNoti[2], pequeñoNoti[3])
+                    altura in 0..1080 -> notifiDesplegue(pequeñoNoti[0], pequeñoNoti[1], pequeñoNoti[2], pequeñoNoti[3])
                 }
             }
             if (!cambioAnimacionNoti) {
-                if (altura >= 3001) {
-                    notifiRepliegue(grande1Noti, grande2Noti, grande3Noti, grande4Noti)
-                }
-                if (altura in 2501..3000) {
-                    notifiRepliegue(mediano1Noti, mediano2Noti, medinao3Noti, mediano4Noti)
-                }
-                if (altura in 1301..2500) {
-                    notifiRepliegue(mediano1Noti, mediano2Noti, medinao3Noti, mediano4Noti)
-                }
-                if (altura in 1081..1300) {
-                    notifiRepliegue(pequeño1Noti, pequeño2Noti, pequeño3Noti, pequeño4Noti)
-                }
-                if (altura <= 1080) {
-                    notifiRepliegue(pequeño1Noti, pequeño2Noti, pequeño3Noti, pequeño4Noti)
+                when{
+                    altura >= 3001 -> notifiRepliegue(grandeNoti[0],grandeNoti[1],grandeNoti[2],grandeNoti[3])
+                    altura in 2501..3000 -> notifiRepliegue(medianoNoti[0], medianoNoti[1], medianoNoti[2], medianoNoti[3])
+                    altura in 1301..2500 -> notifiRepliegue(medianoNoti[0], medianoNoti[1], medianoNoti[2], medianoNoti[3])
+                    altura in 1081..1300 -> notifiRepliegue(pequeñoNoti[0], pequeñoNoti[1], pequeñoNoti[2], pequeñoNoti[3])
+                    altura in 0..1080 -> notifiRepliegue(pequeñoNoti[0], pequeñoNoti[1], pequeñoNoti[2], pequeñoNoti[3])
                 }
             }
             cambioAnimacionNoti = !cambioAnimacionNoti
@@ -810,20 +764,23 @@ class HomeActivity : AppCompatActivity() {
     fun mostrarVista(vararg views: View) {
         val anchor = resources.displayMetrics.widthPixels
         views.forEach { view ->
-            if (anchor <= 590) {
-                view.layoutParams.width = 300
-                view.layoutParams.height = 55
-                view.requestLayout()
-            }
-            if (anchor in 591 .. 1300) {
-                view.layoutParams.width = 600
-                view.layoutParams.height = 105
-                view.requestLayout()
-            }
-            if (anchor >= 1301) {
-                view.layoutParams.width = 650
-                view.layoutParams.height = 150
-                view.requestLayout()
+            when{
+                anchor <= 590 -> {
+                    view.layoutParams.width = 300
+                    view.layoutParams.height = 55
+                    view.requestLayout()
+                }
+                anchor in 591 .. 1300 -> {
+                    view.layoutParams.width = 600
+                    view.layoutParams.height = 105
+                    view.requestLayout()
+                }
+                anchor in 0..1301 -> {
+                    view.layoutParams.width = 650
+                    view.layoutParams.height = 150
+                    view.requestLayout()
+                }
+                else -> return
             }
         }
     }
