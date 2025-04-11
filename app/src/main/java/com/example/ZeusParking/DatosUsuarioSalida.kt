@@ -1,23 +1,24 @@
 package com.example.parquiatenov10
 
-import android.app.NotificationChannel
-import android.app.NotificationManager
-import android.content.Context
-import android.graphics.Color
+
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.widget.Button
+import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.app.NotificationCompat
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
-import java.time.LocalDateTime
+import com.google.firebase.storage.FirebaseStorage
+import com.squareup.picasso.Picasso
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
+
+
 @RequiresApi(Build.VERSION_CODES.O)
 class DatosUsuarioSalida : AppCompatActivity() {
     private var database = FirebaseFirestore.getInstance()
@@ -28,7 +29,8 @@ class DatosUsuarioSalida : AppCompatActivity() {
     private lateinit var numeroTXT: TextView
     private lateinit var tipoTXT: TextView
     private lateinit var botonSalida: Button
-
+    private lateinit var fotoUsuario: ImageView
+    private lateinit var fotoVehi: ImageView
     private var fechaHoraActual = ZonedDateTime.now()
     private var formato = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
     private var fechaHoraFormateada = fechaHoraActual.format(formato)
@@ -44,18 +46,22 @@ class DatosUsuarioSalida : AppCompatActivity() {
         val fechaHora: String
     ) : java.io.Serializable
 
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_datos_usuario_entrada)
+        setContentView(R.layout.activity_datos_usuario_salida)
 
         // Inicializar vistas
-        botonSalida = findViewById(R.id.Salida)
-        correoTXT = findViewById(R.id.correoFirebase)
-        colorTXT = findViewById(R.id.colorFirebase)
-        nombreTXT = findViewById(R.id.nombreFirebase)
-        apellidoTXT = findViewById(R.id.apellidoFirebase)
-        numeroTXT = findViewById(R.id.idVehiculoFirebase)
-        tipoTXT = findViewById(R.id.tipoVehiculoFirebase)
+        botonSalida = findViewById(R.id.SalidaExit)
+        correoTXT = findViewById(R.id.correoFirebaseSalida)
+        colorTXT = findViewById(R.id.colorFirebaseSalida)
+        nombreTXT = findViewById(R.id.nombreFirebaseSalida)
+        apellidoTXT = findViewById(R.id.apellidoFirebaseSalida)
+        numeroTXT = findViewById(R.id.idVehiculoFirebaseSalida)
+        tipoTXT = findViewById(R.id.tipoVehiculoFirebaseSalida)
+        fotoUsuario = findViewById(R.id.fotoUsuarioSalida)
+        fotoVehi = findViewById(R.id.fotoBiciSalida)
 
         val correo = intent.getStringExtra("correo") ?: "No disponible"
         val vehiculo = intent.getStringExtra("tipo") ?: "No disponible"
@@ -68,10 +74,51 @@ class DatosUsuarioSalida : AppCompatActivity() {
             return
         }
 
+        database.collection("Bici_Usuarios")
+            .whereEqualTo("correo",correo)
+            .whereEqualTo("tipo",vehiculo)
+            .addSnapshotListener {documents, e->
+                if (documents != null) {
+                    for (document in documents){
+                        val userId = FirebaseAuth.getInstance().currentUser?.uid
+                        val cedula = document.getString("cedula")
+                        val idVehi = document.getString("numero")
+                        buscarImagenUser(userId,document.id,cedula)
+                        buscarImagenVehi(userId,document.id,idVehi)
+                        Log.d("FireStorage","id -> ${document.id} ")
+                        Log.d("FireStorage","usuario -> $cedula")
+                    }
+                }
+            }
         verificarSalida(correo, vehiculo, idVehiculo)
 
         botonSalida.setOnClickListener {
             finish()
+        }
+    }
+
+    private fun buscarImagenUser (userId: String?, id: String?, cedula: String? ){
+        val storageImagenUser = FirebaseStorage.getInstance().reference
+        val imageStorage = storageImagenUser.child("$userId/$id/$cedula.png")
+        Log.d("FireStorage","$userId/$id/$cedula.png")
+
+        imageStorage.downloadUrl.addOnSuccessListener { uri ->
+            Log.d("FireStorage","URL obtenida: $uri")
+            Picasso.get().load(uri).into(fotoUsuario)
+        }.addOnFailureListener { e ->
+            Log.e("FireStorage","Error en URL:",e)
+        }
+    }
+
+    private fun buscarImagenVehi (userId: String?, id: String?,idVehi: String?){
+        val storageImagenUser = FirebaseStorage.getInstance().reference
+        val imageStorage = storageImagenUser.child("$userId/$id/$idVehi.png")
+
+        imageStorage.downloadUrl.addOnSuccessListener { uri ->
+            Log.d("FireStorage","URL obtenida: $uri")
+            Picasso.get().load(uri).into(fotoVehi)
+        }.addOnFailureListener { e ->
+            Log.e("FireStorage","Error en URL:",e)
         }
     }
 
@@ -84,7 +131,7 @@ class DatosUsuarioSalida : AppCompatActivity() {
                     // El usuario no ha ingresado, proceder a verificar salida
                     verificarEntrada(correo, vehiculo, idVehiculo)
                 } else {
-                    Toast.makeText(this, "El usuario ya ingresó", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, "El usuario ya salio", Toast.LENGTH_SHORT).show()
                 }
             }
             .addOnFailureListener { e ->
@@ -98,12 +145,12 @@ class DatosUsuarioSalida : AppCompatActivity() {
             .get()
             .addOnSuccessListener { documents ->
                 if (!documents.isEmpty) {
-                    // Si existe salida, eliminarla
+                    // Si existe entrada, eliminarla
                     for (document in documents) {
                         database.collection("Entrada").document(document.id).delete()
                     }
                 }
-                // Proceder a registrar el ingreso
+                // Proceder a registrar la salida
                 registrarIngreso(correo, vehiculo, idVehiculo)
             }
             .addOnFailureListener { e ->

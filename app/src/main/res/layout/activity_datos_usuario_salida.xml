@@ -22,6 +22,22 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.700" />
 
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/fotoUsuarioSalida"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:contentDescription="@string/todo"
+        android:scaleType="centerCrop"
+        android:layout_gravity="center"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.51"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.164"
+        app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.App.CircleImage"
+        tools:srcCompat="@tools:sample/avatars" />
+
     <TextView
         android:id="@+id/tipoVehiculoFirebaseSalida"
         android:layout_width="wrap_content"
@@ -45,10 +61,9 @@
         android:textSize="25dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.138" />
+        app:layout_constraintVertical_bias="0.091" />
 
     <TextView
         android:id="@+id/idVehiculoTXTSalida"
@@ -190,6 +205,22 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.300" />
 
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/fotoBiciSalida"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:layout_gravity="center"
+        android:contentDescription="@string/todo"
+        android:scaleType="centerCrop"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.825"
+        app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.App.CircleImage"
+        tools:srcCompat="@tools:sample/avatars" />
+
     <Button
         android:id="@+id/SalidaExit"
         android:layout_width="wrap_content"
@@ -203,6 +234,6 @@
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.85" />
+        app:layout_constraintVertical_bias="0.922" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

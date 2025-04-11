@@ -225,8 +225,8 @@ class RegistrarBiciActivity : AppCompatActivity() {
 
         db.collection("Bici_Usuarios").add(biciData)
             .addOnSuccessListener { documentReference ->
-                subirFoto(fotoUri1, "foto_perfil", documentReference.id)
-                subirFoto(fotoUri2, "foto_bici", documentReference.id)
+                subirFoto(fotoUri1, cedula, documentReference.id)
+                subirFoto(fotoUri2, marco, documentReference.id)
                 Toast.makeText(this, "Datos guardados exitosamente", Toast.LENGTH_SHORT).show()
                 limpiarCampos()
             }
@@ -238,7 +238,7 @@ class RegistrarBiciActivity : AppCompatActivity() {
     private fun subirFoto(fotoUri: Uri?, tipo: String, biciId: String) {
         if (fotoUri == null) return
         val userId = FirebaseAuth.getInstance().currentUser?.uid ?: return
-        val storageRef = storage.reference.child("$userId/$biciId/$tipo.jpg")
+        val storageRef = storage.reference.child("$userId/$biciId/$tipo.png")
 
         storageRef.putFile(fotoUri)
             .addOnSuccessListener {

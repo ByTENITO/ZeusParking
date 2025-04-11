@@ -4,12 +4,16 @@ import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.widget.Button
+import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.storage.FirebaseStorage
+import com.squareup.picasso.Picasso
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 
@@ -23,6 +27,8 @@ class DatosUsuarioEntrada : AppCompatActivity() {
     private lateinit var numeroTXT: TextView
     private lateinit var tipoTXT: TextView
     private lateinit var botonSalida: Button
+    private lateinit var fotoUsuario: ImageView
+    private lateinit var fotoVehi: ImageView
 
     private var fechaHoraActual = ZonedDateTime.now()
     private var formato = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
@@ -51,6 +57,8 @@ class DatosUsuarioEntrada : AppCompatActivity() {
         apellidoTXT = findViewById(R.id.apellidoFirebase)
         numeroTXT = findViewById(R.id.idVehiculoFirebase)
         tipoTXT = findViewById(R.id.tipoVehiculoFirebase)
+        fotoUsuario = findViewById(R.id.fotoUsuario)
+        fotoVehi = findViewById(R.id.fotoBici)
 
         val correo = intent.getStringExtra("correo") ?: "No disponible"
         val vehiculo = intent.getStringExtra("tipo") ?: "No disponible"
@@ -63,10 +71,52 @@ class DatosUsuarioEntrada : AppCompatActivity() {
             return
         }
 
+        database.collection("Bici_Usuarios")
+            .whereEqualTo("correo",correo)
+            .whereEqualTo("tipo",vehiculo)
+            .addSnapshotListener {documents, e->
+                if (documents != null) {
+                    for (document in documents){
+                        val userId = FirebaseAuth.getInstance().currentUser?.uid
+                        val cedula = document.getString("cedula")
+                        val idVehi = document.getString("numero")
+                        buscarImagenUser(userId,document.id,cedula)
+                        buscarImagenVehi(userId,document.id,idVehi)
+                        Log.d("FireStorage","id -> ${document.id} ")
+                        Log.d("FireStorage","usuario -> $cedula")
+                    }
+                }
+            }
+
         verificarEntrada(correo, vehiculo, idVehiculo)
 
         botonSalida.setOnClickListener {
             finish()
+        }
+    }
+
+    private fun buscarImagenUser (userId: String?, id: String?, cedula: String? ){
+        val storageImagenUser = FirebaseStorage.getInstance().reference
+        val imageStorage = storageImagenUser.child("$userId/$id/$cedula.png")
+        Log.d("FireStorage","$userId/$id/$cedula.png")
+
+        imageStorage.downloadUrl.addOnSuccessListener { uri ->
+            Log.d("FireStorage","URL obtenida: $uri")
+            Picasso.get().load(uri).into(fotoUsuario)
+        }.addOnFailureListener { e ->
+            Log.e("FireStorage","Error en URL:",e)
+        }
+    }
+
+    private fun buscarImagenVehi (userId: String?, id: String?,idVehi: String?){
+        val storageImagenUser = FirebaseStorage.getInstance().reference
+        val imageStorage = storageImagenUser.child("$userId/$id/$idVehi.png")
+
+        imageStorage.downloadUrl.addOnSuccessListener { uri ->
+            Log.d("FireStorage","URL obtenida: $uri")
+            Picasso.get().load(uri).into(fotoVehi)
+        }.addOnFailureListener { e ->
+            Log.e("FireStorage","Error en URL:",e)
         }
     }
 
