@@ -8,32 +8,42 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.content.res.ColorStateList
+import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.util.Patterns
+import android.view.Gravity
+import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
-import android.widget.ProgressBar
+import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.google.android.gms.auth.api.signin.GoogleSignInStatusCodes
 import com.google.android.gms.common.api.ApiException
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.material.progressindicator.CircularProgressIndicator
+import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.FirebaseApp
 import com.google.firebase.analytics.FirebaseAnalytics
+import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
+import com.google.firebase.auth.FirebaseAuthInvalidUserException
+import com.google.firebase.auth.FirebaseAuthUserCollisionException
 import com.google.firebase.auth.GoogleAuthProvider
-
 
 enum class ProviderType {
     GOOGLE,
@@ -63,21 +73,20 @@ class AuthActivity : AppCompatActivity() {
         FirebaseApp.initializeApp(this)
 
         //ID de botones
-        val Google_BTN = findViewById<Button>(R.id.Google_BTN)
-        val Acceder_BTN = findViewById<Button>(R.id.Acceder_BTN)
-        val Registrarse_BTN = findViewById<Button>(R.id.Registrarse_BTN)
-        val Correo_ED = findViewById<EditText>(R.id.Correo_ED)
-        val Contraseña_ED = findViewById<EditText>(R.id.Contraseña_ED)
-        val ForgotPassword_TV = findViewById<TextView>(R.id.OlvidasteContrasena_TV)
+        Google_BTN = findViewById(R.id.Google_BTN)
+        Acceder_BTN = findViewById(R.id.Acceder_BTN)
+        Registrarse_BTN = findViewById(R.id.Registrarse_BTN)
+        Correo_ED = findViewById(R.id.Correo_ED)
+        Contraseña_ED = findViewById(R.id.Contraseña_ED)
+        ForgotPassword_TV = findViewById(R.id.OlvidasteContrasena_TV)
         val text5 = findViewById<TextView>(R.id.textView5)
         val text6 = findViewById<TextView>(R.id.textView6)
-        val text7 = findViewById<TextView>(R.id.textView7)
+
         val logo = findViewById<ImageView>(R.id.imageView8)
         val analytics = FirebaseAnalytics.getInstance(this)
         val bundle = Bundle()
         val fadeIn = AnimationUtils.loadAnimation(this, R.anim.fade_in)
         val alto = resources.displayMetrics.heightPixels
-
 
         Google_BTN.startAnimation(fadeIn)
         Acceder_BTN.startAnimation(fadeIn)
@@ -87,14 +96,12 @@ class AuthActivity : AppCompatActivity() {
         ForgotPassword_TV.startAnimation(fadeIn)
         text5.startAnimation(fadeIn)
         text6.startAnimation(fadeIn)
-        text7.startAnimation(fadeIn)
 
         bundle.putString("message", "Integración de Firebase completa")
         analytics.logEvent("InitScreen", bundle)
 
         // Solicitar permisos al abrir la app
-        if (
-            ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED ||
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED ||
             ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED ||
             (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU &&
                     ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED)
@@ -155,32 +162,26 @@ class AuthActivity : AppCompatActivity() {
         session()
     }
 
-
-    // Función que calcula un tamaño en píxeles según un porcentaje del alto de la pantalla
     private fun tamañoPantalla(porcentaje: Float): Int {
-        val alto = resources.displayMetrics.heightPixels // Obtiene el alto de la pantalla en píxeles
-        return (alto * porcentaje).toInt() // Retorna el valor calculado
+        val alto = resources.displayMetrics.heightPixels
+        return (alto * porcentaje).toInt()
     }
 
-    // Función que verifica si hay una sesión guardada en las preferencias
     private fun session() {
         val prefs = getSharedPreferences("Sesion", MODE_PRIVATE)
         val email = prefs.getString("email", null)
         val inputCorreo = prefs.getString("inputCorreo", null)
         val provider = prefs.getString("provider", null)
 
-        // Si hay sesión con inputCorreo, lleva al home del vigilante
         if (inputCorreo != null && provider != null) {
             showHomevigi(inputCorreo, ProviderType.valueOf(provider))
         }
 
-        // Si hay sesión con email, lleva al home normal
         if (email != null && provider != null) {
             showHome(email, ProviderType.valueOf(provider))
         }
     }
 
-    // Anima el botón de Google para cambiar su altura visualmente
     private fun tamaños(Google_BTN: Button, startHeight: Int) {
         val animator = ValueAnimator.ofInt(startHeight)
 
@@ -195,23 +196,12 @@ class AuthActivity : AppCompatActivity() {
         animator.start()
     }
 
-    // Configura la vista inicial y eventos de los botones
     private fun setup() {
-        val tamañoGoogle = tamañoPantalla(0.05f) // Altura del botón Google según pantalla
+        val tamañoGoogle = tamañoPantalla(0.05f)
         title = "Autenticación"
 
-        // Referencias a los componentes del layout
-        Google_BTN = findViewById(R.id.Google_BTN)
-        Acceder_BTN = findViewById(R.id.Acceder_BTN)
-        Registrarse_BTN = findViewById(R.id.Registrarse_BTN)
-        Correo_ED = findViewById(R.id.Correo_ED)
-        Contraseña_ED = findViewById(R.id.Contraseña_ED)
-        ForgotPassword_TV = findViewById(R.id.OlvidasteContrasena_TV)
-
-        // Aplica la animación de tamaño al botón de Google
         tamaños(Google_BTN, tamañoGoogle)
 
-        // Evento al hacer clic en botón de Google
         Google_BTN.setOnClickListener {
             val googleConf = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.default_web_client_id))
@@ -219,74 +209,51 @@ class AuthActivity : AppCompatActivity() {
                 .build()
 
             val googleClient = GoogleSignIn.getClient(this, googleConf)
-            googleClient.signOut() // Asegura cerrar sesión antes
-            startActivityForResult(googleClient.signInIntent, GOOGLE_SIGN_IN) // Inicia login
+            googleClient.signOut()
+            startActivityForResult(googleClient.signInIntent, GOOGLE_SIGN_IN)
         }
 
-        // Evento al hacer clic en botón de Acceder
         Acceder_BTN.setOnClickListener {
-            val email = Correo_ED.text.toString()
+            val email = Correo_ED.text.toString().trim()
             val password = Contraseña_ED.text.toString()
 
-            // Muestra barra de carga personalizada
-            val progressBar = ProgressBar(this).apply {
-                isIndeterminate = true
-                indeterminateTintList = ColorStateList.valueOf(
-                    ContextCompat.getColor(this@AuthActivity, R.color.Botones)
-                )
-                setPadding(0, 30, 0, 30)
+            if (!validateEmail(email)) {
+                showErrorSnackbar("Por favor ingresa un correo electrónico válido")
+                return@setOnClickListener
             }
 
-            val dialog = MaterialAlertDialogBuilder(this)
-                .setTitle("🚦Espera un momento")
-                .setMessage("Verificando usuario...")
-                .setView(progressBar)
-                .setCancelable(false)
-                .create()
+            if (!validatePassword(password)) {
+                showErrorSnackbar("La contraseña debe tener al menos 6 caracteres")
+                return@setOnClickListener
+            }
 
+            val dialog = createAuthProgressDialog("🔐 Verificando credenciales", "Validando tu información...")
             dialog.show()
+            Acceder_BTN.isEnabled = false
 
-            // Si los datos son válidos...
-            if (validateEmail(email) && validatePassword(password)) {
-                Acceder_BTN.isEnabled = false
+            if (email == inputCorreo && password == contraseña) {
+                Handler(Looper.getMainLooper()).postDelayed({
+                    dialog.dismiss()
+                    saveSession(inputCorreo, ProviderType.EMAIL)
+                    showHomevigi(inputCorreo, ProviderType.EMAIL)
+                    Acceder_BTN.isEnabled = true
+                }, 1500)
+                return@setOnClickListener
+            }
 
-                // Si coinciden con los datos previamente guardados localmente
-                if (email == inputCorreo && password == contraseña) {
+            auth.signInWithEmailAndPassword(email, password).addOnCompleteListener { task ->
+                if (task.isSuccessful) {
                     Handler(Looper.getMainLooper()).postDelayed({
-                        dialog.dismiss()
-                        saveSession(inputCorreo, ProviderType.EMAIL)
-                        showHomevigi(inputCorreo, ProviderType.EMAIL)
-                    }, 2500)
+                        handleSuccessfulLogin(task, email, dialog)
+                    }, 1500)
                 } else {
-                    // Login con Firebase
-                    auth.signInWithEmailAndPassword(email, password).addOnCompleteListener { task ->
-                        Handler(Looper.getMainLooper()).postDelayed({
-                            dialog.dismiss()
-
-                            if (task.isSuccessful) {
-                                val user = auth.currentUser
-                                // Verifica si el correo está verificado
-                                if (user != null && user.isEmailVerified) {
-                                    saveSession(email, ProviderType.EMAIL)
-                                    showHome(user.email ?: "", ProviderType.EMAIL)
-                                } else {
-                                    Toast.makeText(this, "Verifica tu correo electrónico", Toast.LENGTH_SHORT).show()
-                                    Acceder_BTN.isEnabled = true
-                                }
-                            } else {
-                                Toast.makeText(this, "Error en la autenticación", Toast.LENGTH_SHORT).show()
-                                Acceder_BTN.isEnabled = true
-                            }
-                        }, 2500)
-                    }
+                    dialog.dismiss()
+                    handleLoginError(task.exception)
+                    Acceder_BTN.isEnabled = true
                 }
-            } else {
-                dialog.dismiss()
-                Toast.makeText(this, "Correo o contraseña inválidos", Toast.LENGTH_SHORT).show()
             }
         }
 
-        // Evento para crear un nuevo usuario (registro)
         Registrarse_BTN.setOnClickListener {
             val email = Correo_ED.text.toString()
             val password = Contraseña_ED.text.toString()
@@ -295,8 +262,8 @@ class AuthActivity : AppCompatActivity() {
                 auth.createUserWithEmailAndPassword(email, password).addOnCompleteListener {
                     if (it.isSuccessful) {
                         val user = auth.currentUser
-                        user?.sendEmailVerification()?.addOnCompleteListener {
-                            if (it.isSuccessful) {
+                        user?.sendEmailVerification()?.addOnCompleteListener { verificationTask ->
+                            if (verificationTask.isSuccessful) {
                                 Toast.makeText(this, "Registro exitoso, ingresa estos mismos datos para iniciar sesión.", Toast.LENGTH_SHORT).show()
                                 Correo_ED.text.clear()
                                 Contraseña_ED.text.clear()
@@ -311,7 +278,6 @@ class AuthActivity : AppCompatActivity() {
             }
         }
 
-        // Evento para restablecer contraseña
         ForgotPassword_TV.setOnClickListener {
             val email = Correo_ED.text.toString()
             if (validateEmail(email)) {
@@ -327,7 +293,36 @@ class AuthActivity : AppCompatActivity() {
         }
     }
 
-    // Guarda la sesión en preferencias
+    private fun handleSuccessfulLogin(task: com.google.android.gms.tasks.Task<AuthResult>, email: String, dialog: AlertDialog) {
+        dialog.dismiss()
+        val user = auth.currentUser
+
+        when {
+            user == null -> {
+                showErrorSnackbar("Error: Usuario no encontrado")
+            }
+            user.isEmailVerified -> {
+                saveSession(email, ProviderType.EMAIL)
+                showHome(user.email ?: email, ProviderType.EMAIL)
+            }
+            else -> {
+                showVerificationNeededDialog(email)
+            }
+        }
+        Acceder_BTN.isEnabled = true
+    }
+
+    private fun handleLoginError(exception: Exception?) {
+        when (exception) {
+            is FirebaseAuthInvalidUserException ->
+                showErrorSnackbar("Usuario no registrado")
+            is FirebaseAuthInvalidCredentialsException ->
+                showErrorSnackbar("Credenciales incorrectas")
+            else ->
+                showErrorSnackbar("Error: ${exception?.message ?: "Error desconocido"}")
+        }
+    }
+
     private fun saveSession(email: String, provider: ProviderType) {
         val prefs = getSharedPreferences(getString(R.string.prefs_file), Context.MODE_PRIVATE).edit()
         prefs.putString("email", email)
@@ -335,7 +330,6 @@ class AuthActivity : AppCompatActivity() {
         prefs.apply()
     }
 
-    // Valida que el correo tenga formato correcto
     private fun validateEmail(email: String): Boolean {
         return if (email.isNotEmpty() && Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
             true
@@ -345,7 +339,6 @@ class AuthActivity : AppCompatActivity() {
         }
     }
 
-    // Valida que la contraseña tenga una estructura segura
     private fun validatePassword(password: String): Boolean {
         val simbolos = "^(?=.*[A-Z])(?=.*[a-z])(?=.*\\d)(?=.*[@\$!%*?&])[A-Za-z\\d@\$!%*?&]{8,}$".toRegex()
         return if (password.matches(simbolos)) {
@@ -356,7 +349,6 @@ class AuthActivity : AppCompatActivity() {
         }
     }
 
-    // Muestra la pantalla principal del usuario
     private fun showHome(email: String, provider: ProviderType) {
         enableEdgeToEdge()
         val user = auth.currentUser
@@ -373,7 +365,6 @@ class AuthActivity : AppCompatActivity() {
         }, 1000)
     }
 
-    // Muestra la pantalla principal del vigilante
     private fun showHomevigi(inputCorreo: String, provider: ProviderType) {
         enableEdgeToEdge()
         val user_vigi = auth.currentUser
@@ -391,7 +382,6 @@ class AuthActivity : AppCompatActivity() {
         }, 1000)
     }
 
-    // Recibe el resultado del login con Google
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
@@ -399,45 +389,114 @@ class AuthActivity : AppCompatActivity() {
             val task = GoogleSignIn.getSignedInAccountFromIntent(data)
 
             try {
-                val authResult = task.getResult(ApiException::class.java)
-                val credential = GoogleAuthProvider.getCredential(authResult.idToken, null)
-
-                // Muestra un diálogo mientras se autentica
-                val progressBar = ProgressBar(this).apply {
-                    isIndeterminate = true
-                    indeterminateTintList = ColorStateList.valueOf(
-                        ContextCompat.getColor(this@AuthActivity, R.color.Botones)
-                    )
-                    setPadding(0, 30, 0, 30)
-                }
-
-                val dialog = MaterialAlertDialogBuilder(this)
-                    .setTitle("🔐 Verificando cuenta")
-                    .setMessage("Espéranos un momento...")
-                    .setView(progressBar)
-                    .setCancelable(false)
-                    .create()
-
+                val account = task.getResult(ApiException::class.java)
+                val dialog = createAuthProgressDialog("🔐 Iniciando sesión", "Conectando con Google...")
                 dialog.show()
 
-                // Intenta iniciar sesión con las credenciales de Google
-                FirebaseAuth.getInstance().signInWithCredential(credential).addOnCompleteListener {
-                    dialog.dismiss()
+                Handler(Looper.getMainLooper()).postDelayed({
+                    val credential = GoogleAuthProvider.getCredential(account.idToken, null)
+                    auth.signInWithCredential(credential).addOnCompleteListener { authTask ->
+                        dialog.dismiss()
 
-                    if (it.isSuccessful) {
-                        saveSession(authResult.email ?: "", ProviderType.GOOGLE)
-                        showHome(authResult.email ?: "", ProviderType.GOOGLE)
-                    } else {
-                        Toast.makeText(this, "Error de autenticación con Google", Toast.LENGTH_SHORT).show()
+                        if (authTask.isSuccessful) {
+                            val email = account.email ?: ""
+                            saveSession(email, ProviderType.GOOGLE)
+                            showHome(email, ProviderType.GOOGLE)
+                        } else {
+                            showErrorSnackbar(
+                                when (authTask.exception) {
+                                    is FirebaseAuthUserCollisionException ->
+                                        "Esta cuenta ya está registrada con email/password"
+                                    else ->
+                                        "Error de autenticación: ${authTask.exception?.message}"
+                                }
+                            )
+                        }
                     }
-                }
-
+                }, 500)
             } catch (e: ApiException) {
-                Toast.makeText(this, "Error de Google Sign-In: ${e.message}", Toast.LENGTH_SHORT).show()
+                when (e.statusCode) {
+                    GoogleSignInStatusCodes.SIGN_IN_CANCELLED -> {}
+                    else -> showErrorSnackbar("Error de Google: ${e.message}")
+                }
             }
         }
     }
+
+    private fun showVerificationNeededDialog(email: String) {
+        MaterialAlertDialogBuilder(this).apply {
+            setTitle("📧 Verificación requerida")
+            setMessage("Hemos enviado un correo de verificación a $email. Por favor verifica tu correo antes de iniciar sesión.")
+            setPositiveButton("Reenviar verificación") { _, _ ->
+                auth.currentUser?.sendEmailVerification()?.addOnCompleteListener { task ->
+                    if (task.isSuccessful) {
+                        showSuccessSnackbar("Correo de verificación reenviado")
+                    } else {
+                        showErrorSnackbar("Error al reenviar el correo: ${task.exception?.message}")
+                    }
+                }
+            }
+            setNegativeButton("Entendido", null)
+        }.show()
+    }
+
+    private fun showSuccessSnackbar(message: String) {
+        Snackbar.make(
+            findViewById(android.R.id.content),
+            message,
+            Snackbar.LENGTH_LONG
+        ).apply {
+            setBackgroundTint(ContextCompat.getColor(this@AuthActivity, R.color.success_green))
+            setTextColor(ContextCompat.getColor(this@AuthActivity, android.R.color.white))
+            show()
+        }
+    }
+
+    private fun createAuthProgressDialog(title: String, message: String): AlertDialog {
+        return MaterialAlertDialogBuilder(this).apply {
+            setTitle(title)
+            setMessage(message)
+            setView(createProgressView())
+            setCancelable(false)
+        }.create()
+    }
+
+    private fun createProgressView(): View {
+        return LinearLayout(this).apply {
+            orientation = LinearLayout.VERTICAL
+            gravity = Gravity.CENTER
+            setPadding(dpToPx(32), dpToPx(32), dpToPx(32), dpToPx(32))
+
+            addView(CircularProgressIndicator(this@AuthActivity).apply {
+                layoutParams = LinearLayout.LayoutParams(dpToPx(48), dpToPx(48))
+                indeterminateTintList = ColorStateList.valueOf(
+                    ContextCompat.getColor(this@AuthActivity, R.color.Botones)
+                )
+            })
+
+            addView(TextView(this@AuthActivity).apply {
+                text = "Por favor espera..."
+                setTextAppearance(androidx.appcompat.R.style.TextAppearance_AppCompat_Body2)
+                setTextColor(ContextCompat.getColor(context, android.R.color.white))
+                setPadding(0, dpToPx(16), 0, 0)
+                gravity = Gravity.CENTER
+            })
+        }
+    }
+
+    private fun showErrorSnackbar(message: String) {
+        Snackbar.make(
+            findViewById(android.R.id.content),
+            message,
+            Snackbar.LENGTH_LONG
+        ).apply {
+            setBackgroundTint(ContextCompat.getColor(this@AuthActivity, R.color.Botones))
+            setTextColor(Color.WHITE)
+            show()
+        }
+    }
+
+    private fun dpToPx(dp: Int): Int {
+        return (dp * resources.displayMetrics.density).toInt()
+    }
 }
-
-
-

@@ -1,172 +1,233 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/fondo"
     tools:context=".RegistrarBiciActivity">
 
-    <Button
-        android:id="@+id/Guardar_BTN"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:backgroundTint="@drawable/c_boton"
-        android:text="@string/guardar"
-        android:textColor="#000000"
-        android:textColorHint="#FFFFFF"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.855" />
+    <!-- Scrollable content area -->
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true"
+        android:clipToPadding="false"
+        android:paddingBottom="72dp"
+        android:paddingTop="32dp">
 
-    <Button
-        android:id="@+id/AgregarFoto2_BTN"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:backgroundTint="@drawable/c_boton"
-        android:text="Usuario"
-        android:textColor="#000000"
-        android:textColorHint="#FFFFFF"
-        app:icon="@drawable/usuario"
-        app:iconTint="#FFFFFF"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.854"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.749" />
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="16dp">
 
-    <Button
-        android:id="@+id/AgregarFoto1_BTN"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:backgroundTint="@drawable/c_boton"
-        android:text="Vehiculo"
-        android:textColor="#000000"
-        android:textColorHint="#FFFFFF"
-        app:icon="@android:drawable/ic_menu_camera"
-        app:iconTint="#FFFFFF"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.11"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.749" />
+            <!-- Contenedor centrado -->
+            <LinearLayout
+                android:id="@+id/centerContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center"
+                android:layout_centerVertical="true"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.5">
 
-    <EditText
-        android:id="@+id/Color_ED"
-        android:layout_width="355dp"
-        android:layout_height="45dp"
-        android:ems="10"
-        android:hint="@string/color"
-        android:inputType="text"
-        android:textColor="#FFFFFF"
-        android:textColorHint="#FFFFFF"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.553"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.543" />
+                <!-- Card de formulario -->
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="16dp"
+                    app:cardCornerRadius="8dp"
+                    app:cardElevation="4dp"
+                    app:strokeColor="@android:color/white"
+                    app:strokeWidth="1dp">
 
-    <Spinner
-        android:id="@+id/Tipos_Spinner"
-        android:layout_width="355dp"
-        android:layout_height="45dp"
-        android:popupBackground="#2F2F2F"
-        android:textColor="#FFFFFF"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.387" />
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="24dp">
 
-    <EditText
-        android:id="@+id/Nombre_ED"
-        android:layout_width="355dp"
-        android:layout_height="45dp"
-        android:ems="10"
-        android:hint="@string/nombres"
-        android:inputType="text"
-        android:textColor="#FFFFFF"
-        android:textColorHint="#FFFFFF"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.157" />
+                        <!-- Campo de Nombre -->
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:id="@+id/NombreLayout"
+                            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="8dp"
+                            android:hint="@string/nombres"
+                            app:boxStrokeColor="@android:color/white"
+                            app:hintTextColor="@android:color/white">
 
-    <EditText
-        android:id="@+id/Marco_NUM"
-        android:layout_width="355dp"
-        android:layout_height="45dp"
-        android:ems="10"
-        android:hint="@string/num_marco_placa"
-        android:inputType="number"
-        android:textColor="#FFFFFF"
-        android:textColorHint="#FFFFFF"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.553"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.466" />
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/Nombre_ED"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:inputType="text"
+                                android:textColor="@android:color/white"/>
+                        </com.google.android.material.textfield.TextInputLayout>
 
-    <EditText
-        android:id="@+id/Apellidos_ED"
-        android:layout_width="355dp"
-        android:layout_height="45dp"
-        android:ems="10"
-        android:hint="@string/apellidos"
-        android:inputType="text"
-        android:textColor="#FFFFFF"
-        android:textColorHint="#FFFFFF"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.24" />
+                        <!-- Campo de Apellidos -->
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:id="@+id/ApellidosLayout"
+                            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="8dp"
+                            android:hint="@string/apellidos"
+                            app:boxStrokeColor="@android:color/white"
+                            app:hintTextColor="@android:color/white">
 
-    <EditText
-        android:id="@+id/Cedula_NUM"
-        android:layout_width="355dp"
-        android:layout_height="45dp"
-        android:ems="10"
-        android:hint="@string/cedula"
-        android:inputType="number"
-        android:textColor="#FFFFFF"
-        android:textColorHint="#FFFFFF"
-        android:textSize="19sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.306" />
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/Apellidos_ED"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:inputType="text"
+                                android:textColor="@android:color/white"/>
+                        </com.google.android.material.textfield.TextInputLayout>
 
-    <TextView
-        android:id="@+id/textView3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/sube_aqui_tus_fotos"
-        android:textColor="#FFFFFF"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.657" />
+                        <!-- Campo de Cédula -->
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:id="@+id/CedulaLayout"
+                            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="8dp"
+                            android:hint="@string/cedula"
+                            app:boxStrokeColor="@android:color/white"
+                            app:hintTextColor="@android:color/white">
 
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/Cedula_NUM"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:inputType="number"
+                                android:textColor="@android:color/white"/>
+                        </com.google.android.material.textfield.TextInputLayout>
+
+                        <!-- Spinner de Tipo -->
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:id="@+id/spinnerContainer"
+                            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="8dp"
+                            android:hint="Tipo"
+                            app:boxStrokeColor="@android:color/white"
+                            app:hintTextColor="@android:color/white">
+
+                            <Spinner
+                                android:id="@+id/Tipos_Spinner"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:backgroundTint="@color/Navegacion"
+                                android:popupBackground="@color/Navegacion"
+                                android:textColor="@android:color/white"/>
+                        </com.google.android.material.textfield.TextInputLayout>
+
+                        <!-- Campo de Número de Marco -->
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:id="@+id/MarcoLayout"
+                            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="8dp"
+                            android:hint="@string/num_marco_placa"
+                            app:boxStrokeColor="@android:color/white"
+                            app:hintTextColor="@android:color/white">
+
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/Marco_NUM"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:inputType="number"
+                                android:textColor="@android:color/white"/>
+                        </com.google.android.material.textfield.TextInputLayout>
+
+                        <!-- Campo de Color -->
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:id="@+id/ColorLayout"
+                            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="16dp"
+                            android:hint="@string/color"
+                            app:boxStrokeColor="@android:color/white"
+                            app:hintTextColor="@android:color/white">
+
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/Color_ED"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:inputType="text"
+                                android:textColor="@android:color/white"/>
+                        </com.google.android.material.textfield.TextInputLayout>
+
+                        <!-- Sección de Subida de Foto -->
+                        <TextView
+                            android:id="@+id/textView3"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/sube_aqui_tus_fotos"
+                            android:textColor="@android:color/white"
+                            android:textSize="16sp"
+                            android:layout_gravity="center_horizontal"
+                            android:layout_marginBottom="16dp"/>
+
+                        <!-- Botones de Foto -->
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:layout_marginBottom="16dp">
+
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/AgregarFoto2_BTN"
+                                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:layout_marginEnd="8dp"
+                                android:text="Usuario"
+                                android:textColor="@android:color/white"
+                                app:strokeColor="@android:color/white"/>
+
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/AgregarFoto1_BTN"
+                                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:text="Vehiculo"
+                                android:textColor="@android:color/white"
+                                app:strokeColor="@android:color/white"/>
+                        </LinearLayout>
+
+                        <!-- Botón de Guardar -->
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/Guardar_BTN"
+                            style="@style/Widget.MaterialComponents.Button"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="@string/guardar"
+                            app:backgroundTint="@color/Botones"/>
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+            </LinearLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.core.widget.NestedScrollView>
+
+    <!-- Barra de navegación inferior -->
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottom_navigation"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/white"
-        app:menu="@menu/nav_menu"
+        android:layout_gravity="bottom"
+        android:background="@color/Navegacion"
         app:labelVisibilityMode="labeled"
-        app:layout_constraintBottom_toBottomOf="parent"/>
-
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+        app:menu="@menu/nav_menu"/>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

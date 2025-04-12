@@ -16,7 +16,7 @@
         android:layout_height="50dp"
         android:clickable="true"
         android:focusable="true"
-        android:src="@drawable/notificacionvacia"
+        android:src="@drawable/ic_qr"
         app:layout_constraintBottom_toTopOf="@+id/bottom_navigation_vigi"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.867"
@@ -121,10 +121,10 @@
         android:src="@drawable/fondo_vigilante"
         app:layout_constraintBottom_toTopOf="@+id/bottom_navigation_vigi"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.858"
+        app:layout_constraintHorizontal_bias="0.848"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.156"
+        app:layout_constraintVertical_bias="0.152"
         tools:srcCompat="@tools:sample/avatars" />
 
     <com.google.android.material.bottomnavigation.BottomNavigationView

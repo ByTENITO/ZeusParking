@@ -3,11 +3,14 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="Botones">#E4CC00</color>
-    <color name="Google">#7c7c79</color>
-    <color name="primario">#6200EE</color>
+    <color name="Navegacion">#1C1D1C</color>
+    <color name="primario">#F8BD00</color>
     <color name="secundario">#03DAC5</color>
     <color name="blanco">#FFFFFF</color>
     <color name="negro">#000000</color>
     <color name="gris">#BDBDBD</color>
+
+    <color name="success_green">#4CAF50</color>
+    <color name="error_red">#F44336</color>
 
 </resources>

@@ -8,11 +8,10 @@ import android.content.Intent
 import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.util.Log
 import android.view.View
-import android.view.animation.AnimationUtils
+import android.view.animation.AccelerateDecelerateInterpolator
+import android.widget.Button
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.auth.FirebaseAuth
@@ -24,55 +23,122 @@ import androidx.core.app.NotificationCompat
 import com.google.firebase.firestore.FirebaseFirestore
 import com.squareup.picasso.Picasso
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.android.material.imageview.ShapeableImageView
 
 class HomeActivity : AppCompatActivity() {
     // Variables y vistas
     private var database = FirebaseFirestore.getInstance()
-    private lateinit var Correo_TV: TextView
-    private lateinit var Usuario: TextView
-    private lateinit var cerrarSesion: ImageView
-    private lateinit var registrarBiciButton: ImageView
-    private lateinit var entradaButton: ImageView
-    private lateinit var localizacionButton: ImageView
+
     private lateinit var perfilImageView: ImageView
-    private lateinit var BienvenidaTextView: TextView
-    private lateinit var opciones: LinearLayout
-    private lateinit var menuOp: ImageView
     private lateinit var notificacionLinear: LinearLayout
-    private lateinit var notificaciones: ImageView
+
     private lateinit var notifiFurgon: TextView
     private lateinit var notifiVehiculoParticular: TextView
     private lateinit var notifiBicicleta: TextView
     private lateinit var notifiMotocicleta: TextView
-
-    private var cambioAnimacion = true
     private var cambioAnimacionNoti = true
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        startAnimationsWithDelay()
         setContentView(R.layout.activity_home)
 
         // Setup de vistas
-        Correo_TV = findViewById(R.id.Correo_TV)
-        Usuario = findViewById(R.id.textView2)
-        cerrarSesion = findViewById(R.id.CerrarSesion)
-        registrarBiciButton = findViewById(R.id.RegistrarBici_BTN)
-        entradaButton = findViewById(R.id.Entrada_BTN)
-        localizacionButton = findViewById(R.id.Localizacion_BTN)
         perfilImageView = findViewById(R.id.FotoPerfil_ImageView)
-        BienvenidaTextView = findViewById(R.id.Bienvenida_TV)
-        opciones = findViewById(R.id.menuOpciones)
-        menuOp = findViewById(R.id.menu)
-        notificacionLinear = findViewById(R.id.notificaciones)
-        notificaciones = findViewById(R.id.notificacionVC)
+
         notifiFurgon = findViewById(R.id.notificacionFurgon)
         notifiVehiculoParticular = findViewById(R.id.notificacionVehiculoParticular)
         notifiBicicleta = findViewById(R.id.notificacionBicicleta)
         notifiMotocicleta = findViewById(R.id.notificacionMotocicleta)
 
+        val perfilMenuLayout = findViewById<LinearLayout>(R.id.menuPerfil)
+        val imagenGrande = findViewById<ShapeableImageView>(R.id.perfil_grande)
+        val nombreTV = findViewById<TextView>(R.id.usuario_tv)
+        val correoTV = findViewById<TextView>(R.id.email_tv)
+        val gestionarBtn = findViewById<Button>(R.id.gestionar_btn)
+        val cerrarSesionBtn = findViewById<Button>(R.id.cerrar_sesion_btn)
+        val seccionDisponibilidad = findViewById<LinearLayout>(R.id.seccionDisponibilidad)
+        val fondoDesactivado = findViewById<View>(R.id.fondoDesactivado)
+
         crearCanalNotificacion(this)
+
+        // Mostrar menú al hacer click en la imagen de perfil
+        perfilImageView.setOnClickListener {
+            // Mostrar fondo oscuro y menú
+            fondoDesactivado.visibility = View.VISIBLE
+            perfilMenuLayout.visibility = View.VISIBLE
+
+            // Animación del menú
+            perfilMenuLayout.apply {
+                alpha = 0f
+                translationY = -80f
+                animate()
+                    .alpha(1f)
+                    .translationY(0f)
+                    .setDuration(400)
+                    .setInterpolator(AccelerateDecelerateInterpolator())
+                    .start()
+            }
+
+            // Datos del usuario
+            val fotoUrl = intent.getStringExtra("foto_perfil_url")
+            val nombre = FirebaseAuth.getInstance().currentUser?.displayName ?: "Usuario"
+            val correo = FirebaseAuth.getInstance().currentUser?.email ?: "correo@ejemplo.com"
+
+            nombreTV.text = nombre
+            correoTV.text = correo
+
+            if (!fotoUrl.isNullOrEmpty()) {
+                Picasso.get()
+                    .load(fotoUrl)
+                    .placeholder(R.drawable.fondo_vigilante)
+                    .error(R.drawable.fondo_vigilante)
+                    .into(imagenGrande)
+            } else {
+                imagenGrande.setImageResource(R.drawable.fondo_vigilante)
+            }
+        }
+
+        // Cerrar menú al tocar fuera (fondo oscuro)
+        fondoDesactivado.setOnClickListener {
+            // Animación de cierre del menú
+            perfilMenuLayout.animate()
+                .alpha(0f)
+                .translationY(-50f)
+                .setDuration(200)
+                .withEndAction {
+                    perfilMenuLayout.visibility = View.GONE
+                }
+                .start()
+
+            // Ocultar fondo y mostrar de nuevo la imagen de perfil
+            fondoDesactivado.visibility = View.GONE
+            perfilImageView.alpha = 0f
+            perfilImageView.visibility = View.VISIBLE
+            perfilImageView.animate()
+                .alpha(1f)
+                .setDuration(200)
+                .start()
+        }
+
+
+        // Mostrar/ocultar sección de disponibilidad
+        gestionarBtn.setOnClickListener {
+            seccionDisponibilidad.visibility = if (seccionDisponibilidad.visibility == View.VISIBLE)
+                View.GONE else View.VISIBLE
+        }
+
+        // Cerrar sesión
+        cerrarSesionBtn.setOnClickListener {
+            val prefs = getSharedPreferences(getString(R.string.prefs_file), Context.MODE_PRIVATE)
+            prefs.edit().clear().apply()
+
+            FirebaseAuth.getInstance().signOut()
+
+            val intent = Intent(this, AuthActivity::class.java)
+            startActivity(intent)
+            finish()
+        }
 
 
         //Menu de Navegaion
@@ -194,28 +260,6 @@ class HomeActivity : AppCompatActivity() {
                 }
             }
 
-        val ancho = resources.displayMetrics.widthPixels
-        val alto = resources.displayMetrics.heightPixels
-
-        overridePendingTransition(0, 0)
-
-        when {
-            alto >= 3001 -> responsividad(menuOp, 200, 200)
-            alto in 2501..3000 -> responsividad(menuOp, 200, 200)
-            alto in 1301..2500 -> responsividad(menuOp, 140, 140)
-            alto in 1081..1300 -> responsividad(menuOp, 80, 80)
-            alto in 0..1080 -> responsividad(menuOp, 60, 60)
-            else -> return
-        }
-
-        when{
-            ancho >= 3001 -> responsividadText(Correo_TV, 3500)
-            ancho in 2501..3000 -> responsividadText(Correo_TV, 2500)
-            ancho in 1081..2500 -> responsividadText(Correo_TV, 2000)
-            ancho in 721..1080 -> responsividadText(Correo_TV, 900)
-            ancho in 0..720 -> responsividadText(Correo_TV, 580)
-        }
-
         // Comprobar si el proveedor es Google
         if (provider == ProviderType.GOOGLE.name && email != null && fotoPerfilUrl != null) {
             setup(email)
@@ -236,20 +280,7 @@ class HomeActivity : AppCompatActivity() {
         editor.apply()
     }
 
-    private fun startAnimationsWithDelay() {
-        val fadeIn = AnimationUtils.loadAnimation(this, R.anim.fade_in)
-        Handler(Looper.getMainLooper()).postDelayed({
-            listOf(
-                Correo_TV,
-                Usuario,
-                BienvenidaTextView,
-                menuOp,
-                notificaciones
-            ).forEach { view ->
-                view.startAnimation(fadeIn)
-            }
-        }, 0) // Ajusta el tiempo de retraso si es necesario
-    }
+
 
     // Función para cargar la foto de perfil desde la URL
     private fun loadProfilePicture(fotoUrl: String) {
@@ -299,131 +330,16 @@ class HomeActivity : AppCompatActivity() {
     // Configuración inicial del correo y bienvenida
     private fun setup(email: String) {
         title = "Inicio"
-        Correo_TV.text = email
 
-        // Obtener el nombre completo del usuario desde Firebase si el proveedor es Google
-        val user = FirebaseAuth.getInstance().currentUser
-        val displayName = user?.displayName
-        val nameParts = displayName?.split(" ")
 
-        // Si tiene nombre y apellido, muestra el saludo
-        if (nameParts != null && nameParts.size >= 2) {
-            val firstName = nameParts[0]
-            val lastName = nameParts[1]
-            BienvenidaTextView.text = "Bienvenido, $firstName $lastName"
-        } else {
-            // Si no tiene nombre, mostrar saludo por defecto
-            BienvenidaTextView.text = "Bienvenido, Bici Usuario"
-        }
-
-        // Configuración de los botones
-        menuOp.setOnClickListener {
-            val altura = resources.displayMetrics.heightPixels
-            val pequeño = 60
-            val mediano = 80
-            val medianoAlto = 140
-            val Alto = 200
-            val grande = 200
-            if (cambioAnimacion) {
-                when {
-                    altura >= 3001 ->{
-                        animacionAnchoLinear(opciones, 1, 900, 100L)
-                        responsividad(entradaButton, grande, grande)
-                        responsividad(localizacionButton, grande, grande)
-                        responsividad(registrarBiciButton, grande, grande)
-                        responsividad(cerrarSesion, grande, grande)
-                    }
-                    altura in 2501..3000 -> {
-                        animacionAnchoLinear(opciones, 1, 860, 100L)
-                        responsividad(entradaButton, Alto, Alto)
-                        responsividad(localizacionButton, Alto, Alto)
-                        responsividad(registrarBiciButton, Alto, Alto)
-                        responsividad(cerrarSesion, Alto, Alto)
-                    }
-                    altura in 1301..2500 -> {
-                        animacionAnchoLinear(opciones, 1, 630, 100L)
-                        responsividad(entradaButton, medianoAlto, medianoAlto)
-                        responsividad(localizacionButton, medianoAlto, medianoAlto)
-                        responsividad(registrarBiciButton, medianoAlto, medianoAlto)
-                        responsividad(cerrarSesion, medianoAlto, medianoAlto)
-                    }
-                    altura in 1081..1300 -> {
-                        animacionAnchoLinear(opciones, 1, 350, 100L)
-                        responsividad(entradaButton, mediano, mediano)
-                        responsividad(localizacionButton, mediano, mediano)
-                        responsividad(registrarBiciButton, mediano, mediano)
-                        responsividad(cerrarSesion, mediano, mediano)
-                    }
-                    altura in 0..1080 -> {
-                        animacionAnchoLinear(opciones, 1, 270, 100L)
-                        responsividad(entradaButton, pequeño, pequeño)
-                        responsividad(localizacionButton, pequeño, pequeño)
-                        responsividad(registrarBiciButton, pequeño, pequeño)
-                        responsividad(cerrarSesion, pequeño, pequeño)
-                    }
-                }
-            }
-            if (!cambioAnimacion) {
-                when{
-                    altura >= 3001 -> animacionAnchoLinear(opciones, 900, 1, 100L)
-                    altura in 2501..3000 -> animacionAnchoLinear(opciones, 860, 1, 100L)
-                    altura in 1301..2500 -> animacionAnchoLinear(opciones, 630, 1, 100L)
-                    altura in 1081..1300 -> animacionAnchoLinear(opciones, 350, 1, 100L)
-                    altura in 0..1080 -> animacionAnchoLinear(opciones, 270, 1, 100L)
-                }
-            }
-            cambioAnimacion = !cambioAnimacion
-        }
-
-        notificaciones.setOnClickListener {
-            val altura = resources.displayMetrics.heightPixels
-            val pequeñoNoti = listOf(80,140,195,260)
-            val medianoNoti = listOf(140,265,390,520)
-            val grandeNoti = listOf(230,430,500,725)
-            if (cambioAnimacionNoti) {
-                when{
-                    altura >= 3001 -> notifiDesplegue(grandeNoti[0],grandeNoti[1],grandeNoti[2],grandeNoti[3])
-                    altura in 2501..3000 -> notifiDesplegue(medianoNoti[0], medianoNoti[1], medianoNoti[2], medianoNoti[3])
-                    altura in 1301..2500 -> notifiDesplegue(medianoNoti[0], medianoNoti[1], medianoNoti[2], medianoNoti[3])
-                    altura in 1081..1300 -> notifiDesplegue(pequeñoNoti[0], pequeñoNoti[1], pequeñoNoti[2], pequeñoNoti[3])
-                    altura in 0..1080 -> notifiDesplegue(pequeñoNoti[0], pequeñoNoti[1], pequeñoNoti[2], pequeñoNoti[3])
-                }
-            }
-            if (!cambioAnimacionNoti) {
-                when{
-                    altura >= 3001 -> notifiRepliegue(grandeNoti[0],grandeNoti[1],grandeNoti[2],grandeNoti[3])
-                    altura in 2501..3000 -> notifiRepliegue(medianoNoti[0], medianoNoti[1], medianoNoti[2], medianoNoti[3])
-                    altura in 1301..2500 -> notifiRepliegue(medianoNoti[0], medianoNoti[1], medianoNoti[2], medianoNoti[3])
-                    altura in 1081..1300 -> notifiRepliegue(pequeñoNoti[0], pequeñoNoti[1], pequeñoNoti[2], pequeñoNoti[3])
-                    altura in 0..1080 -> notifiRepliegue(pequeñoNoti[0], pequeñoNoti[1], pequeñoNoti[2], pequeñoNoti[3])
-                }
-            }
-            cambioAnimacionNoti = !cambioAnimacionNoti
-        }
-
-        cerrarSesion.setOnClickListener {
-            // Borrar datos guardados
-            val prefs = getSharedPreferences(getString(R.string.prefs_file), Context.MODE_PRIVATE)
-            val editor = prefs.edit()
-            editor.clear()
-            editor.apply()
-
-            // Cerrar sesión en Firebase y finalizar la actividad
-            FirebaseAuth.getInstance().signOut()
-            /*se reemplazo esta accion ya que si se utiliza el funcion finish() esta
-            volvera a la anterior actiidad utilizada, por lo que esta volvera a la actividad
-            que le apuntamos
-             */
-            val intent = Intent(this, AuthActivity::class.java)
-            startActivity(intent)
-        }
 
 
     }
 
     fun notifiRepliegue(notiUno: Int, notiDos: Int, notiTres: Int, notiCuatro: Int) {
         database.collection("Bici_Usuarios")
-            .whereEqualTo("correo", Correo_TV.text.toString())
+            .whereEqualTo("correo", FirebaseAuth.getInstance().currentUser?.email ?: "correo@ejemplo.com"
+            )
             .addSnapshotListener { documents, e ->
                 if (e != null) {
                     Toast.makeText(
@@ -504,8 +420,8 @@ class HomeActivity : AppCompatActivity() {
 
                             tiposUsuario.containsAll(
                                 setOf(
-                                "Furgon",
-                                "Bicicleta"
+                                    "Furgon",
+                                    "Bicicleta"
                                 )
                             ) -> {
                                 ocultarVista(notifiVehiculoParticular)
@@ -577,7 +493,9 @@ class HomeActivity : AppCompatActivity() {
                                 100L
                             )
                         }
-                        Log.d("FireStore", "Tipos de vehiculos: $Usuario, Ancho:$heigth")
+                        val nombre = FirebaseAuth.getInstance().currentUser?.displayName ?: "Usuario"
+                        Log.d("FireStore", "Tipos de vehiculos: $nombre, Ancho:$heigth")
+
                     }
                 }
             }
@@ -585,7 +503,8 @@ class HomeActivity : AppCompatActivity() {
 
     fun notifiDesplegue(notiUno: Int, notiDos: Int, notiTres: Int, notiCuatro: Int) {
         database.collection("Bici_Usuarios")
-            .whereEqualTo("correo", Correo_TV.text.toString())
+            .whereEqualTo("correo", FirebaseAuth.getInstance().currentUser?.displayName ?: "Usuario"
+            )
             .addSnapshotListener { documents, e ->
                 if(e != null){
                     Toast.makeText(
@@ -815,7 +734,12 @@ class HomeActivity : AppCompatActivity() {
         notificationManager.notify(notificationId, builder.build())
     }
 
-    fun escucharDisponibilidad(documentId: String, campo: String, textoView: TextView, umbrales: List<Pair<IntRange, String>>) {
+    fun escucharDisponibilidad(
+        documentId: String,
+        campo: String,
+        textoView: TextView,
+        umbrales: List<Pair<IntRange, String>>
+    ) {
         database.collection("Disponibilidad")
             .document(documentId)
             .addSnapshotListener { document, e ->
@@ -823,19 +747,33 @@ class HomeActivity : AppCompatActivity() {
                     Log.d("Firestore", "Error al escuchar: $documentId", e)
                     return@addSnapshotListener
                 }
+
                 val espacios = document?.getLong(campo)?.toInt() ?: 0
                 Log.d("Firestore", "Actualizado $campo -> $espacios")
-                textoView.text = "Quedan $espacios espacios para $campo"
+
+                // 🧩 Seleccionamos el emoji según el tipo de vehículo
+                val emoji = when (campo.lowercase()) {
+                    "furgon" -> "🚐"
+                    "bicicleta" -> "🚲"
+                    "motocicleta" -> "🏍️"
+                    "vehiculo particular" -> "🚗"
+                    else -> "NADA"
+                }
+
+                // 🧾 Mostramos mensaje en el TextView con emoji
+                textoView.text = "$emoji Quedan $espacios espacios para $campo"
+
                 for ((rango, mensaje) in umbrales) {
                     if (espacios in rango) {
                         mostrarNotificacion(
                             this,
                             "ZeusParking",
-                            mensaje.replace("{espacios}", espacios.toString())
+                            "$emoji " + mensaje.replace("{espacios}", espacios.toString())
                         )
                         break
                     }
                 }
             }
     }
+
 }
