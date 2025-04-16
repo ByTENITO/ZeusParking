@@ -8,6 +8,7 @@ import android.os.Bundle
 import android.widget.Button
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.FragmentActivity
+import com.example.ZeusParking.BaseNavigationActivity
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -17,11 +18,10 @@ import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 
-class Localizacion : FragmentActivity(), OnMapReadyCallback {
+class Localizacion : BaseNavigationActivity(), OnMapReadyCallback {
 
     private lateinit var mMap: GoogleMap
     private lateinit var usuario: FusedLocationProviderClient
-    private lateinit var VolverButton: Button
 
     data class UbicacionDetallada(
         val coordinates: LatLng,
@@ -33,18 +33,20 @@ class Localizacion : FragmentActivity(), OnMapReadyCallback {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_localizacion)
-        overridePendingTransition(0, 0)
 
-        VolverButton = findViewById(R.id.Volver_BTN)
+        //Navegacion
+        setupNavigation()
+
+        overridePendingTransition(0, 0)
         usuario = LocationServices.getFusedLocationProviderClient(this)
 
         val mapFragment = supportFragmentManager
             .findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)
-        VolverButton.setOnClickListener {
-            finish()
-        }
     }
+
+    //Navegacion del Sistema
+    override fun getCurrentNavigationItem(): Int = R.id.localizacion
 
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap

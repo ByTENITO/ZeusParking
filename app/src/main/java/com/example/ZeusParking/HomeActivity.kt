@@ -20,12 +20,13 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.core.app.NotificationCompat
+import com.example.ZeusParking.BaseNavigationActivity
 import com.google.firebase.firestore.FirebaseFirestore
 import com.squareup.picasso.Picasso
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.imageview.ShapeableImageView
 
-class HomeActivity : AppCompatActivity() {
+class HomeActivity : BaseNavigationActivity() {
     // Variables y vistas
     private var database = FirebaseFirestore.getInstance()
 
@@ -40,8 +41,11 @@ class HomeActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
         setContentView(R.layout.activity_home)
+        enableEdgeToEdge()
+
+        //Navegacion
+        setupNavigation()
 
         // Setup de vistas
         perfilImageView = findViewById(R.id.FotoPerfil_ImageView)
@@ -121,7 +125,6 @@ class HomeActivity : AppCompatActivity() {
                 .start()
         }
 
-
         // Mostrar/ocultar sección de disponibilidad
         gestionarBtn.setOnClickListener {
             seccionDisponibilidad.visibility = if (seccionDisponibilidad.visibility == View.VISIBLE)
@@ -138,45 +141,6 @@ class HomeActivity : AppCompatActivity() {
             val intent = Intent(this, AuthActivity::class.java)
             startActivity(intent)
             finish()
-        }
-
-
-        //Menu de Navegaion
-        val bottomNavigationView = findViewById<BottomNavigationView>(R.id.bottom_navigation)
-
-        bottomNavigationView.setOnItemSelectedListener { item ->
-            if (item.itemId == bottomNavigationView.selectedItemId) {
-                return@setOnItemSelectedListener true
-            }
-
-            when (item.itemId) {
-                R.id.home -> {
-                    if (this::class.java != HomeActivity::class.java as Class<*>) {
-                        startActivity(Intent(this, HomeActivity::class.java))
-                        overridePendingTransition(0, 0)
-                    }
-                }
-                R.id.localizacion -> {
-                    if (this::class.java != Localizacion::class.java as Class<*>) {
-                        startActivity(Intent(this, Localizacion::class.java))
-                        overridePendingTransition(0, 0)
-                    }
-                }
-                R.id.registro -> {
-                    if (this::class.java != RegistrarBiciActivity::class.java as Class<*>) {
-                        startActivity(Intent(this, RegistrarBiciActivity::class.java))
-                        overridePendingTransition(0, 0)
-                    }
-                }
-                R.id.qr -> {
-                    if (this::class.java != QrActivity::class.java as Class<*>) {
-                        startActivity(Intent(this, QrActivity::class.java))
-                        overridePendingTransition(0, 0)
-                    }
-                }
-            }
-
-            true
         }
 
         // Obtener datos del intent
@@ -279,6 +243,9 @@ class HomeActivity : AppCompatActivity() {
         editor.putString("email", email)
         editor.apply()
     }
+
+    //Navegacion del Sistema
+    override fun getCurrentNavigationItem(): Int = R.id.home
 
 
 

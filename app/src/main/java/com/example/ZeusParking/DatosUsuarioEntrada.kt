@@ -80,7 +80,7 @@ class DatosUsuarioEntrada : AppCompatActivity() {
                         val userId = FirebaseAuth.getInstance().currentUser?.uid
                         val cedula = document.getString("cedula")
                         val idVehi = document.getString("numero")
-                        buscarImagenUser(userId,document.id,cedula)
+                        buscarImagenUser(userId,cedula)
                         buscarImagenVehi(userId,document.id,idVehi)
                         Log.d("FireStorage","id -> ${document.id} ")
                         Log.d("FireStorage","usuario -> $cedula")
@@ -95,10 +95,10 @@ class DatosUsuarioEntrada : AppCompatActivity() {
         }
     }
 
-    private fun buscarImagenUser (userId: String?, id: String?, cedula: String? ){
+    private fun buscarImagenUser (userId: String?, cedula: String? ){
         val storageImagenUser = FirebaseStorage.getInstance().reference
-        val imageStorage = storageImagenUser.child("$userId/$id/$cedula.png")
-        Log.d("FireStorage","$userId/$id/$cedula.png")
+        val imageStorage = storageImagenUser.child("$userId/$cedula.png")
+        Log.d("FireStorage","$userId/$cedula.png")
 
         imageStorage.downloadUrl.addOnSuccessListener { uri ->
             Log.d("FireStorage","URL obtenida: $uri")

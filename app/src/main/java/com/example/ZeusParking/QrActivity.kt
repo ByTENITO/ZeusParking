@@ -7,109 +7,86 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.view.animation.AnimationUtils
-import android.widget.Button
 import android.widget.ImageView
-import androidx.appcompat.app.AppCompatActivity
-import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.example.ZeusParking.BaseNavigationActivity
 import com.google.zxing.BarcodeFormat
 import com.google.zxing.EncodeHintType
 import com.google.zxing.MultiFormatWriter
 import com.google.zxing.WriterException
 
-class QrActivity : AppCompatActivity() {
-    private lateinit var CodSalida: ImageView
-    private lateinit var Salida: Button
+class QrActivity : BaseNavigationActivity() {
+    private lateinit var ivCodigoQR: ImageView
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        startAnimationsWithDelay()
         setContentView(R.layout.activity_entrada_qr)
-        CodSalida = findViewById(R.id.ivCodigoSalida)
-        Salida = findViewById(R.id.Buttonsalir)
-        overridePendingTransition(0, 0)
-        val ivCodigoQR: ImageView = findViewById(R.id.ivCodigoSalida)
+
+        // Initialize views
+        ivCodigoQR = findViewById(R.id.ivCodigoSalida)
+
+        // Setup navigation
+        setupNavigation()
+
+        // Generate and display QR code
+        generateAndDisplayQrCode()
+
+        // Start animations
+        startAnimationsWithDelay()
+    }
+
+    private fun generateAndDisplayQrCode() {
         val sharedPref = getSharedPreferences("MisDatos", MODE_PRIVATE)
-        val correo = sharedPref.getString("nombreUsuario", "Desconocido")
-        //val barcodeEncoder = BarcodeEncoder()
-        //val bitmap: Bitmap = barcodeEncoder.encodeBitmap(correo.toString(), BarcodeFormat.QR_CODE, 750, 750)
-        //try {
-        //    ivCodigoQR.setImageBitmap(bitmap)
-        //} catch (e: Exception) {
-        //    e.printStackTrace()
-        //}
-        ivCodigoQR.setBackgroundColor(Color.TRANSPARENT)
-        ivCodigoQR.setImageBitmap(generateQRCodeTransparent(correo, 750))
-        Salida.setOnClickListener {
-            finish()
-        }
+        val correo = sharedPref.getString("nombreUsuario", "Desconocido") ?: "DefaultValue"
 
-        //Menu de Navegaion
-        val bottomNavigationView = findViewById<BottomNavigationView>(R.id.bottom_navigation)
-
-        bottomNavigationView.setOnItemSelectedListener { item ->
-            if (item.itemId == bottomNavigationView.selectedItemId) {
-                return@setOnItemSelectedListener true  // Evita recargar la misma actividad
-            }
-
-            when (item.itemId) {
-
-                R.id.home -> {
-                    startActivity(Intent(this, HomeActivity::class.java))
-                    overridePendingTransition(0, 0)  // Evita la animación de transición
-                    finish()  // Finaliza la actividad actual para evitar que quede en la pila
-                }
-                R.id.localizacion -> {
-                    startActivity(Intent(this, Localizacion::class.java))
-                    overridePendingTransition(0, 0)
-                    finish()
-                }
-                R.id.registro -> {
-                    startActivity(Intent(this, RegistrarBiciActivity::class.java))
-                    overridePendingTransition(0, 0)
-                    finish()
-                }
-                R.id.qr -> {
-                    startActivity(Intent(this, QrActivity::class.java))
-                    overridePendingTransition(0, 0)
-                    finish()
-                }
-            }
-            true
+        try {
+            val qrBitmap = generateQRCode(correo, 700)
+            ivCodigoQR.setImageBitmap(qrBitmap)
+        } catch (e: Exception) {
+            e.printStackTrace()
+            // Handle error (maybe show a placeholder)
         }
     }
 
-    private fun generateQRCodeTransparent(qr: String?, size: Int): Bitmap? {
-        try {
+    private fun generateQRCode(content: String, size: Int): Bitmap? {
+        return try {
             val hints = mapOf(
-                EncodeHintType.MARGIN to 0 // Eliminar márgenes
+                EncodeHintType.MARGIN to 1, // Small margin
+                EncodeHintType.ERROR_CORRECTION to "L" // Error correction level
             )
-            val QR = MultiFormatWriter().encode(qr, BarcodeFormat.QR_CODE, size, size, hints)
-            val width = QR.width
-            val height = QR.height
+
+            val bitMatrix = MultiFormatWriter().encode(
+                content,
+                BarcodeFormat.QR_CODE,
+                size,
+                size,
+                hints
+            )
+
+            val width = bitMatrix.width
+            val height = bitMatrix.height
             val bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
 
             for (x in 0 until width) {
                 for (y in 0 until height) {
-                    bitmap.setPixel(x, y, if (QR[x, y]) Color.YELLOW else Color.TRANSPARENT)
+                    bitmap.setPixel(x, y, if (bitMatrix[x, y]) Color.BLACK else Color.WHITE)
                 }
             }
 
-            return bitmap
+            bitmap
         } catch (e: WriterException) {
             e.printStackTrace()
+            null
         }
-        return null
     }
 
     private fun startAnimationsWithDelay() {
         val fadeIn = AnimationUtils.loadAnimation(this, R.anim.fade_in)
         Handler(Looper.getMainLooper()).postDelayed({
-            listOf(
-                CodSalida,
-                Salida
-            ).forEach { view ->
-                view.startAnimation(fadeIn)
-            }
-        }, 0)
+            ivCodigoQR.startAnimation(fadeIn)
+        }, 100) // Small delay for smoother animation
     }
 
+    override fun getCurrentNavigationItem(): Int {
+        return R.id.qr // Make sure this matches your menu item ID
+    }
 }

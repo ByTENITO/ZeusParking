@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/fondo"
+    android:background="@drawable/fondo_regis"
     tools:context=".RegistrarBiciActivity">
 
     <!-- Scrollable content area -->
@@ -43,7 +43,7 @@
                     android:layout_marginHorizontal="16dp"
                     app:cardCornerRadius="8dp"
                     app:cardElevation="4dp"
-                    app:strokeColor="@android:color/white"
+                    app:strokeColor="@color/Botones"
                     app:strokeWidth="1dp">
 
                     <LinearLayout
@@ -60,7 +60,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="8dp"
                             android:hint="@string/nombres"
-                            app:boxStrokeColor="@android:color/white"
+                            app:boxStrokeColor="@color/Botones"
                             app:hintTextColor="@android:color/white">
 
                             <com.google.android.material.textfield.TextInputEditText
@@ -79,7 +79,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="8dp"
                             android:hint="@string/apellidos"
-                            app:boxStrokeColor="@android:color/white"
+                            app:boxStrokeColor="@color/Botones"
                             app:hintTextColor="@android:color/white">
 
                             <com.google.android.material.textfield.TextInputEditText
@@ -98,7 +98,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="8dp"
                             android:hint="@string/cedula"
-                            app:boxStrokeColor="@android:color/white"
+                            app:boxStrokeColor="@color/Botones"
                             app:hintTextColor="@android:color/white">
 
                             <com.google.android.material.textfield.TextInputEditText
@@ -117,7 +117,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="8dp"
                             android:hint="Tipo"
-                            app:boxStrokeColor="@android:color/white"
+                            app:boxStrokeColor="@color/Botones"
                             app:hintTextColor="@android:color/white">
 
                             <Spinner
@@ -136,8 +136,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="8dp"
-                            android:hint="@string/num_marco_placa"
-                            app:boxStrokeColor="@android:color/white"
+                            app:boxStrokeColor="@color/Botones"
                             app:hintTextColor="@android:color/white">
 
                             <com.google.android.material.textfield.TextInputEditText
@@ -156,7 +155,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="16dp"
                             android:hint="@string/color"
-                            app:boxStrokeColor="@android:color/white"
+                            app:boxStrokeColor="@color/Botones"
                             app:hintTextColor="@android:color/white">
 
                             <com.google.android.material.textfield.TextInputEditText
@@ -194,7 +193,7 @@
                                 android:layout_marginEnd="8dp"
                                 android:text="Usuario"
                                 android:textColor="@android:color/white"
-                                app:strokeColor="@android:color/white"/>
+                                app:strokeColor="@color/Botones"/>
 
                             <com.google.android.material.button.MaterialButton
                                 android:id="@+id/AgregarFoto1_BTN"
@@ -204,7 +203,7 @@
                                 android:layout_weight="1"
                                 android:text="Vehiculo"
                                 android:textColor="@android:color/white"
-                                app:strokeColor="@android:color/white"/>
+                                app:strokeColor="@color/Botones"/>
                         </LinearLayout>
 
                         <!-- Botón de Guardar -->
@@ -214,6 +213,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="@string/guardar"
+                            android:textColor="@color/Navegacion"
                             app:backgroundTint="@color/Botones"/>
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
@@ -229,5 +229,10 @@
         android:layout_gravity="bottom"
         android:background="@color/Navegacion"
         app:labelVisibilityMode="labeled"
-        app:menu="@menu/nav_menu"/>
+        app:menu="@menu/nav_menu"
+        app:itemIconTint="@drawable/nav_item_color"
+        app:itemTextColor="@drawable/nav_text_color"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+
+
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

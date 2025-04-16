@@ -13,4 +13,10 @@
     <color name="success_green">#4CAF50</color>
     <color name="error_red">#F44336</color>
 
+    //Navegacion
+    <color name="Seleccionado">#FFC107</color>
+    <color name="No_seleccionado">#FFFFFF</color>
+    <color name="text_seleccionado">#FFC107</color>
+    <color name="text_no_seleccionado">#FFFFFF</color>
+
 </resources>

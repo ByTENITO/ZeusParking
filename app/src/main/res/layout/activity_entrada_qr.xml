@@ -1,55 +1,58 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/fondo_qr"
     tools:context=".QrActivity">
 
+    <!-- Smaller logo at top -->
     <ImageView
-        android:id="@+id/ivCodigoSalida"
-        android:layout_width="403dp"
-        android:layout_height="395dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:id="@+id/imageView"
+        android:layout_width="200dp"
+        android:layout_height="80dp"
+        android:adjustViewBounds="true"
+        android:contentDescription="@null"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.342" />
+        app:layout_constraintVertical_bias="0.1"
+        app:srcCompat="@drawable/zeuspass"
+        tools:ignore="ContentDescription" />
 
-    <Button
-        android:id="@+id/Buttonsalir"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:backgroundTint="#E4CC00"
-        android:text="@string/salir"
-        android:textColor="#000000"
-        app:layout_constraintBottom_toBottomOf="parent"
+    <!-- White QR Code Container (smaller and centered) -->
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/qrCard"
+        android:layout_width="300dp"
+        android:layout_height="300dp"
+        app:cardBackgroundColor="@android:color/white"
+        app:cardCornerRadius="12dp"
+        app:cardElevation="4dp"
+        app:layout_constraintBottom_toTopOf="@+id/bottom_navigation"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.793" />
+        app:layout_constraintTop_toBottomOf="@+id/imageView">
 
+        <ImageView
+            android:id="@+id/ivCodigoSalida"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="20dp"
+            android:scaleType="fitCenter"/>
+    </com.google.android.material.card.MaterialCardView>
+
+    <!-- Bottom Navigation (EXACTLY AS YOU HAD IT) -->
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottom_navigation"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/white"
-        app:menu="@menu/nav_menu"
+        android:background="@color/Navegacion"
+        app:itemIconTint="@drawable/nav_item_color"
+        app:itemTextColor="@drawable/nav_text_color"
         app:labelVisibilityMode="labeled"
-        app:layout_constraintBottom_toBottomOf="parent"/>
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:menu="@menu/nav_menu" />
 
-    <ImageView
-        android:id="@+id/imageView"
-        android:layout_width="280dp"
-        android:layout_height="112dp"
-        app:layout_constraintBottom_toTopOf="@+id/bottom_navigation"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.496"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.005"
-        app:srcCompat="@drawable/zeuspass" />
 </androidx.constraintlayout.widget.ConstraintLayout>

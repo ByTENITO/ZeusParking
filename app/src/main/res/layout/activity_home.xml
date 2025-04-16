@@ -30,6 +30,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/Navegacion"
+        app:itemIconTint="@drawable/nav_item_color"
+        app:itemTextColor="@drawable/nav_text_color"
         app:menu="@menu/nav_menu"
         app:labelVisibilityMode="labeled"
         app:layout_constraintBottom_toBottomOf="parent"/>
@@ -48,7 +50,7 @@
         android:layout_height="450dp"
         android:orientation="vertical"
         android:padding="16dp"
-        android:background="@drawable/borde_menu"
+        android:background="@color/Navegacion"
         android:visibility="gone"
         android:elevation="6dp"
         android:layout_marginTop="8dp"
@@ -90,6 +92,8 @@
             android:id="@+id/gestionar_btn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:textColor="@color/Navegacion"
+            android:backgroundTint="#FFC107"
             android:text="Disponibilidad" />
 
         <!-- SECCIÓN DE NOTIFICACIONES INTEGRADA -->
@@ -106,7 +110,7 @@
                 android:id="@+id/notificacionFurgon"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@android:color/black"
+                android:textColor="@color/blanco"
                 android:textSize="15sp"
                 android:layout_marginBottom="6dp" />
 
@@ -114,7 +118,7 @@
                 android:id="@+id/notificacionVehiculoParticular"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@android:color/black"
+                android:textColor="@color/blanco"
                 android:textSize="15sp"
                 android:layout_marginBottom="6dp" />
 
@@ -122,7 +126,7 @@
                 android:id="@+id/notificacionBicicleta"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@android:color/black"
+                android:textColor="@color/blanco"
                 android:textSize="15sp"
                 android:layout_marginBottom="6dp" />
 
@@ -130,7 +134,7 @@
                 android:id="@+id/notificacionMotocicleta"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@android:color/black"
+                android:textColor="@color/blanco"
                 android:textSize="15sp"
                 android:layout_marginBottom="6dp" />
         </LinearLayout>

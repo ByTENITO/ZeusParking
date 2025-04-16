@@ -17,9 +17,10 @@ import com.google.firebase.storage.FirebaseStorage
 import android.text.InputType
 import android.text.InputFilter
 import android.view.animation.AnimationUtils
+import com.example.ZeusParking.BaseNavigationActivity
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
-class RegistrarBiciActivity : AppCompatActivity() {
+class RegistrarBiciActivity : BaseNavigationActivity() {
     private lateinit var nombreEd: EditText
     private lateinit var apellidosEd: EditText
     private lateinit var colorEd: EditText
@@ -37,7 +38,7 @@ class RegistrarBiciActivity : AppCompatActivity() {
     private val db = FirebaseFirestore.getInstance()
     private val storage = FirebaseStorage.getInstance()
 
-    // Definición de la clase BiciData fuera de cualquier métdo
+
     data class BiciData(
         val nombre: String,
         val apellidos: String,
@@ -50,9 +51,13 @@ class RegistrarBiciActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_registrar_bici)
         enableEdgeToEdge()
         startAnimationsWithDelay()
-        setContentView(R.layout.activity_registrar_bici)
+
+        //Navegacion
+        setupNavigation()
+
         overridePendingTransition(0, 0)
 
         // Configuración de los elementos de la interfaz
@@ -67,39 +72,6 @@ class RegistrarBiciActivity : AppCompatActivity() {
         Guardar = findViewById(R.id.Guardar_BTN)
         texto = findViewById(R.id.textView3)
 
-        //Menu de Navegaion
-        val bottomNavigationView = findViewById<BottomNavigationView>(R.id.bottom_navigation)
-
-        bottomNavigationView.setOnItemSelectedListener { item ->
-            if (item.itemId == bottomNavigationView.selectedItemId) {
-                return@setOnItemSelectedListener true  // Evita recargar la misma actividad
-            }
-
-            when (item.itemId) {
-
-                R.id.home -> {
-                    startActivity(Intent(this, HomeActivity::class.java))
-                    overridePendingTransition(0, 0)  // Evita la animación de transición
-                    finish()  // Finaliza la actividad actual para evitar que quede en la pila
-                }
-                R.id.localizacion -> {
-                    startActivity(Intent(this, Localizacion::class.java))
-                    overridePendingTransition(0, 0)
-                    finish()
-                }
-                R.id.registro -> {
-                    startActivity(Intent(this, RegistrarBiciActivity::class.java))
-                    overridePendingTransition(0, 0)
-                    finish()
-                }
-                R.id.qr -> {
-                    startActivity(Intent(this, QrActivity::class.java))
-                    overridePendingTransition(0, 0)
-                    finish()
-                }
-            }
-            true
-        }
 
         // Configuración del Spinner
         val adapter = ArrayAdapter.createFromResource(this, R.array.items, R.layout.estilo_spinner)
@@ -115,15 +87,15 @@ class RegistrarBiciActivity : AppCompatActivity() {
             ) {
                 when (position) {
                     1 -> {
-                        marcoNum.hint = "Número de Marco"
+                        marcoNum.hint = "4 Ultimos Numeros"
                         marcoNum.inputType = InputType.TYPE_CLASS_NUMBER
                         marcoNum.filters = arrayOf(InputFilter.LengthFilter(20))
                     }
 
                     2, 3, 4 -> {
                         marcoNum.hint = when (position) {
-                            2 -> "Placa (Ej. ABC-123)"
-                            3 -> "Placa (Ej. ABC-123)"
+                            2 -> "Placa (Ej. abc123)"
+                            3 -> "Placa (Ej. abc123)"
                             4 -> "Número de Furgón"
                             else -> "Número de Marco"
                         }
@@ -158,6 +130,9 @@ class RegistrarBiciActivity : AppCompatActivity() {
             guardarDatosEnFirestore()
         }
     }
+
+    //Navegacion del Sistema
+    override fun getCurrentNavigationItem(): Int = R.id.registro
 
     private fun startAnimationsWithDelay() {
         val fadeIn = AnimationUtils.loadAnimation(this, R.anim.fade_in)
@@ -225,7 +200,7 @@ class RegistrarBiciActivity : AppCompatActivity() {
 
         db.collection("Bici_Usuarios").add(biciData)
             .addOnSuccessListener { documentReference ->
-                subirFoto(fotoUri1, cedula, documentReference.id)
+                User(fotoUri1, cedula)
                 subirFoto(fotoUri2, marco, documentReference.id)
                 Toast.makeText(this, "Datos guardados exitosamente", Toast.LENGTH_SHORT).show()
                 limpiarCampos()
@@ -239,6 +214,19 @@ class RegistrarBiciActivity : AppCompatActivity() {
         if (fotoUri == null) return
         val userId = FirebaseAuth.getInstance().currentUser?.uid ?: return
         val storageRef = storage.reference.child("$userId/$biciId/$tipo.png")
+
+        storageRef.putFile(fotoUri)
+            .addOnSuccessListener {
+                Toast.makeText(this, "Foto $tipo subida exitosamente", Toast.LENGTH_SHORT).show()
+            }
+            .addOnFailureListener {
+                Toast.makeText(this, "Error al subir la foto $tipo", Toast.LENGTH_SHORT).show()
+            }
+    }
+    private fun User(fotoUri: Uri?, tipo: String) {
+        if (fotoUri == null) return
+        val userId = FirebaseAuth.getInstance().currentUser?.uid ?: return
+        val storageRef = storage.reference.child("$userId/$tipo.png")
 
         storageRef.putFile(fotoUri)
             .addOnSuccessListener {
