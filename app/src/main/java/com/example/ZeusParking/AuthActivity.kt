@@ -62,7 +62,6 @@ class AuthActivity : AppCompatActivity() {
     private lateinit var Contraseña_ED: EditText
     private lateinit var ForgotPassword_TV: TextView
     private lateinit var auth: FirebaseAuth
-    private var eye = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -116,50 +115,26 @@ class AuthActivity : AppCompatActivity() {
             ActivityCompat.requestPermissions(this, permisos.toTypedArray(), 123)
         }
 
-        if (alto >= 3001) {
-            val params = logo.layoutParams
-            params.width = 1160 // Ancho en píxeles
-            params.height = 1160 // Alto en píxeles
-            logo.layoutParams = params
+        when {
+            alto >= 3001 -> responsividadImagenes(logo, 1160, 1160)
+            alto in 2400..2500 -> responsividadImagenes(logo, 761, 761)
+            alto in 1841..2399 -> responsividadImagenes(logo, 870, 870)
+            alto in 1301..1840 -> responsividadImagenes(logo, 761, 761)
+            alto in 1081..1300 -> responsividadImagenes(logo, 500, 500)
+            alto <= 1080 -> responsividadImagenes(logo, 300, 300)
         }
 
-        if (alto in 1301..2500) {
-            if (alto >= 2400) {
-                val params = logo.layoutParams
-                params.width = 761 // Ancho en píxeles
-                params.height = 761 // Alto en píxeles
-                logo.layoutParams = params
-            }
-            if (alto in 1841..2399) {
-                val params = logo.layoutParams
-                params.width = 870 // Ancho en píxeles
-                params.height = 870 // Alto en píxeles
-                logo.layoutParams = params
-            }
-            if (alto <= 1840) {
-                val params = logo.layoutParams
-                params.width = 761 // Ancho en píxeles
-                params.height = 761 // Alto en píxeles
-                logo.layoutParams = params
-            }
-        }
-
-        if (alto in 1081..1300) {
-            val params = logo.layoutParams
-            params.width = 500 // Ancho en píxeles
-            params.height = 500 // Alto en píxeles
-            logo.layoutParams = params
-        }
-        if (alto <= 1080) {
-            val params = logo.layoutParams
-            params.width = 300 // Ancho en píxeles
-            params.height = 300 // Alto en píxeles
-            logo.layoutParams = params
-        }
         overridePendingTransition(0, 0)
         auth = FirebaseAuth.getInstance()
         setup()
         session()
+    }
+
+    private fun responsividadImagenes(Imagen: ImageView, Alto: Int, Ancho: Int) {
+        val params = Imagen.layoutParams
+        params.width = Ancho // Ancho en píxeles
+        params.height = Alto // Alto en píxeles
+        Imagen.layoutParams = params
     }
 
     private fun tamañoPantalla(porcentaje: Float): Int {

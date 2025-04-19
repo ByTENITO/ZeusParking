@@ -5,6 +5,7 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
 import android.content.Intent
+import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
@@ -25,19 +26,21 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.squareup.picasso.Picasso
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.imageview.ShapeableImageView
+import com.google.firebase.storage.FirebaseStorage
+import java.io.File
 
 class HomeActivity : BaseNavigationActivity() {
     // Variables y vistas
     private var database = FirebaseFirestore.getInstance()
 
     private lateinit var perfilImageView: ImageView
-    private lateinit var notificacionLinear: LinearLayout
+    private lateinit var perfilImageStorage: ImageView
+    private lateinit var perfilImageStorageGrande: ImageView
 
     private lateinit var notifiFurgon: TextView
     private lateinit var notifiVehiculoParticular: TextView
     private lateinit var notifiBicicleta: TextView
     private lateinit var notifiMotocicleta: TextView
-    private var cambioAnimacionNoti = true
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,6 +52,8 @@ class HomeActivity : BaseNavigationActivity() {
 
         // Setup de vistas
         perfilImageView = findViewById(R.id.FotoPerfil_ImageView)
+        perfilImageStorage = findViewById(R.id.FotoPerfil_Storage)
+        perfilImageStorageGrande = findViewById(R.id.perfil_grande)
 
         notifiFurgon = findViewById(R.id.notificacionFurgon)
         notifiVehiculoParticular = findViewById(R.id.notificacionVehiculoParticular)
@@ -64,43 +69,31 @@ class HomeActivity : BaseNavigationActivity() {
         val seccionDisponibilidad = findViewById<LinearLayout>(R.id.seccionDisponibilidad)
         val fondoDesactivado = findViewById<View>(R.id.fondoDesactivado)
 
+        val userId = FirebaseAuth.getInstance().currentUser?.uid
+        val correo = intent.getStringExtra("email") ?: "No disponible"
+
         crearCanalNotificacion(this)
+
+        database.collection("Bici_Usuarios")
+            .whereEqualTo("correo", correo)
+            .addSnapshotListener { documents, e ->
+                if (documents != null) {
+                    for (document in documents) {
+                        val cedula = document.getString("cedula")
+                        buscarImagenUser(userId, cedula)
+                        Log.d("FireStorage", "id -> ${document.id} ")
+                        Log.d("FireStorage", "usuario -> $cedula")
+                    }
+                }
+            }
 
         // Mostrar menú al hacer click en la imagen de perfil
         perfilImageView.setOnClickListener {
-            // Mostrar fondo oscuro y menú
-            fondoDesactivado.visibility = View.VISIBLE
-            perfilMenuLayout.visibility = View.VISIBLE
+            cargarImagen(fondoDesactivado, perfilMenuLayout, nombreTV, correoTV, imagenGrande)
+        }
 
-            // Animación del menú
-            perfilMenuLayout.apply {
-                alpha = 0f
-                translationY = -80f
-                animate()
-                    .alpha(1f)
-                    .translationY(0f)
-                    .setDuration(400)
-                    .setInterpolator(AccelerateDecelerateInterpolator())
-                    .start()
-            }
-
-            // Datos del usuario
-            val fotoUrl = intent.getStringExtra("foto_perfil_url")
-            val nombre = FirebaseAuth.getInstance().currentUser?.displayName ?: "Usuario"
-            val correo = FirebaseAuth.getInstance().currentUser?.email ?: "correo@ejemplo.com"
-
-            nombreTV.text = nombre
-            correoTV.text = correo
-
-            if (!fotoUrl.isNullOrEmpty()) {
-                Picasso.get()
-                    .load(fotoUrl)
-                    .placeholder(R.drawable.fondo_vigilante)
-                    .error(R.drawable.fondo_vigilante)
-                    .into(imagenGrande)
-            } else {
-                imagenGrande.setImageResource(R.drawable.fondo_vigilante)
-            }
+        perfilImageStorage.setOnClickListener {
+            cargarImagen(fondoDesactivado, perfilMenuLayout, nombreTV, correoTV, imagenGrande)
         }
 
         // Cerrar menú al tocar fuera (fondo oscuro)
@@ -247,7 +240,84 @@ class HomeActivity : BaseNavigationActivity() {
     //Navegacion del Sistema
     override fun getCurrentNavigationItem(): Int = R.id.home
 
+    private fun cargarImagen(
+        fondoDesactivado: View,
+        perfilMenuLayout: View,
+        nombreTV: TextView,
+        correoTV: TextView,
+        imagenGrande: ImageView
+    ) {
+        // Mostrar fondo oscuro y menú
+        fondoDesactivado.visibility = View.VISIBLE
+        perfilMenuLayout.visibility = View.VISIBLE
 
+        // Animación del menú
+        perfilMenuLayout.apply {
+            alpha = 0f
+            translationY = -80f
+            animate()
+                .alpha(1f)
+                .translationY(0f)
+                .setDuration(400)
+                .setInterpolator(AccelerateDecelerateInterpolator())
+                .start()
+        }
+        // Datos del usuario
+        val fotoUrl = intent.getStringExtra("foto_perfil_url")
+        val nombre = FirebaseAuth.getInstance().currentUser?.displayName ?: "Usuario"
+        val correo = FirebaseAuth.getInstance().currentUser?.email ?: "correo@ejemplo.com"
+
+        nombreTV.text = nombre
+        correoTV.text = correo
+
+        if (!fotoUrl.isNullOrEmpty()) {
+            Picasso.get()
+                .load(fotoUrl)
+                .placeholder(R.drawable.fondo_vigilante)
+                .error(R.drawable.fondo_vigilante)
+                .into(imagenGrande)
+        }
+    }
+
+    private fun buscarImagenUser(userId: String?, cedula: String?) {
+        val storageImagenUser = FirebaseStorage.getInstance().reference.child("$userId/$cedula.png")
+        storageImagenUser.metadata.addOnSuccessListener { metadata ->
+            val actualizacionRemota = metadata.updatedTimeMillis
+            val carpeta = File(getExternalFilesDir(null), "70T05_U$3R")
+
+            Log.d("FireStorage", "$userId/$cedula.png")
+
+            if (!carpeta.exists() || carpeta.lastModified() < actualizacionRemota) {
+                carpeta.mkdirs()
+                val file = File(carpeta, "$cedula.png")
+                storageImagenUser.getFile(file).addOnSuccessListener {
+                    Log.d("FireStorage", "Imagen descargada en: ${file.absolutePath}")
+                    val bitMap = BitmapFactory.decodeFile(file.absolutePath)
+                    perfilImageStorage.setImageBitmap(bitMap)
+                    perfilImageStorageGrande.setImageBitmap(bitMap)
+                }.addOnFailureListener {
+                    Log.e("FireStorage", "Error al descargar la imagen:", it)
+                }
+            } else {
+                val archivo = File(getExternalFilesDir(null), "70T05_U$3R/$cedula.png")
+                if (archivo.exists()) {
+                    Log.d("FireStorage", "Imagen descargada en: ${archivo.absolutePath}")
+                    val bitMap = BitmapFactory.decodeFile(archivo.absolutePath)
+                    perfilImageStorage.setImageBitmap(bitMap)
+                    perfilImageStorageGrande.setImageBitmap(bitMap)
+                } else {
+                    storageImagenUser.getFile(archivo).addOnSuccessListener {
+                        Log.d("FireStorage", "Imagen descargada en: ${archivo.absolutePath}")
+                        val bitMap = BitmapFactory.decodeFile(archivo.absolutePath)
+                        perfilImageStorage.setImageBitmap(bitMap)
+                        perfilImageStorageGrande.setImageBitmap(bitMap)
+                    }.addOnFailureListener {
+                        Log.e("FireStorage", "Error al descargar la imagen:", it)
+                    }
+                }
+            }
+        }
+    }
 
     // Función para cargar la foto de perfil desde la URL
     private fun loadProfilePicture(fotoUrl: String) {
@@ -255,420 +325,9 @@ class HomeActivity : BaseNavigationActivity() {
         Picasso.get().load(fotoUrl).into(perfilImageView)
     }
 
-    private fun animacionAnchoLinear(view: View, startHeight: Int, endHeight: Int, duration: Long) {
-        val animacionAncho = ValueAnimator.ofInt(startHeight, endHeight)
-        animacionAncho.duration = duration
-        animacionAncho.addUpdateListener { animation ->
-            val params = view.layoutParams
-            params.height = animation.animatedValue as Int
-            view.layoutParams = params
-        }
-        animacionAncho.start()
-    }
-
-    private fun responsividadText(view: View, width: Int) {
-        val textoUsuario = ValueAnimator.ofInt(width)
-        textoUsuario.addUpdateListener { animation ->
-            val params = view.layoutParams
-            params.width = animation.animatedValue as Int
-            view.layoutParams = params
-        }
-        textoUsuario.start()
-    }
-
-    private fun responsividad(view: View, width: Int, heigth: Int) {
-        val anchoComponente = ValueAnimator.ofInt(width)
-        val altoComponente = ValueAnimator.ofInt(heigth)
-        anchoComponente.addUpdateListener { animation ->
-            val params = view.layoutParams
-            params.width = animation.animatedValue as Int
-            view.layoutParams = params
-        }
-
-        altoComponente.addUpdateListener { animation ->
-            val params = view.layoutParams
-            params.height = animation.animatedValue as Int
-            view.layoutParams = params
-        }
-        altoComponente.start()
-        anchoComponente.start()
-    }
-
     // Configuración inicial del correo y bienvenida
     private fun setup(email: String) {
         title = "Inicio"
-
-
-
-
-    }
-
-    fun notifiRepliegue(notiUno: Int, notiDos: Int, notiTres: Int, notiCuatro: Int) {
-        database.collection("Bici_Usuarios")
-            .whereEqualTo("correo", FirebaseAuth.getInstance().currentUser?.email ?: "correo@ejemplo.com"
-            )
-            .addSnapshotListener { documents, e ->
-                if (e != null) {
-                    Toast.makeText(
-                        this,
-                        "El usuario no tiene vinculados vehiculos",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                } else {
-                    if (documents != null && !documents.isEmpty) {
-                        val tiposUsuario = mutableSetOf<String>()
-                        for (document in documents) {
-                            if (document.exists()) {
-                                document.getString("tipo")?.let { tiposUsuario.add(it) }
-                            }
-                        }
-                        if (tiposUsuario.isEmpty()) {
-                            notifiFurgon.text = "No tiene un vehiculo asignado"
-                            mostrarVista(notifiFurgon)
-                            animacionAnchoLinear(notificacionLinear, notiUno, 1, 100L)
-                        }
-                        val heigth = when {
-                            tiposUsuario.containsAll(
-                                setOf(
-                                    "Furgon",
-                                    "Vehiculo Particular",
-                                    "Bicicleta",
-                                    "Motocicleta"
-                                )
-                            ) -> notiCuatro
-
-                            tiposUsuario.containsAll(
-                                setOf(
-                                    "Furgon",
-                                    "Vehiculo Particular",
-                                    "Bicicleta"
-                                )
-                            ) -> notiTres
-
-                            tiposUsuario.containsAll(
-                                setOf(
-                                    "Furgon",
-                                    "Vehiculo Particular",
-                                    "Motocicleta"
-                                )
-                            ) -> {
-                                ocultarVista(notifiBicicleta)
-                                notiTres
-                            }
-
-                            tiposUsuario.containsAll(
-                                setOf(
-                                    "Furgon",
-                                    "Bicicleta",
-                                    "Motocicleta"
-                                )
-                            ) -> {
-                                ocultarVista(notifiVehiculoParticular)
-                                notiTres
-                            }
-
-                            tiposUsuario.containsAll(
-                                setOf(
-                                    "Vehiculo Particular",
-                                    "Bicicleta",
-                                    "Motocicleta"
-                                )
-                            ) -> {
-                                ocultarVista(notifiFurgon)
-                                notiTres
-                            }
-
-                            tiposUsuario.containsAll(
-                                setOf(
-                                    "Furgon",
-                                    "Vehiculo Particular"
-                                )
-                            ) -> notiDos
-
-                            tiposUsuario.containsAll(
-                                setOf(
-                                    "Furgon",
-                                    "Bicicleta"
-                                )
-                            ) -> {
-                                ocultarVista(notifiVehiculoParticular)
-                                notiDos
-                            }
-
-                            tiposUsuario.containsAll(
-                                setOf(
-                                    "Furgon",
-                                    "Motocicleta"
-                                )
-                            ) -> {
-                                ocultarVista(notifiBicicleta, notifiVehiculoParticular)
-                                notiDos
-                            }
-
-                            tiposUsuario.containsAll(
-                                setOf(
-                                    "Vehiculo Particular",
-                                    "Bicicleta"
-                                )
-                            ) -> {
-                                ocultarVista(notifiFurgon)
-                                notiDos
-                            }
-
-                            tiposUsuario.containsAll(
-                                setOf(
-                                    "Vehiculo Particular",
-                                    "Motocicleta"
-                                )
-                            ) -> {
-                                ocultarVista(notifiFurgon, notifiBicicleta)
-                                notiDos
-                            }
-
-                            tiposUsuario.containsAll(setOf("Bicicleta", "Motocicleta")) -> {
-                                ocultarVista(notifiFurgon, notifiVehiculoParticular)
-                                notiDos
-                            }
-
-                            tiposUsuario.contains("Furgon") -> {
-                                mostrarVista(notifiFurgon)
-                                notiUno
-                            }
-
-                            tiposUsuario.contains("Vehiculo Particular") -> {
-                                mostrarVista(notifiVehiculoParticular)
-                                notiUno
-                            }
-
-                            tiposUsuario.contains("Motocicleta") -> {
-                                mostrarVista(notifiMotocicleta)
-                                notiUno
-                            }
-
-                            tiposUsuario.contains("Bicicleta") -> {
-                                mostrarVista(notifiBicicleta)
-                                notiUno
-                            }
-
-                            else -> 0
-                        }
-                        if (heigth > 0) {
-                            animacionAnchoLinear(
-                                notificacionLinear,
-                                heigth,
-                                1,
-                                100L
-                            )
-                        }
-                        val nombre = FirebaseAuth.getInstance().currentUser?.displayName ?: "Usuario"
-                        Log.d("FireStore", "Tipos de vehiculos: $nombre, Ancho:$heigth")
-
-                    }
-                }
-            }
-    }
-
-    fun notifiDesplegue(notiUno: Int, notiDos: Int, notiTres: Int, notiCuatro: Int) {
-        database.collection("Bici_Usuarios")
-            .whereEqualTo("correo", FirebaseAuth.getInstance().currentUser?.displayName ?: "Usuario"
-            )
-            .addSnapshotListener { documents, e ->
-                if(e != null){
-                    Toast.makeText(
-                        this,
-                        "El usuario no tiene vinculados vehiculos",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                }else {
-                    if (documents != null && !documents.isEmpty) {
-                        val tiposUsuario = mutableSetOf<String>()
-                        for (document in documents) {
-                            if (document.exists()) {
-                                document.getString("tipo")?.let { tiposUsuario.add(it) }
-                            }
-                        }
-                        if (tiposUsuario.isEmpty()) {
-                            notifiFurgon.text = "No tiene un vehiculo asignado"
-                            mostrarVista(notifiFurgon)
-                            animacionAnchoLinear(notificacionLinear, 1, notiUno, 100L)
-                            return@addSnapshotListener
-                        }
-                        val heigth = when {
-                            tiposUsuario.containsAll(
-                                setOf(
-                                    "Furgon",
-                                    "Vehiculo Particular",
-                                    "Bicicleta",
-                                    "Motocicleta"
-                                )
-                            ) -> notiCuatro
-
-                            tiposUsuario.containsAll(
-                                setOf(
-                                    "Furgon",
-                                    "Vehiculo Particular",
-                                    "Bicicleta"
-                                )
-                            ) -> notiTres
-
-                            tiposUsuario.containsAll(
-                                setOf(
-                                    "Furgon",
-                                    "Vehiculo Particular",
-                                    "Motocicleta"
-                                )
-                            ) -> {
-                                ocultarVista(notifiBicicleta)
-                                notiTres
-                            }
-
-                            tiposUsuario.containsAll(
-                                setOf(
-                                    "Furgon",
-                                    "Bicicleta",
-                                    "Motocicleta"
-                                )
-                            ) -> {
-                                ocultarVista(notifiVehiculoParticular)
-                                notiTres
-                            }
-
-                            tiposUsuario.containsAll(
-                                setOf(
-                                    "Vehiculo Particular",
-                                    "Bicicleta",
-                                    "Motocicleta"
-                                )
-                            ) -> {
-                                ocultarVista(notifiFurgon)
-                                notiTres
-                            }
-
-                            tiposUsuario.containsAll(
-                                setOf(
-                                    "Furgon",
-                                    "Vehiculo Particular"
-                                )
-                            ) -> notiDos
-
-                            tiposUsuario.containsAll(
-                                setOf(
-                                    "Furgon",
-                                    "Bicicleta"
-                                )
-                            ) -> {
-                                ocultarVista(notifiVehiculoParticular)
-                                notiDos
-                            }
-
-                            tiposUsuario.containsAll(
-                                setOf(
-                                    "Furgon",
-                                    "Motocicleta")
-                            ) -> {
-                                ocultarVista(notifiBicicleta, notifiVehiculoParticular)
-                                notiDos
-                            }
-
-                            tiposUsuario.containsAll(
-                                setOf(
-                                    "Vehiculo Particular",
-                                    "Bicicleta"
-                                )
-                            ) -> {
-                                ocultarVista(notifiFurgon)
-                                notiDos
-                            }
-
-                            tiposUsuario.containsAll(
-                                setOf(
-                                    "Vehiculo Particular",
-                                    "Motocicleta"
-                                )
-                            ) -> {
-                                ocultarVista(notifiFurgon, notifiBicicleta)
-                                notiDos
-                            }
-
-                            tiposUsuario.containsAll(
-                                setOf(
-                                    "Bicicleta",
-                                    "Motocicleta"
-                                )
-                            ) -> {
-                                ocultarVista(notifiFurgon, notifiVehiculoParticular)
-                                notiDos
-                            }
-
-                            tiposUsuario.containsAll(
-                                setOf(
-                                    "Bicicleta",
-                                    "Motocicleta"
-                                )
-                            ) -> {
-                                ocultarVista(notifiFurgon, notifiVehiculoParticular)
-                                notiDos
-                            }
-
-                            tiposUsuario.contains("Furgon") -> {
-                                mostrarVista(notifiFurgon)
-                                notiUno
-                            }
-
-                            tiposUsuario.contains("Vehiculo Particular") -> {
-                                mostrarVista(notifiVehiculoParticular)
-                                notiUno
-                            }
-
-                            tiposUsuario.contains("Motocicleta") -> {
-                                mostrarVista(notifiMotocicleta)
-                                notiUno
-                            }
-
-                            tiposUsuario.contains("Bicicleta") -> {
-                                mostrarVista(notifiBicicleta)
-                                notiUno
-                            }
-                            else -> 0
-                        }
-                        if (heigth > 0) {
-                            animacionAnchoLinear(notificacionLinear, 1, heigth, 100L)
-                        }
-                    }
-                }
-            }
-    }
-
-    fun ocultarVista(vararg views: View) {
-        views.forEach { view ->
-            view.layoutParams.width = 0
-            view.layoutParams.height = 0
-            view.requestLayout()
-        }
-    }
-
-    fun mostrarVista(vararg views: View) {
-        val anchor = resources.displayMetrics.widthPixels
-        views.forEach { view ->
-            when{
-                anchor <= 590 -> {
-                    view.layoutParams.width = 300
-                    view.layoutParams.height = 55
-                    view.requestLayout()
-                }
-                anchor in 591 .. 1300 -> {
-                    view.layoutParams.width = 600
-                    view.layoutParams.height = 105
-                    view.requestLayout()
-                }
-                anchor in 0..1301 -> {
-                    view.layoutParams.width = 650
-                    view.layoutParams.height = 150
-                    view.requestLayout()
-                }
-                else -> return
-            }
-        }
     }
 
     fun crearCanalNotificacion(context: Context) {

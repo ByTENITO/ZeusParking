@@ -80,7 +80,7 @@ class DatosUsuarioSalida : AppCompatActivity() {
             .addSnapshotListener {documents, e->
                 if (documents != null) {
                     for (document in documents){
-                        val userId = FirebaseAuth.getInstance().currentUser?.uid
+                        val userId = document.getString("id")
                         val cedula = document.getString("cedula")
                         val idVehi = document.getString("numero")
                         buscarImagenUser(userId,cedula)

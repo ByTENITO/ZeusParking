@@ -46,7 +46,8 @@ class RegistrarBiciActivity : BaseNavigationActivity() {
         val cedula: String,
         val numero: String,
         val tipo: String,
-        val correo: String
+        val correo: String,
+        val id: String
     ) : java.io.Serializable
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -188,25 +189,47 @@ class RegistrarBiciActivity : BaseNavigationActivity() {
         val tipoVehiculo = tiposSpinner.selectedItem.toString()
         val sharedPref = getSharedPreferences("MisDatos", MODE_PRIVATE)
         val correo = sharedPref.getString("nombreUsuario", "Desconocido")
-
+        val id = FirebaseAuth.getInstance().currentUser?.uid
         if (nombre.isEmpty() || apellidos.isEmpty() || color.isEmpty() || cedula.isEmpty() || marco.isEmpty()) {
             Toast.makeText(this, "Llene Todos los Campos Por Favor", Toast.LENGTH_SHORT).show()
             return
         }
 
         // Creación de la instancia de BiciData
-        val biciData =
-            BiciData(nombre, apellidos, color, cedula, marco, tipoVehiculo, correo.toString())
+        val biciData = BiciData(nombre, apellidos, color, cedula, marco, tipoVehiculo, correo.toString(), id.toString())
 
-        db.collection("Bici_Usuarios").add(biciData)
-            .addOnSuccessListener { documentReference ->
-                User(fotoUri1, cedula)
-                subirFoto(fotoUri2, marco, documentReference.id)
-                Toast.makeText(this, "Datos guardados exitosamente", Toast.LENGTH_SHORT).show()
-                limpiarCampos()
-            }
-            .addOnFailureListener {
-                Toast.makeText(this, "Error al guardar los datos", Toast.LENGTH_SHORT).show()
+        db.collection("Bici_Usuarios")
+            .whereEqualTo("numero", marco)
+            .addSnapshotListener { documents, e ->
+                if (documents != null) {
+                    for (document in documents) {
+                        if (document.exists()) {
+                            Toast.makeText(this, "Error, el vehiculo ya esta registrado", Toast.LENGTH_LONG).show()
+                            limpiarCampos()
+                        } else {
+                            db.collection("Bici_Usuarios").add(biciData)
+                                .addOnSuccessListener { documentReference ->
+                                    User(fotoUri1, cedula)
+                                    subirFoto(fotoUri2, marco, documentReference.id)
+                                    Toast.makeText(
+                                        this,
+                                        "Datos guardados exitosamente",
+                                        Toast.LENGTH_SHORT
+                                    )
+                                        .show()
+                                    limpiarCampos()
+                                }
+                                .addOnFailureListener {
+                                    Toast.makeText(
+                                        this,
+                                        "Error al guardar los datos",
+                                        Toast.LENGTH_SHORT
+                                    )
+                                        .show()
+                                }
+                        }
+                    }
+                }
             }
     }
 
@@ -223,6 +246,7 @@ class RegistrarBiciActivity : BaseNavigationActivity() {
                 Toast.makeText(this, "Error al subir la foto $tipo", Toast.LENGTH_SHORT).show()
             }
     }
+
     private fun User(fotoUri: Uri?, tipo: String) {
         if (fotoUri == null) return
         val userId = FirebaseAuth.getInstance().currentUser?.uid ?: return
@@ -247,8 +271,4 @@ class RegistrarBiciActivity : BaseNavigationActivity() {
         fotoUri1 = null
         fotoUri2 = null
     }
-
-
-    private fun editarDatosEnFirestore() {}
-    private fun eliminarDatosEnFirestore() {}
 }
