@@ -44,6 +44,7 @@ import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
 import com.google.firebase.auth.FirebaseAuthInvalidUserException
 import com.google.firebase.auth.FirebaseAuthUserCollisionException
 import com.google.firebase.auth.GoogleAuthProvider
+import com.google.firebase.firestore.FirebaseFirestore
 
 enum class ProviderType {
     GOOGLE,
@@ -52,8 +53,11 @@ enum class ProviderType {
 
 class AuthActivity : AppCompatActivity() {
 
+    private var database = FirebaseFirestore.getInstance()
+
     private val GOOGLE_SIGN_IN = 100
-    private val inputCorreo = "vigilante@uniminuto.edu.co" //Correo para ingreso a modulo de vigilante
+    private val inputCorreo =
+        "vigilante@uniminuto.edu.co" //Correo para ingreso a modulo de vigilante
     private val contraseña = "Vigilante123*"
     private lateinit var Google_BTN: Button
     private lateinit var Acceder_BTN: Button
@@ -100,10 +104,19 @@ class AuthActivity : AppCompatActivity() {
         analytics.logEvent("InitScreen", bundle)
 
         // Solicitar permisos al abrir la app
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED ||
-            ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED ||
+        if (ContextCompat.checkSelfPermission(
+                this,
+                Manifest.permission.CAMERA
+            ) != PackageManager.PERMISSION_GRANTED ||
+            ContextCompat.checkSelfPermission(
+                this,
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED ||
             (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU &&
-                    ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED)
+                    ContextCompat.checkSelfPermission(
+                        this,
+                        Manifest.permission.POST_NOTIFICATIONS
+                    ) != PackageManager.PERMISSION_GRANTED)
         ) {
             val permisos = mutableListOf<String>()
             permisos.add(Manifest.permission.CAMERA)
@@ -206,27 +219,35 @@ class AuthActivity : AppCompatActivity() {
             dialog.show()
             Acceder_BTN.isEnabled = false
 
-            if (email == inputCorreo && password == contraseña) {
-                Handler(Looper.getMainLooper()).postDelayed({
-                    dialog.dismiss()
-                    saveSession(inputCorreo, ProviderType.EMAIL)
-                    showHomevigi(inputCorreo, ProviderType.EMAIL)
-                    Acceder_BTN.isEnabled = true
-                }, 1500)
-                return@setOnClickListener
-            }
-
-            auth.signInWithEmailAndPassword(email, password).addOnCompleteListener { task ->
-                if (task.isSuccessful) {
-                    Handler(Looper.getMainLooper()).postDelayed({
-                        handleSuccessfulLogin(task, email, dialog)
-                    }, 1500)
-                } else {
-                    dialog.dismiss()
-                    handleLoginError(task.exception)
-                    Acceder_BTN.isEnabled = true
+            database.collection("Usuarios_Admin")
+                .whereEqualTo("correo",email)
+                .whereEqualTo("contraseña",password)
+                .get()
+                .addOnSuccessListener { documents ->
+                    if (documents != null && !documents.isEmpty) {
+                        for (document in documents) {
+                            val correo = document.getString("correo").toString()
+                                Handler(Looper.getMainLooper()).postDelayed({
+                                    dialog.dismiss()
+                                    saveSession(correo, ProviderType.EMAIL)
+                                    showHomevigi(correo, ProviderType.EMAIL)
+                                    Acceder_BTN.isEnabled = true
+                                }, 1500)
+                        }
+                    }else{
+                        auth.signInWithEmailAndPassword(email, password).addOnCompleteListener { task ->
+                            if (task.isSuccessful) {
+                                Handler(Looper.getMainLooper()).postDelayed({
+                                    handleSuccessfulLogin(task, email, dialog)
+                                }, 1500)
+                            } else {
+                                dialog.dismiss()
+                                handleLoginError(task.exception)
+                                Acceder_BTN.isEnabled = true
+                            }
+                        }
+                    }
                 }
-            }
         }
 
         Registrarse_BTN.setOnClickListener {
@@ -239,15 +260,24 @@ class AuthActivity : AppCompatActivity() {
                         val user = auth.currentUser
                         user?.sendEmailVerification()?.addOnCompleteListener { verificationTask ->
                             if (verificationTask.isSuccessful) {
-                                Toast.makeText(this, "Registro exitoso, ingresa estos mismos datos para iniciar sesión.", Toast.LENGTH_SHORT).show()
+                                Toast.makeText(
+                                    this,
+                                    "Registro exitoso, ingresa estos mismos datos para iniciar sesión.",
+                                    Toast.LENGTH_SHORT
+                                ).show()
                                 Correo_ED.text.clear()
                                 Contraseña_ED.text.clear()
                             } else {
-                                Toast.makeText(this, "Ups, hubo un problema.", Toast.LENGTH_SHORT).show()
+                                Toast.makeText(this, "Ups, hubo un problema.", Toast.LENGTH_SHORT)
+                                    .show()
                             }
                         }
                     } else {
-                        Toast.makeText(this, "Error en el registro. Revisa los datos.", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(
+                            this,
+                            "Error en el registro. Revisa los datos.",
+                            Toast.LENGTH_SHORT
+                        ).show()
                     }
                 }
             }
@@ -259,16 +289,32 @@ class AuthActivity : AppCompatActivity() {
                 ForgotPassword_TV.isEnabled = true
                 auth.sendPasswordResetEmail(email).addOnCompleteListener {
                     if (it.isSuccessful) {
-                        Toast.makeText(this, "Se ha enviado un enlace para restablecer la contraseña a tu correo.", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(
+                            this,
+                            "Se ha enviado un enlace para restablecer la contraseña a tu correo.",
+                            Toast.LENGTH_SHORT
+                        ).show()
                     } else {
-                        Toast.makeText(this, "Error al enviar el correo de restablecimiento.", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(
+                            this,
+                            "Error al enviar el correo de restablecimiento.",
+                            Toast.LENGTH_SHORT
+                        ).show()
                     }
                 }
             }
         }
     }
 
-    private fun handleSuccessfulLogin(task: com.google.android.gms.tasks.Task<AuthResult>, email: String, dialog: AlertDialog) {
+    private fun usuariosAdmin(email: String, password: String, dialog: AlertDialog) {
+
+    }
+
+    private fun handleSuccessfulLogin(
+        task: com.google.android.gms.tasks.Task<AuthResult>,
+        email: String,
+        dialog: AlertDialog
+    ) {
         dialog.dismiss()
         val user = auth.currentUser
 
@@ -276,10 +322,12 @@ class AuthActivity : AppCompatActivity() {
             user == null -> {
                 showErrorSnackbar("Error: Usuario no encontrado")
             }
+
             user.isEmailVerified -> {
                 saveSession(email, ProviderType.EMAIL)
                 showHome(user.email ?: email, ProviderType.EMAIL)
             }
+
             else -> {
                 showVerificationNeededDialog(email)
             }
@@ -291,15 +339,18 @@ class AuthActivity : AppCompatActivity() {
         when (exception) {
             is FirebaseAuthInvalidUserException ->
                 showErrorSnackbar("Usuario no registrado")
+
             is FirebaseAuthInvalidCredentialsException ->
                 showErrorSnackbar("Credenciales incorrectas")
+
             else ->
                 showErrorSnackbar("Error: ${exception?.message ?: "Error desconocido"}")
         }
     }
 
     private fun saveSession(email: String, provider: ProviderType) {
-        val prefs = getSharedPreferences(getString(R.string.prefs_file), Context.MODE_PRIVATE).edit()
+        val prefs =
+            getSharedPreferences(getString(R.string.prefs_file), Context.MODE_PRIVATE).edit()
         prefs.putString("email", email)
         prefs.putString("provider", provider.name)
         prefs.apply()
@@ -309,17 +360,26 @@ class AuthActivity : AppCompatActivity() {
         return if (email.isNotEmpty() && Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
             true
         } else {
-            Toast.makeText(this, "Por favor, ingresa un correo electrónico válido.", Toast.LENGTH_SHORT).show()
+            Toast.makeText(
+                this,
+                "Por favor, ingresa un correo electrónico válido.",
+                Toast.LENGTH_SHORT
+            ).show()
             false
         }
     }
 
     private fun validatePassword(password: String): Boolean {
-        val simbolos = "^(?=.*[A-Z])(?=.*[a-z])(?=.*\\d)(?=.*[@\$!%*?&])[A-Za-z\\d@\$!%*?&]{8,}$".toRegex()
+        val simbolos =
+            "^(?=.*[A-Z])(?=.*[a-z])(?=.*\\d)(?=.*[@\$!%*?&])[A-Za-z\\d@\$!%*?&]{8,}$".toRegex()
         return if (password.matches(simbolos)) {
             true
         } else {
-            Toast.makeText(this, "La contraseña debe tener al menos 8 caracteres, una mayúscula, una minúscula, un número y un carácter especial.", Toast.LENGTH_LONG).show()
+            Toast.makeText(
+                this,
+                "La contraseña debe tener al menos 8 caracteres, una mayúscula, una minúscula, un número y un carácter especial.",
+                Toast.LENGTH_LONG
+            ).show()
             false
         }
     }
@@ -365,7 +425,8 @@ class AuthActivity : AppCompatActivity() {
 
             try {
                 val account = task.getResult(ApiException::class.java)
-                val dialog = createAuthProgressDialog("🔐 Iniciando sesión", "Conectando con Google...")
+                val dialog =
+                    createAuthProgressDialog("🔐 Iniciando sesión", "Conectando con Google...")
                 dialog.show()
 
                 Handler(Looper.getMainLooper()).postDelayed({
@@ -382,6 +443,7 @@ class AuthActivity : AppCompatActivity() {
                                 when (authTask.exception) {
                                     is FirebaseAuthUserCollisionException ->
                                         "Esta cuenta ya está registrada con email/password"
+
                                     else ->
                                         "Error de autenticación: ${authTask.exception?.message}"
                                 }

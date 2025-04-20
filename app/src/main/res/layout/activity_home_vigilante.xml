@@ -16,7 +16,7 @@
         android:layout_height="50dp"
         android:clickable="true"
         android:focusable="true"
-        android:src="@drawable/ic_qr"
+        android:src="@android:drawable/ic_popup_reminder"
         app:layout_constraintBottom_toTopOf="@+id/bottom_navigation_vigi"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.867"
@@ -113,18 +113,20 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.027" />
 
-    <ImageView
+    <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/FotoPerfil_vigi"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
+        android:layout_width="65dp"
+        android:layout_height="65dp"
         android:contentDescription="@string/todo"
         android:src="@drawable/fondo_vigilante"
+        android:scaleType="centerCrop"
         app:layout_constraintBottom_toTopOf="@+id/bottom_navigation_vigi"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.848"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.152"
+        app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.App.CircleImage"
         tools:srcCompat="@tools:sample/avatars" />
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
