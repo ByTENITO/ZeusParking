@@ -54,7 +54,6 @@ dependencies {
     implementation("com.google.android.gms:play-services-auth:20.7.0")
 
     //Storage
-
     implementation(platform("com.google.firebase:firebase-bom:32.7.1"))
     implementation("com.google.firebase:firebase-storage")
     implementation ("androidx.core:core-ktx:1.7.0")

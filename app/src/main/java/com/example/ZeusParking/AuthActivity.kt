@@ -56,9 +56,6 @@ class AuthActivity : AppCompatActivity() {
     private var database = FirebaseFirestore.getInstance()
 
     private val GOOGLE_SIGN_IN = 100
-    private val inputCorreo =
-        "vigilante@uniminuto.edu.co" //Correo para ingreso a modulo de vigilante
-    private val contraseña = "Vigilante123*"
     private lateinit var Google_BTN: Button
     private lateinit var Acceder_BTN: Button
     private lateinit var Registrarse_BTN: Button
@@ -211,41 +208,50 @@ class AuthActivity : AppCompatActivity() {
             }
 
             if (!validatePassword(password)) {
-                showErrorSnackbar("La contraseña debe tener al menos 6 caracteres")
+                showErrorSnackbar("La contraseña debe ser de mínimo 8 caracteres con mayúsculas, minúsculas, número y símbolo.")
                 return@setOnClickListener
             }
 
-            val dialog = createAuthProgressDialog("🔐 Verificando credenciales", "Validando tu información...")
+            val dialog = createAuthProgressDialog(
+                "🔐 Verificando credenciales",
+                "Validando tu información..."
+            )
             dialog.show()
             Acceder_BTN.isEnabled = false
 
             database.collection("Usuarios_Admin")
-                .whereEqualTo("correo",email)
-                .whereEqualTo("contraseña",password)
+                .whereEqualTo("correo", email)
+                .whereEqualTo("contraseña", password)
                 .get()
                 .addOnSuccessListener { documents ->
                     if (documents != null && !documents.isEmpty) {
                         for (document in documents) {
                             val correo = document.getString("correo").toString()
-                                Handler(Looper.getMainLooper()).postDelayed({
-                                    dialog.dismiss()
-                                    saveSession(correo, ProviderType.EMAIL)
-                                    showHomevigi(correo, ProviderType.EMAIL)
-                                    Acceder_BTN.isEnabled = true
-                                }, 1500)
-                        }
-                    }else{
-                        auth.signInWithEmailAndPassword(email, password).addOnCompleteListener { task ->
-                            if (task.isSuccessful) {
-                                Handler(Looper.getMainLooper()).postDelayed({
-                                    handleSuccessfulLogin(task, email, dialog)
-                                }, 1500)
-                            } else {
-                                dialog.dismiss()
-                                handleLoginError(task.exception)
-                                Acceder_BTN.isEnabled = true
+                            val id = document.id
+                            when (id) {
+                                "wUsch7ox8oAHJiGRWrVV" -> {
+                                    Handler(Looper.getMainLooper()).postDelayed({
+                                        dialog.dismiss()
+                                        saveSession(correo, ProviderType.EMAIL)
+                                        showHomevigi(correo, ProviderType.EMAIL)
+                                        Acceder_BTN.isEnabled = true
+                                    }, 1500)
+                                }
                             }
                         }
+                    } else {
+                        auth.signInWithEmailAndPassword(email, password)
+                            .addOnCompleteListener { task ->
+                                if (task.isSuccessful) {
+                                    Handler(Looper.getMainLooper()).postDelayed({
+                                        handleSuccessfulLogin(task, email, dialog)
+                                    }, 1500)
+                                } else {
+                                    dialog.dismiss()
+                                    handleLoginError(task.exception)
+                                    Acceder_BTN.isEnabled = true
+                                }
+                            }
                     }
                 }
         }
@@ -306,10 +312,6 @@ class AuthActivity : AppCompatActivity() {
         }
     }
 
-    private fun usuariosAdmin(email: String, password: String, dialog: AlertDialog) {
-
-    }
-
     private fun handleSuccessfulLogin(
         task: com.google.android.gms.tasks.Task<AuthResult>,
         email: String,
@@ -360,11 +362,6 @@ class AuthActivity : AppCompatActivity() {
         return if (email.isNotEmpty() && Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
             true
         } else {
-            Toast.makeText(
-                this,
-                "Por favor, ingresa un correo electrónico válido.",
-                Toast.LENGTH_SHORT
-            ).show()
             false
         }
     }
@@ -375,11 +372,6 @@ class AuthActivity : AppCompatActivity() {
         return if (password.matches(simbolos)) {
             true
         } else {
-            Toast.makeText(
-                this,
-                "La contraseña debe tener al menos 8 caracteres, una mayúscula, una minúscula, un número y un carácter especial.",
-                Toast.LENGTH_LONG
-            ).show()
             false
         }
     }
@@ -395,6 +387,7 @@ class AuthActivity : AppCompatActivity() {
                 putExtra("provider", provider.name)
                 putExtra("foto_perfil_url", fotoUrl)
             }
+            Acceder_BTN.isEnabled = true
             startActivity(homeIntent)
             overridePendingTransition(0, 0)
         }, 1000)
@@ -506,6 +499,7 @@ class AuthActivity : AppCompatActivity() {
 
             addView(CircularProgressIndicator(this@AuthActivity).apply {
                 layoutParams = LinearLayout.LayoutParams(dpToPx(48), dpToPx(48))
+                isIndeterminate = true
                 indeterminateTintList = ColorStateList.valueOf(
                     ContextCompat.getColor(this@AuthActivity, R.color.Botones)
                 )
@@ -513,8 +507,8 @@ class AuthActivity : AppCompatActivity() {
 
             addView(TextView(this@AuthActivity).apply {
                 text = "Por favor espera..."
-                setTextAppearance(androidx.appcompat.R.style.TextAppearance_AppCompat_Body2)
-                setTextColor(ContextCompat.getColor(context, android.R.color.white))
+                //setTextAppearance(androidx.appcompat.R.style.TextAppearance_AppCompat_Body2)
+                setTextColor(ContextCompat.getColor(context, android.R.color.darker_gray))
                 setPadding(0, dpToPx(16), 0, 0)
                 gravity = Gravity.CENTER
             })
@@ -528,7 +522,7 @@ class AuthActivity : AppCompatActivity() {
             Snackbar.LENGTH_LONG
         ).apply {
             setBackgroundTint(ContextCompat.getColor(this@AuthActivity, R.color.Botones))
-            setTextColor(Color.WHITE)
+            setTextColor(Color.BLACK)
             show()
         }
     }

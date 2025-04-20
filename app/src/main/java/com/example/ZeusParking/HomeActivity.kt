@@ -301,7 +301,7 @@ class HomeActivity : BaseNavigationActivity() {
             } else {
                 val archivo = File(getExternalFilesDir(null), "70T05_U$3R/$cedula.png")
                 if (archivo.exists()) {
-                    Log.d("FireStorage", "Imagen descargada en: ${archivo.absolutePath}")
+                    Log.d("FireStorage", "Imagen en: ${archivo.absolutePath}")
                     val bitMap = BitmapFactory.decodeFile(archivo.absolutePath)
                     perfilImageStorage.setImageBitmap(bitMap)
                     perfilImageStorageGrande.setImageBitmap(bitMap)

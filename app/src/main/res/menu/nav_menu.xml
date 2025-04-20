@@ -11,12 +11,11 @@
         android:id="@+id/qr"
         android:icon="@drawable/ic_qr"
         android:title="QR" />
+
     <item
         android:id="@+id/localizacion"
         android:icon="@drawable/ic_localizacion"
         android:title="Localización" />
-
-
 
     <item
         android:id="@+id/registro"
