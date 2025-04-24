@@ -26,7 +26,6 @@ import java.util.concurrent.Executors
 class SalidaQrParqueadero : BaseNavigationActivity() {
     private lateinit var camaraEjecutarSalida: ExecutorService
     private lateinit var tiposSpinnerSalida: Spinner
-    private lateinit var Salir: Button
     private lateinit var marcoNumSalida: EditText
     private var escaneoRealizado: Boolean = false
 
@@ -39,7 +38,6 @@ class SalidaQrParqueadero : BaseNavigationActivity() {
 
         tiposSpinnerSalida = findViewById(R.id.Tipos_SpinnerVigiSalida)
         marcoNumSalida = findViewById(R.id.Marco_NUMVigiSalida)
-        Salir = findViewById(R.id.exitScannerSalida)
         camaraEjecutarSalida = Executors.newSingleThreadExecutor()
         empezarCamara()
         val adapter = ArrayAdapter.createFromResource(this, R.array.items, R.layout.estilo_spinner)
@@ -82,9 +80,6 @@ class SalidaQrParqueadero : BaseNavigationActivity() {
             }
 
             override fun onNothingSelected(parent: AdapterView<*>) {}
-        }
-        Salir.setOnClickListener {
-            finish()
         }
     }
 

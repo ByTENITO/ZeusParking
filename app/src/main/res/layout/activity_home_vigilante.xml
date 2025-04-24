@@ -63,8 +63,11 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp"
-                app:cardBackgroundColor="?attr/colorSurfaceVariant"
-                app:cardElevation="4dp">
+                app:cardBackgroundColor="@color/Navegacion"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="4dp"
+                app:strokeColor="@color/Botones"
+                app:strokeWidth="1dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -76,16 +79,18 @@
                         android:id="@+id/welcome_text"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:text="Bienvenido, Vigilante"
                         android:textAppearance="@style/TextAppearance.Material3.HeadlineSmall"
-                        android:textColor="?attr/colorOnSurface"/>
+                        android:textColor="@color/white"/>
 
                     <com.google.android.material.textview.MaterialTextView
                         android:id="@+id/email_text"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="4dp"
+                        android:text="vigilanteuniminuto@gmail.com"
                         android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
-                        android:textColor="?attr/colorOnSurfaceVariant"/>
+                        android:textColor="@color/white"/>
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
@@ -94,28 +99,31 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp"
-                app:cardElevation="4dp">
+                app:cardBackgroundColor="@color/Navegacion"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="4dp"
+                app:strokeColor="@color/Botones"
+                app:strokeWidth="1dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:padding="8dp">
+                    android:padding="16dp">
 
                     <com.google.android.material.textview.MaterialTextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="8dp"
-                        android:layout_marginTop="8dp"
                         android:text="Acciones Rápidas"
                         android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
-                        android:textColor="?attr/colorOnSurface"/>
+                        android:textColor="@color/white"/>
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:orientation="horizontal">
+                        android:layout_marginTop="16dp"
+                        android:orientation="horizontal"
+                        android:paddingHorizontal="8dp">
 
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/scan_entrada_btn"
@@ -123,9 +131,12 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:layout_marginEnd="4dp"
+                            android:layout_marginEnd="8dp"
                             android:text="Entrada"
-                            app:icon="@drawable/ic_qr"/>
+                            android:textColor="@color/white"
+                            app:icon="@drawable/ic_qr"
+                            app:iconTint="@color/white"
+                            app:strokeColor="@color/Botones"/>
 
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/scan_salida_btn"
@@ -133,9 +144,12 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:layout_marginStart="4dp"
+                            android:layout_marginStart="8dp"
                             android:text="Salida"
-                            app:icon="@drawable/ic_qr"/>
+                            android:textColor="@color/white"
+                            app:icon="@drawable/ic_qr"
+                            app:iconTint="@color/white"
+                            app:strokeColor="@color/Botones"/>
                     </LinearLayout>
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
@@ -144,149 +158,214 @@
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:cardElevation="4dp">
+                app:cardBackgroundColor="@color/Navegacion"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="4dp"
+                app:strokeColor="@color/Botones"
+                app:strokeWidth="1dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:padding="8dp">
+                    android:padding="16dp">
 
                     <com.google.android.material.textview.MaterialTextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="8dp"
-                        android:layout_marginTop="8dp"
                         android:text="Disponibilidad Actual"
                         android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
-                        android:textColor="?attr/colorOnSurface"/>
+                        android:textColor="@color/white"/>
 
                     <!-- Vehicle Availability Indicators -->
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
+                        android:layout_marginTop="16dp"
                         android:orientation="vertical">
 
                         <!-- Furgon Availability -->
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="8dp"
-                            android:orientation="horizontal">
+                            android:layout_marginBottom="12dp"
+                            android:orientation="horizontal"
+                            android:paddingVertical="8dp">
 
                             <ImageView
-                                android:layout_width="24dp"
-                                android:layout_height="24dp"
-                                android:layout_marginEnd="8dp"
-                                android:src="@drawable/ic_furgon"/>
+                                android:layout_width="32dp"
+                                android:layout_height="32dp"
+                                android:layout_marginEnd="12dp"
+                                android:src="@drawable/ic_furgon"
+                                android:tint="@color/Botones"/>
 
-                            <com.google.android.material.textview.MaterialTextView
-                                android:id="@+id/notiFurgon"
+                            <LinearLayout
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
-                                android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
-                                android:textColor="?attr/colorOnSurface"/>
+                                android:orientation="vertical">
+
+                                <com.google.android.material.textview.MaterialTextView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:text="Furgones"
+                                    android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
+                                    android:textColor="@color/Botones"/>
+
+                                <com.google.android.material.textview.MaterialTextView
+                                    android:id="@+id/notiFurgon"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:text="0/0 disponibles"
+                                    android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
+                                    android:textColor="@color/white"/>
+                            </LinearLayout>
 
                             <com.google.android.material.progressindicator.LinearProgressIndicator
                                 android:id="@+id/progressFurgon"
-                                android:layout_width="80dp"
+                                android:layout_width="100dp"
                                 android:layout_height="8dp"
                                 android:layout_gravity="center_vertical"
-                                app:indicatorColor="?attr/colorPrimary"
-                                app:trackColor="?attr/colorSurfaceVariant"/>
+                                app:indicatorColor="@color/success_green"
+                                app:trackColor="@color/white"/>
                         </LinearLayout>
 
                         <!-- Vehiculo Particular Availability -->
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="12dp"
-                            android:orientation="horizontal">
+                            android:layout_marginBottom="12dp"
+                            android:orientation="horizontal"
+                            android:paddingVertical="8dp">
 
                             <ImageView
-                                android:layout_width="24dp"
-                                android:layout_height="24dp"
-                                android:layout_marginEnd="8dp"
-                                android:src="@drawable/ic_carro"/>
+                                android:layout_width="32dp"
+                                android:layout_height="32dp"
+                                android:layout_marginEnd="12dp"
+                                android:src="@drawable/ic_carro"
+                                android:tint="@color/Botones"/>
 
-                            <com.google.android.material.textview.MaterialTextView
-                                android:id="@+id/notiVehiculo"
+                            <LinearLayout
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
-                                android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
-                                android:textColor="?attr/colorOnSurface"/>
+                                android:orientation="vertical">
+
+                                <com.google.android.material.textview.MaterialTextView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:text="Vehículos"
+                                    android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
+                                    android:textColor="@color/Botones"/>
+
+                                <com.google.android.material.textview.MaterialTextView
+                                    android:id="@+id/notiVehiculo"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:text="0/0 disponibles"
+                                    android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
+                                    android:textColor="@color/white"/>
+                            </LinearLayout>
 
                             <com.google.android.material.progressindicator.LinearProgressIndicator
                                 android:id="@+id/progressVehiculo"
-                                android:layout_width="80dp"
+                                android:layout_width="100dp"
                                 android:layout_height="8dp"
                                 android:layout_gravity="center_vertical"
-                                app:indicatorColor="?attr/colorPrimary"
-                                app:trackColor="?attr/colorSurfaceVariant"/>
+                                app:indicatorColor="@color/success_green"
+                                app:trackColor="@color/white"/>
                         </LinearLayout>
 
                         <!-- Bicicleta Availability -->
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="12dp"
-                            android:orientation="horizontal">
+                            android:layout_marginBottom="12dp"
+                            android:orientation="horizontal"
+                            android:paddingVertical="8dp">
 
                             <ImageView
-                                android:layout_width="24dp"
-                                android:layout_height="24dp"
-                                android:layout_marginEnd="8dp"
-                                android:src="@drawable/ic_bici"/>
+                                android:layout_width="32dp"
+                                android:layout_height="32dp"
+                                android:layout_marginEnd="12dp"
+                                android:src="@drawable/ic_bici"
+                                android:tint="@color/Botones"/>
 
-                            <com.google.android.material.textview.MaterialTextView
-                                android:id="@+id/notiBicicleta"
+                            <LinearLayout
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
-                                android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
-                                android:textColor="?attr/colorOnSurface"/>
+                                android:orientation="vertical">
+
+                                <com.google.android.material.textview.MaterialTextView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:text="Bicicletas"
+                                    android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
+                                    android:textColor="@color/Botones"/>
+
+                                <com.google.android.material.textview.MaterialTextView
+                                    android:id="@+id/notiBicicleta"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:text="0/0 disponibles"
+                                    android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
+                                    android:textColor="@color/white"/>
+                            </LinearLayout>
 
                             <com.google.android.material.progressindicator.LinearProgressIndicator
                                 android:id="@+id/progressBicicleta"
-                                android:layout_width="80dp"
+                                android:layout_width="100dp"
                                 android:layout_height="8dp"
                                 android:layout_gravity="center_vertical"
-                                app:indicatorColor="?attr/colorPrimary"
-                                app:trackColor="?attr/colorSurfaceVariant"/>
+                                app:indicatorColor="@color/success_green"
+                                app:trackColor="@color/white"/>
                         </LinearLayout>
 
                         <!-- Motocicleta Availability -->
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="12dp"
                             android:layout_marginBottom="8dp"
-                            android:orientation="horizontal">
+                            android:orientation="horizontal"
+                            android:paddingVertical="8dp">
 
                             <ImageView
-                                android:layout_width="24dp"
-                                android:layout_height="24dp"
-                                android:layout_marginEnd="8dp"
-                                android:src="@drawable/ic_moto"/>
+                                android:layout_width="32dp"
+                                android:layout_height="32dp"
+                                android:layout_marginEnd="12dp"
+                                android:src="@drawable/ic_moto"
+                                android:tint="@color/Botones"/>
 
-                            <com.google.android.material.textview.MaterialTextView
-                                android:id="@+id/notiMoto"
+                            <LinearLayout
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
-                                android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
-                                android:textColor="?attr/colorOnSurface"/>
+                                android:orientation="vertical">
+
+                                <com.google.android.material.textview.MaterialTextView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:text="Motocicletas"
+                                    android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
+                                    android:textColor="@color/Botones"/>
+
+                                <com.google.android.material.textview.MaterialTextView
+                                    android:id="@+id/notiMoto"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:text="0/0 disponibles"
+                                    android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
+                                    android:textColor="@color/white"/>
+                            </LinearLayout>
 
                             <com.google.android.material.progressindicator.LinearProgressIndicator
                                 android:id="@+id/progressMoto"
-                                android:layout_width="80dp"
+                                android:layout_width="100dp"
                                 android:layout_height="8dp"
                                 android:layout_gravity="center_vertical"
-                                app:indicatorColor="?attr/colorPrimary"
-                                app:trackColor="?attr/colorSurfaceVariant"/>
+                                app:indicatorColor="@color/success_green"
+                                app:trackColor="@color/white"/>
                         </LinearLayout>
                     </LinearLayout>
                 </LinearLayout>

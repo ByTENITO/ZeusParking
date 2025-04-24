@@ -90,7 +90,7 @@
                 </RelativeLayout>
             </com.google.android.material.card.MaterialCardView>
 
-            <!-- Vehicle Info Section -->
+
             <TextView
                 android:id="@+id/sectionVehicle"
                 android:layout_width="match_parent"
@@ -116,29 +116,6 @@
                     android:orientation="vertical"
                     android:padding="24dp">
 
-                    <!-- Vehicle Number -->
-                    <com.google.android.material.textfield.TextInputLayout
-                        android:id="@+id/marcoInputLayout"
-                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="24dp"
-                        app:boxStrokeColor="#E4CC00"
-                        app:counterEnabled="true"
-                        app:counterMaxLength="20"
-                        app:errorEnabled="true"
-                        app:hintTextColor="#E4CC00">
-
-                        <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/Marco_NUMVigiEntrada"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:hint="Número de placa/marco"
-                            android:inputType="textCapCharacters|textNoSuggestions"
-                            android:textColor="#FFFFFF"
-                            android:textColorHint="#AAAAAA"/>
-                    </com.google.android.material.textfield.TextInputLayout>
-
                     <!-- Vehicle Type - Fixed Spinner -->
                     <com.google.android.material.textfield.TextInputLayout
                         android:id="@+id/spinnerLayout"
@@ -158,25 +135,30 @@
                             android:popupBackground="#2F2F2F"
                             android:textColor="#FFFFFF"/>
                     </com.google.android.material.textfield.TextInputLayout>
+
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/marcoInputLayout"
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="24dp"
+                        app:boxStrokeColor="#E4CC00"
+                        app:counterEnabled="true"
+                        app:counterMaxLength="20"
+                        app:errorEnabled="true"
+                        app:hintTextColor="#E4CC00">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/Marco_NUMVigiEntrada"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:inputType="textCapCharacters|textNoSuggestions"
+                            android:textColor="#FFFFFF"
+                            android:textColorHint="#AAAAAA"/>
+                    </com.google.android.material.textfield.TextInputLayout>
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
-
-            <!-- Action Button -->
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/exitScannerEntrada"
-                style="@style/Widget.MaterialComponents.Button"
-                android:layout_width="match_parent"
-                android:layout_height="56dp"
-                android:layout_marginBottom="32dp"
-                android:text="REGISTRAR ENTRADA"
-                android:textColor="#000000"
-                android:textSize="16sp"
-                android:letterSpacing="0.05"
-                app:backgroundTint="#E4CC00"
-                app:cornerRadius="12dp"
-                app:iconGravity="textStart"
-                app:iconPadding="8dp"
-                app:iconTint="#000000"/>
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 
