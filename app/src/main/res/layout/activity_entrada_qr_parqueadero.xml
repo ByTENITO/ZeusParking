@@ -187,7 +187,11 @@
         android:layout_gravity="bottom"
         android:background="@color/Navegacion"
         app:labelVisibilityMode="labeled"
-        app:menu="@menu/menu_vigi"/>
+        app:menu="@menu/menu_vigi"
+        app:itemIconTint="@drawable/nav_item_color"
+        app:itemTextColor="@drawable/nav_text_color"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+
     <!-- Loading Indicator -->
     <com.google.android.material.progressindicator.CircularProgressIndicator
         android:id="@+id/progressIndicator"

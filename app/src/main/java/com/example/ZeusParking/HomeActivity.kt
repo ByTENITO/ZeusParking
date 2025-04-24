@@ -144,7 +144,7 @@ class HomeActivity : BaseNavigationActivity() {
         val fotoPerfilUrl: String? = bundle?.getString("foto_perfil_url")
         val sharedPref = getSharedPreferences("MisDatos", MODE_PRIVATE)
         with(sharedPref.edit()) {
-            if (inputCorreo == "vigilante@uniminuto.edu.co") {
+            if (inputCorreo == "vigilanteuniminuto@gmail.com") {
                 putString("nombreUsuario", inputCorreo)
             } else {
                 putString("nombreUsuario", email)

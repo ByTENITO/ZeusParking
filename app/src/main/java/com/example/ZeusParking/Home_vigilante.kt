@@ -1,351 +1,160 @@
 package com.example.parquiatenov10
 
-import android.animation.ValueAnimator
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
 import android.content.Intent
+import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.util.Log
 import android.view.View
-import android.view.animation.AnimationUtils
-import androidx.activity.enableEdgeToEdge
-import androidx.appcompat.app.AppCompatActivity
-import com.google.firebase.auth.FirebaseAuth
-import android.widget.TextView
+import android.widget.Button
 import android.widget.ImageView
 import android.widget.LinearLayout
+import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.enableEdgeToEdge
 import androidx.core.app.NotificationCompat
 import com.example.ZeusParking.BaseNavigationActivity
-import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.storage.FirebaseStorage
 import com.squareup.picasso.Picasso
+import java.io.File
 
 class Home_vigilante : BaseNavigationActivity() {
 
-    // Variables y vistas
     private var database = FirebaseFirestore.getInstance()
-    private lateinit var perfil_vigi: ImageView
-    private lateinit var Bienvenida_vigi: TextView
-    private lateinit var usuario_vigi: TextView
-    private lateinit var texto: TextView
-    private lateinit var notificacionLinear: LinearLayout
-    private lateinit var notificaciones: ImageView
+    private lateinit var perfilImageView: ImageView
     private lateinit var notifiFurgon: TextView
     private lateinit var notifiVehiculoParticular: TextView
     private lateinit var notifiBicicleta: TextView
     private lateinit var notifiMotocicleta: TextView
 
-    private var cambioAnimacionNoti = true
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
-        startAnimationsWithDelay()
         setContentView(R.layout.activity_home_vigilante)
+        enableEdgeToEdge()
 
-        //Navegacion
         setupNavigation()
+        initViews()
+        setupUserProfile()
+        listenToAllAvailabilities()
+    }
 
-        // Setup de vistas
-        perfil_vigi = findViewById(R.id.FotoPerfil_vigi)
-        Bienvenida_vigi = findViewById(R.id.Bienvenida_vigi)
-        usuario_vigi = findViewById(R.id.Usuario_vigi)
-        texto = findViewById(R.id.textView2_vigi)
-        notificacionLinear = findViewById(R.id.notificacionesVigi)
-        notificaciones = findViewById(R.id.notiVigi)
+    private fun initViews() {
+        perfilImageView = findViewById(R.id.profile_image)
         notifiFurgon = findViewById(R.id.notiFurgon)
         notifiVehiculoParticular = findViewById(R.id.notiVehiculo)
         notifiBicicleta = findViewById(R.id.notiBicicleta)
         notifiMotocicleta = findViewById(R.id.notiMoto)
+    }
 
-        crearCanalNotificacion(this)
+    private fun setupUserProfile() {
+        val email = FirebaseAuth.getInstance().currentUser?.email ?: ""
+        val welcomeText = findViewById<TextView>(R.id.welcome_text)
+        val emailText = findViewById<TextView>(R.id.email_text)
 
+        // Get user data from Firestore
+        database.collection("Bici_Usuarios")
+            .whereEqualTo("correo", email)
+            .get()
+            .addOnSuccessListener { documents ->
+                if (!documents.isEmpty) {
+                    val document = documents.documents[0]
+                    val nombre = document.getString("nombre") ?: "Vigilante"
+                    val cedula = document.getString("cedula") ?: ""
 
-        // Obtener datos del intent
-        val bundle: Bundle? = intent.extras
-        val inputCorreo: String? = bundle?.getString("inputCorreo")
-        val email: String? = bundle?.getString("email")
-        val provider = bundle?.getString("provider")
-        val fotoPerfilUrl: String? = bundle?.getString("foto_perfil_url")
-        val sharedPref = getSharedPreferences("MisDatos", MODE_PRIVATE)
-        with(sharedPref.edit()) {
-            if (inputCorreo == "vigilante@uniminuto.edu.co") {
-                putString("nombreUsuario", inputCorreo)
-            } else {
-                putString("nombreUsuario", email)
+                    welcomeText.text = "Bienvenido, $nombre"
+                    emailText.text = email
+
+                    // Load profile image from Firebase Storage
+                    val userId = FirebaseAuth.getInstance().currentUser?.uid
+                    if (userId != null && cedula.isNotEmpty()) {
+                        buscarImagenUser(userId, cedula)
+                    }
+                } else {
+                    welcomeText.text = "Bienvenido, Vigilante"
+                    emailText.text = email
+                }
             }
-            apply()
+            .addOnFailureListener {
+                welcomeText.text = "Bienvenido, Vigilante"
+                emailText.text = email
+            }
+    }
+
+    private fun buscarImagenUser(userId: String?, cedula: String?) {
+        val storageImagenUser = FirebaseStorage.getInstance().reference.child("$userId/$cedula.png")
+        storageImagenUser.metadata.addOnSuccessListener { metadata ->
+            val actualizacionRemota = metadata.updatedTimeMillis
+            val carpeta = File(getExternalFilesDir(null), "70T05_U$3R")
+
+            if (!carpeta.exists() || carpeta.lastModified() < actualizacionRemota) {
+                carpeta.mkdirs()
+                val file = File(carpeta, "$cedula.png")
+                storageImagenUser.getFile(file).addOnSuccessListener {
+                    val bitMap = BitmapFactory.decodeFile(file.absolutePath)
+                    perfilImageView.setImageBitmap(bitMap)
+                }.addOnFailureListener {
+                    Log.e("FireStorage", "Error al descargar la imagen:", it)
+                }
+            } else {
+                val archivo = File(getExternalFilesDir(null), "70T05_U$3R/$cedula.png")
+                if (archivo.exists()) {
+                    val bitMap = BitmapFactory.decodeFile(archivo.absolutePath)
+                    perfilImageView.setImageBitmap(bitMap)
+                }
+            }
         }
+    }
+
+    private fun listenToAllAvailabilities() {
+        // Furgon
         escucharDisponibilidad(
             "0ctYNlFXwtVw9ylURFXi",
             "Furgon",
             notifiFurgon,
-            listOf(
-                (0..0) to "Hola, no quedan espacios para Furgon",
-                (1..2) to "Hola, quedan pocos espacios en el parqueadero de Furgon, quedan: {espacios}",
-                (3..4) to "Hola, quedan {espacios} espacios para Furgon"
-            )
+            findViewById(R.id.progressFurgon),
+            5
         )
+
+        // Vehiculo Particular
         escucharDisponibilidad(
             "UF0tfabGHGitcj7En6Wy",
             "Vehiculo Particular",
             notifiVehiculoParticular,
-            listOf(
-                (0..0) to "Hola, no quedan espacios para Vehiculo Particular",
-                (1..5) to "Hola, quedan pocos espacios en el parqueadero de Vehiculo Particular, quedan: {espacios}",
-                (6..10) to "Hola, quedan {espacios} espacios para Vehiculo Particular"
-            )
+            findViewById(R.id.progressVehiculo),
+            10
         )
+
+        // Bicicleta
         escucharDisponibilidad(
             "IuDC5XlTyhxhqU4It8SD",
             "Bicicleta",
             notifiBicicleta,
-            listOf(
-                (0..0) to "Hola, no quedan espacios para Bicicleta",
-                (1..5) to "Hola, quedan pocos espacios en el parqueadero de Bicicleta, quedan: {espacios}",
-                (6..10) to "Hola, quedan {espacios} espacios para Bicicleta"
-            )
+            findViewById(R.id.progressBicicleta),
+            10
         )
+
+        // Motocicleta
         escucharDisponibilidad(
             "ntHgnXs4Qbz074siOrvz",
             "Motocicleta",
             notifiMotocicleta,
-            listOf(
-                (0..0) to "Hola, no quedan espacios para Motocicleta",
-                (1..5) to "Hola, quedan pocos espacios en el parqueadero de Motocicleta, quedan: {espacios}",
-                (6..10) to "Hola, quedan {espacios} espacios para Motocicleta"
-            )
+            findViewById(R.id.progressMoto),
+            10
         )
-
-        // Comprobar si el proveedor es Google
-        if (provider == ProviderType.GOOGLE.name && inputCorreo != null && fotoPerfilUrl != null) {
-            setup_vigi(inputCorreo)
-            loadProfilePicture_vigi(fotoPerfilUrl)
-        } else if (inputCorreo != null) {
-            setup_vigi(inputCorreo)
-        }
-        if (fotoPerfilUrl.isNullOrEmpty()) {
-            Log.e("CargaImagen", "La URL de la imagen es nula o vacía.")
-        } else {
-            Log.d("CargaImagen", "URL de la imagen recibida: $fotoPerfilUrl")
-        }
-
-        // Guardar email en preferencias
-        val prefs = getSharedPreferences(getString(R.string.prefs_file), Context.MODE_PRIVATE)
-        val editor = prefs.edit()
-        editor.putString("email", inputCorreo)
-        editor.apply()
     }
 
-    //Navegacion del Sistema
-    override fun getCurrentNavigationItem(): Int = R.id.home_vigi
-
-    private fun startAnimationsWithDelay() {
-        val fadeIn = AnimationUtils.loadAnimation(this, R.anim.fade_in)
-        Handler(Looper.getMainLooper()).postDelayed({
-            listOf(
-                usuario_vigi,
-                texto,
-                Bienvenida_vigi,
-                notificaciones
-            ).forEach { view ->
-                view.startAnimation(fadeIn)
-            }
-        }, 0) // Ajusta el tiempo de retraso si es necesario
-    }
-
-    // Función para cargar la foto de perfil desde la URL
-    private fun loadProfilePicture_vigi(fotoUrl: String) {
-        // Usar Picasso para cargar la imagen desde la URL
-        Picasso.get().load(fotoUrl).into(perfil_vigi)
-    }
-
-    private fun animacionAnchoLinear(view: View, startHeight: Int, endHeight: Int, duration: Long) {
-        val animacionAncho = ValueAnimator.ofInt(startHeight, endHeight)
-        animacionAncho.duration = duration
-        animacionAncho.addUpdateListener { animation ->
-            val params = view.layoutParams
-            params.height = animation.animatedValue as Int
-            view.layoutParams = params
-        }
-        animacionAncho.start()
-    }
-
-    private fun responsividadText(view: View, width: Int) {
-        val textoUsuario = ValueAnimator.ofInt(width)
-        textoUsuario.addUpdateListener { animation ->
-            val params = view.layoutParams
-            params.width = animation.animatedValue as Int
-            view.layoutParams = params
-        }
-        textoUsuario.start()
-    }
-
-    private fun responsividad(view: View, width: Int, heigth: Int) {
-        val anchoComponente = ValueAnimator.ofInt(width)
-        val altoComponente = ValueAnimator.ofInt(heigth)
-        anchoComponente.addUpdateListener { animation ->
-            val params = view.layoutParams
-            params.width = animation.animatedValue as Int
-            view.layoutParams = params
-        }
-
-        altoComponente.addUpdateListener { animation ->
-            val params = view.layoutParams
-            params.height = animation.animatedValue as Int
-            view.layoutParams = params
-        }
-        altoComponente.start()
-        anchoComponente.start()
-    }
-
-    // Configuración inicial del correo y bienvenida
-    private fun setup_vigi(inputCorreo: String) {
-        title = "Inicio"
-        usuario_vigi.text = inputCorreo
-
-        // Obtener el nombre completo del usuario desde Firebase si el proveedor es Google
-        val user = FirebaseAuth.getInstance().currentUser
-        val displayName = user?.displayName
-        val nameParts = displayName?.split(" ")
-
-        // Si tiene nombre y apellido, muestra el saludo
-        if (nameParts != null && nameParts.size >= 2) {
-            val firstName = nameParts[0]
-            val lastName = nameParts[1]
-            Bienvenida_vigi.text = "Bienvenido, $firstName $lastName"
-        } else {
-            // Si no tiene nombre, mostrar saludo por defecto
-            Bienvenida_vigi.text = "Bienvenido, Bici Usuario"
-        }
-
-        notificaciones.setOnClickListener {
-            val altura = resources.displayMetrics.heightPixels
-            if (cambioAnimacionNoti) {
-                when {
-                    altura >= 3001 ->{
-                        animacionAnchoLinear(notificacionLinear, 1, 725, 200L)
-                        mostrarVista(
-                            notifiFurgon,
-                            notifiVehiculoParticular,
-                            notifiMotocicleta,
-                            notifiBicicleta
-                        )
-                    }
-                    altura in 2501..3000 -> {
-                        animacionAnchoLinear(notificacionLinear, 1, 520, 200L)
-                        mostrarVista(
-                            notifiFurgon,
-                            notifiVehiculoParticular,
-                            notifiMotocicleta,
-                            notifiBicicleta
-                        )
-                    }
-                    altura in 1301..2500 -> {
-                        animacionAnchoLinear(notificacionLinear, 1, 500, 200L)
-                        mostrarVista(
-                            notifiFurgon,
-                            notifiVehiculoParticular,
-                            notifiMotocicleta,
-                            notifiBicicleta
-                        )
-                    }
-                    altura in 1081..1300 -> {
-                        animacionAnchoLinear(notificacionLinear, 1, 260, 200L)
-                        mostrarVista(
-                            notifiFurgon,
-                            notifiVehiculoParticular,
-                            notifiMotocicleta,
-                            notifiBicicleta
-                        )
-                    }
-                    altura in 0..1080 -> {
-                        animacionAnchoLinear(notificacionLinear, 1, 260, 200L)
-                        mostrarVista(
-                            notifiFurgon,
-                            notifiVehiculoParticular,
-                            notifiMotocicleta,
-                            notifiBicicleta
-                        )
-                    }
-                }
-            }
-            if (!cambioAnimacionNoti) {
-                when{
-                    altura >= 3001 -> animacionAnchoLinear(notificacionLinear, 725, 1, 200L)
-                    altura in 2501..3000 -> animacionAnchoLinear(notificacionLinear, 520, 1, 200L)
-                    altura in 1301..2500 -> animacionAnchoLinear(notificacionLinear, 520, 1, 200L)
-                    altura in 1081..1300 -> animacionAnchoLinear(notificacionLinear, 260, 1, 200L)
-                    altura in 0..1080 -> animacionAnchoLinear(notificacionLinear, 260, 1, 200L)
-                }
-            }
-            cambioAnimacionNoti = !cambioAnimacionNoti
-        }
-
-    }
-
-    fun mostrarVista(vararg views: View) {
-        val anchor = resources.displayMetrics.widthPixels
-        views.forEach { view ->
-            when{
-                anchor <= 590 -> {
-                    view.layoutParams.width = 300
-                    view.layoutParams.height = 60
-                    view.requestLayout()
-                }
-                anchor in 591 .. 1300 -> {
-                    view.layoutParams.width = 600
-                    view.layoutParams.height = 110
-                    view.requestLayout()
-                }
-                anchor in 0..1301 -> {
-                    view.layoutParams.width = 650
-                    view.layoutParams.height = 155
-                    view.requestLayout()
-                }
-                else -> return
-            }
-        }
-    }
-
-    fun crearCanalNotificacion(context: Context) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val nombre = "Canal ZeusParking"
-            val descripcion = "Descripción del canal ZeusParking"
-            val importancia = NotificationManager.IMPORTANCE_DEFAULT
-            val canal = NotificationChannel("ZeusParking", nombre, importancia).apply {
-                description = descripcion
-            }
-            val manager =
-                context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-            manager.createNotificationChannel(canal)
-        }
-    }
-
-    fun mostrarNotificacion(context: Context, titulo: String, mensaje: String) {
-        val notificationManager =
-            context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-        val builder = NotificationCompat.Builder(context, "ZeusParking")
-            .setSmallIcon(android.R.drawable.ic_dialog_info)
-            .setContentTitle(titulo)
-            .setContentText(mensaje)
-            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-            .setAutoCancel(true)
-
-        notificationManager.notify(System.currentTimeMillis().toInt(), builder.build())
-    }
-
-    fun escucharDisponibilidad(
+    private fun escucharDisponibilidad(
         documentId: String,
         campo: String,
         textoView: TextView,
-        umbrales: List<Pair<IntRange, String>>
+        progressBar: com.google.android.material.progressindicator.LinearProgressIndicator,
+        maxCapacity: Int
     ) {
         database.collection("Disponibilidad")
             .document(documentId)
@@ -354,20 +163,35 @@ class Home_vigilante : BaseNavigationActivity() {
                     Log.d("Firestore", "Error al escuchar: $documentId", e)
                     return@addSnapshotListener
                 }
+
                 val espacios = document?.getLong(campo)?.toInt() ?: 0
-                Log.d("Firestore", "Actualizado $campo -> $espacios")
-                textoView.text = "Quedan $espacios espacios para $campo"
-                for ((rango, mensaje) in umbrales) {
-                    if (espacios in rango) {
-                        mostrarNotificacion(
-                            this,
-                            "ZeusParking",
-                            mensaje.replace("{espacios}", espacios.toString())
-                        )
-                        break
-                    }
+                val percentage = (espacios.toFloat() / maxCapacity.toFloat() * 100).toInt()
+
+                textoView.text = "$espacios/$maxCapacity espacios para $campo"
+                progressBar.progress = percentage
+
+                if (espacios <= 2) {
+                    mostrarNotificacion(
+                        this,
+                        "Alerta de Disponibilidad",
+                        "Quedan pocos espacios para $campo ($espacios)"
+                    )
                 }
             }
     }
 
+    private fun mostrarNotificacion(context: Context, titulo: String, mensaje: String) {
+        val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        val builder = NotificationCompat.Builder(context, "ZeusParking")
+            .setSmallIcon(R.drawable.icon_zeusparking)
+            .setContentTitle(titulo)
+            .setContentText(mensaje)
+            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+            .setColor(Color.BLUE)
+            .setAutoCancel(true)
+
+        notificationManager.notify(System.currentTimeMillis().toInt(), builder.build())
+    }
+
+    override fun getCurrentNavigationItem(): Int = R.id.home_vigi
 }
