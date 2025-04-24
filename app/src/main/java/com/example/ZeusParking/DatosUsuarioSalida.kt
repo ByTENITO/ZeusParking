@@ -219,24 +219,39 @@ class DatosUsuarioSalida : AppCompatActivity() {
             "Motocicleta" -> "ntHgnXs4Qbz074siOrvz"
             else -> return
         }
+        val FijosId = when (tipoVehiculo) {
+            "Furgon" -> "NLRmedawc0M0nrpDt9Ci"
+            "Vehiculo Particular" -> "edYUNbYSmPtvu1H6dI93"
+            "Bicicleta" -> "sPcLdzFgRF2eAY5BWvFC"
+            "Motocicleta" -> "AQjYvV224T01lrSEeQQY"
+            else -> return
+        }
 
-        database.collection("Disponibilidad").document(documentId)
-            .get()
+        database.collection("Disponibilidad")
+            .document(documentId).get()
             .addOnSuccessListener { document ->
                 if (document.exists()) {
                     val espacios = document.getLong(tipoVehiculo) ?: 0
-                    if (espacios > 0) {
-                        database.collection("Disponibilidad").document(documentId)
-                            .update(tipoVehiculo, FieldValue.increment(1))
-                            .addOnSuccessListener {
-                                Log.d("Firestore", "Campo '$tipoVehiculo' decrementado")
+                    database.collection("EspaciosFijos").document(FijosId).get()
+                        .addOnSuccessListener { document ->
+                            val espaciosFijos = document.getLong(tipoVehiculo) ?: 0
+                            if (espacios!=espaciosFijos) {
+                                database.collection("Disponibilidad").document(documentId)
+                                    .update(tipoVehiculo, FieldValue.increment(1))
+                                    .addOnSuccessListener {
+                                        Log.d("Firestore", "Campo '$tipoVehiculo' aumentado")
+                                    }
+                                    .addOnFailureListener { e ->
+                                        Log.e("Firestore", "Error al actualizar el campo: ", e)
+                                    }
+                            } else {
+                                Toast.makeText(
+                                    this,
+                                    "No puede salir porque se superaron los espacios disponibles para $tipoVehiculo",
+                                    Toast.LENGTH_LONG
+                                ).show()
                             }
-                            .addOnFailureListener { e ->
-                                Log.e("Firestore", "Error al actualizar el campo: ", e)
-                            }
-                    } else {
-                        Toast.makeText(this, "No hay espacios disponibles para $tipoVehiculo", Toast.LENGTH_LONG).show()
-                    }
+                        }
                 } else {
                     Log.d("Firestore", "No se encontró el documento para $tipoVehiculo")
                 }
