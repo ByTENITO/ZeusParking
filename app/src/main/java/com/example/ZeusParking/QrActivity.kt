@@ -43,15 +43,15 @@ class QrActivity : BaseNavigationActivity() {
             ivCodigoQR.setImageBitmap(qrBitmap)
         } catch (e: Exception) {
             e.printStackTrace()
-            // Handle error (maybe show a placeholder)
+
         }
     }
 
     private fun generateQRCode(content: String, size: Int): Bitmap? {
         return try {
             val hints = mapOf(
-                EncodeHintType.MARGIN to 1, // Small margin
-                EncodeHintType.ERROR_CORRECTION to "L" // Error correction level
+                EncodeHintType.MARGIN to 1,
+                EncodeHintType.ERROR_CORRECTION to "L"
             )
 
             val bitMatrix = MultiFormatWriter().encode(
@@ -83,10 +83,10 @@ class QrActivity : BaseNavigationActivity() {
         val fadeIn = AnimationUtils.loadAnimation(this, R.anim.fade_in)
         Handler(Looper.getMainLooper()).postDelayed({
             ivCodigoQR.startAnimation(fadeIn)
-        }, 100) // Small delay for smoother animation
+        }, 100)
     }
 
     override fun getCurrentNavigationItem(): Int {
-        return R.id.qr // Make sure this matches your menu item ID
+        return R.id.qr 
     }
 }

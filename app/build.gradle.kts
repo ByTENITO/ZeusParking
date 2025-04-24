@@ -91,9 +91,9 @@ dependencies {
 
     //Lottie json gif - animaciones
     implementation ("com.airbnb.android:lottie:6.0.0")
-
     implementation ("com.google.android.material:material:1.6.0")
     implementation ("com.google.zxing:core:3.4.1")
+
 
 
     //Android Studio

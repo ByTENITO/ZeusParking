@@ -21,11 +21,12 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.core.app.NotificationCompat
+import com.example.ZeusParking.BaseNavigationActivity
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.firestore.FirebaseFirestore
 import com.squareup.picasso.Picasso
 
-class Home_vigilante : AppCompatActivity() {
+class Home_vigilante : BaseNavigationActivity() {
 
     // Variables y vistas
     private var database = FirebaseFirestore.getInstance()
@@ -48,6 +49,9 @@ class Home_vigilante : AppCompatActivity() {
         startAnimationsWithDelay()
         setContentView(R.layout.activity_home_vigilante)
 
+        //Navegacion
+        setupNavigation()
+
         // Setup de vistas
         perfil_vigi = findViewById(R.id.FotoPerfil_vigi)
         Bienvenida_vigi = findViewById(R.id.Bienvenida_vigi)
@@ -62,27 +66,6 @@ class Home_vigilante : AppCompatActivity() {
 
         crearCanalNotificacion(this)
 
-        //Menu de Navegacion
-        val bottomNavigationView = findViewById<BottomNavigationView>(R.id.bottom_navigation_vigi)
-
-        bottomNavigationView.setOnItemSelectedListener { item ->
-            if (item.itemId == bottomNavigationView.selectedItemId) {
-                return@setOnItemSelectedListener true
-            }
-
-            when (item.itemId) {
-                R.id.Entrada -> {
-                    val intent = Intent(this, EntradaQrParqueadero::class.java)
-                    startActivity(intent)
-                }
-
-                R.id.Salida -> {
-                    val intent = Intent(this, SalidaQrParqueadero::class.java)
-                    startActivity(intent)
-                }
-            }
-            true
-        }
 
         // Obtener datos del intent
         val bundle: Bundle? = intent.extras
@@ -159,6 +142,9 @@ class Home_vigilante : AppCompatActivity() {
         editor.putString("email", inputCorreo)
         editor.apply()
     }
+
+    //Navegacion del Sistema
+    override fun getCurrentNavigationItem(): Int = R.id.home_vigi
 
     private fun startAnimationsWithDelay() {
         val fadeIn = AnimationUtils.loadAnimation(this, R.anim.fade_in)

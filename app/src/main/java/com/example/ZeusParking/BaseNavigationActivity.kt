@@ -6,11 +6,14 @@ import android.os.Handler
 import android.os.Looper
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.example.parquiatenov10.EntradaQrParqueadero
 import com.example.parquiatenov10.HomeActivity
+import com.example.parquiatenov10.Home_vigilante
 import com.example.parquiatenov10.Localizacion
 import com.example.parquiatenov10.QrActivity
 import com.example.parquiatenov10.R
 import com.example.parquiatenov10.RegistrarBiciActivity
+import com.example.parquiatenov10.SalidaQrParqueadero
 import com.google.android.material.bottomnavigation.BottomNavigationView
 abstract class BaseNavigationActivity : AppCompatActivity() {
 
@@ -42,6 +45,9 @@ abstract class BaseNavigationActivity : AppCompatActivity() {
             R.id.localizacion -> Localizacion::class.java
             R.id.registro -> RegistrarBiciActivity::class.java
             R.id.qr -> QrActivity::class.java
+            R.id.entrada -> EntradaQrParqueadero::class.java
+            R.id.salida -> SalidaQrParqueadero::class.java
+            R.id.home_vigi -> Home_vigilante::class.java
             else -> null
         }
 

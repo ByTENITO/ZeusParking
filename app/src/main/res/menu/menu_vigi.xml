@@ -2,7 +2,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/Entrada"
+        android:id="@+id/entrada"
         android:icon="@drawable/ic_entrada"
         android:title="Entrada" />
 
@@ -12,7 +12,7 @@
         android:title="Entrada" />
 
     <item
-        android:id="@+id/Salida"
+        android:id="@+id/salida"
         android:icon="@drawable/ic_salida"
         android:title="Salida" />
 </menu>

@@ -202,13 +202,11 @@ class AuthActivity : AppCompatActivity() {
             val email = Correo_ED.text.toString().trim()
             val password = Contraseña_ED.text.toString()
 
-            if (!validateEmail(email)) {
-                showErrorSnackbar("Por favor ingresa un correo electrónico válido")
+            if (!validateEmailWithFeedback(email)) {
                 return@setOnClickListener
             }
 
-            if (!validatePassword(password)) {
-                showErrorSnackbar("La contraseña debe ser de mínimo 8 caracteres con mayúsculas, minúsculas, número y símbolo.")
+            if (!validatePasswordWithFeedback(password)) {
                 return@setOnClickListener
             }
 
@@ -227,9 +225,9 @@ class AuthActivity : AppCompatActivity() {
                     if (documents != null && !documents.isEmpty) {
                         for (document in documents) {
                             val correo = document.getString("correo").toString()
-                            val id = document.id
-                            when (id) {
-                                "wUsch7ox8oAHJiGRWrVV" -> {
+                            val rol = document.getString("rol").toString()
+                            when (rol) {
+                                "vigilante" -> {
                                     Handler(Looper.getMainLooper()).postDelayed({
                                         dialog.dismiss()
                                         saveSession(correo, ProviderType.EMAIL)
@@ -248,43 +246,53 @@ class AuthActivity : AppCompatActivity() {
                                     }, 1500)
                                 } else {
                                     dialog.dismiss()
-                                    handleLoginError(task.exception)
+                                    handleLoginErrorWithDetailedMessages(task.exception)
                                     Acceder_BTN.isEnabled = true
                                 }
                             }
                     }
                 }
-        }
+            }
 
         Registrarse_BTN.setOnClickListener {
-            val email = Correo_ED.text.toString()
+            val email = Correo_ED.text.toString().trim()
             val password = Contraseña_ED.text.toString()
 
-            if (validateEmail(email) && validatePassword(password)) {
-                auth.createUserWithEmailAndPassword(email, password).addOnCompleteListener {
-                    if (it.isSuccessful) {
-                        val user = auth.currentUser
-                        user?.sendEmailVerification()?.addOnCompleteListener { verificationTask ->
-                            if (verificationTask.isSuccessful) {
-                                Toast.makeText(
-                                    this,
-                                    "Registro exitoso, ingresa estos mismos datos para iniciar sesión.",
-                                    Toast.LENGTH_SHORT
-                                ).show()
-                                Correo_ED.text.clear()
-                                Contraseña_ED.text.clear()
-                            } else {
-                                Toast.makeText(this, "Ups, hubo un problema.", Toast.LENGTH_SHORT)
-                                    .show()
-                            }
-                        }
-                    } else {
-                        Toast.makeText(
-                            this,
-                            "Error en el registro. Revisa los datos.",
-                            Toast.LENGTH_SHORT
-                        ).show()
+            if (!validateEmailWithFeedback(email)) {
+                return@setOnClickListener
+            }
+
+            if (!validatePasswordWithFeedback(password)) {
+                return@setOnClickListener
+            }
+
+            auth.fetchSignInMethodsForEmail(email).addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    val signInMethods = task.result?.signInMethods ?: emptyList()
+                    if (signInMethods.isNotEmpty()) {
+                        showErrorSnackbar("Ya existe una cuenta con este correo electrónico")
+                        return@addOnCompleteListener
                     }
+
+                    // Continue with registration if email is not in use
+                    auth.createUserWithEmailAndPassword(email, password).addOnCompleteListener {
+                        if (it.isSuccessful) {
+                            val user = auth.currentUser
+                            user?.sendEmailVerification()?.addOnCompleteListener { verificationTask ->
+                                if (verificationTask.isSuccessful) {
+                                    showSuccessSnackbar("Registro exitoso. Se ha enviado un correo de verificación. Por favor verifica tu correo antes de iniciar sesión.")
+                                    Correo_ED.text.clear()
+                                    Contraseña_ED.text.clear()
+                                } else {
+                                    showErrorSnackbar("Error al enviar el correo de verificación: ${verificationTask.exception?.message}")
+                                }
+                            }
+                        } else {
+                            handleRegistrationError(it.exception)
+                        }
+                    }
+                } else {
+                    showErrorSnackbar("Error al verificar el correo: ${task.exception?.message}")
                 }
             }
         }
@@ -311,6 +319,99 @@ class AuthActivity : AppCompatActivity() {
             }
         }
     }
+
+    private fun validateEmailWithFeedback(email: String): Boolean {
+        return when {
+            email.isEmpty() -> {
+                showErrorSnackbar("Por favor ingresa un correo electrónico")
+                false
+            }
+            !Patterns.EMAIL_ADDRESS.matcher(email).matches() -> {
+                showErrorSnackbar("Por favor ingresa un correo electrónico válido")
+                false
+            }
+            else -> true
+        }
+    }
+
+    private fun handleLoginErrorWithDetailedMessages(exception: Exception?) {
+        when (exception) {
+            is FirebaseAuthInvalidUserException -> {
+                showErrorSnackbar("No existe una cuenta con este correo electrónico")
+            }
+            is FirebaseAuthInvalidCredentialsException -> {
+                if (exception.message?.contains("password") == true) {
+                    showErrorSnackbar("Contraseña incorrecta")
+                } else {
+                    showErrorSnackbar("Credenciales inválidas")
+                }
+            }
+            else -> {
+                showErrorSnackbar("Error de autenticación: ${exception?.message ?: "Error desconocido"}")
+            }
+        }
+    }
+
+    private fun handleRegistrationError(exception: Exception?) {
+        when (exception) {
+            is FirebaseAuthUserCollisionException -> {
+                showErrorSnackbar("Ya existe una cuenta con este correo electrónico")
+            }
+            is FirebaseAuthInvalidCredentialsException -> {
+                if (exception.message?.contains("email") == true) {
+                    showErrorSnackbar("Correo electrónico inválido")
+                } else {
+                    showErrorSnackbar("Contraseña inválida: debe tener al menos 8 caracteres con mayúsculas, minúsculas, números y símbolos")
+                }
+            }
+            else -> {
+                showErrorSnackbar("Error en el registro: ${exception?.message ?: "Error desconocido"}")
+            }
+        }
+    }
+
+    private fun validatePasswordWithFeedback(password: String): Boolean {
+        return when {
+            password.isEmpty() -> {
+                showErrorSnackbar("Por favor ingresa una contraseña")
+                false
+            }
+            password.length < 8 -> {
+                showErrorSnackbar("La contraseña debe tener al menos 8 caracteres")
+                false
+            }
+            password.length > 64 -> {
+                showErrorSnackbar("La contraseña no puede exceder 64 caracteres")
+                false
+            }
+            !password.any { it.isUpperCase() } -> {
+                showErrorSnackbar("Debe contener al menos una mayúscula (A-Z)")
+                false
+            }
+            !password.any { it.isLowerCase() } -> {
+                showErrorSnackbar("Debe contener al menos una minúscula (a-z)")
+                false
+            }
+            !password.any { it.isDigit() } -> {
+                showErrorSnackbar("Debe contener al menos un número (0-9)")
+                false
+            }
+            !password.any { it in "!@#$%^&*()-_=+[]{}|;:'\",.<>?/" } -> {
+                showErrorSnackbar("Debe contener al menos un símbolo especial")
+                false
+            }
+            password.contains(Regex("(.)\\1{2,}")) -> {
+                showErrorSnackbar("No se permiten caracteres repetidos 3+ veces")
+                false
+            }
+            password == Correo_ED.text.toString() -> {
+                showErrorSnackbar("La contraseña no puede ser igual al correo")
+                false
+            }
+            else -> true
+        }
+    }
+
 
     private fun handleSuccessfulLogin(
         task: com.google.android.gms.tasks.Task<AuthResult>,

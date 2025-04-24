@@ -17,12 +17,13 @@ import androidx.camera.core.*
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.camera.view.PreviewView
 import androidx.core.content.ContextCompat
+import com.example.ZeusParking.BaseNavigationActivity
 import com.google.mlkit.vision.barcode.BarcodeScanning
 import com.google.mlkit.vision.common.InputImage
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 
-class SalidaQrParqueadero : AppCompatActivity() {
+class SalidaQrParqueadero : BaseNavigationActivity() {
     private lateinit var camaraEjecutarSalida: ExecutorService
     private lateinit var tiposSpinnerSalida: Spinner
     private lateinit var Salir: Button
@@ -32,6 +33,10 @@ class SalidaQrParqueadero : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_salida_qr_parqueadero)
+
+        //Navegacion
+        setupNavigation()
+
         tiposSpinnerSalida = findViewById(R.id.Tipos_SpinnerVigiSalida)
         marcoNumSalida = findViewById(R.id.Marco_NUMVigiSalida)
         Salir = findViewById(R.id.exitScannerSalida)
@@ -82,6 +87,9 @@ class SalidaQrParqueadero : AppCompatActivity() {
             finish()
         }
     }
+
+    //Navegacion del Sistema
+    override fun getCurrentNavigationItem(): Int = R.id.salida
 
     private fun empezarCamara() {
         val camaraProvedorFuturo = ProcessCameraProvider.getInstance(this)
