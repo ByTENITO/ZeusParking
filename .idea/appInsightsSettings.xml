@@ -6,6 +6,14 @@
         <entry key="Firebase Crashlytics">
           <value>
             <InsightsFilterSettings>
+              <option name="connection">
+                <ConnectionSetting>
+                  <option name="appId" value="com.example.parquiatenov10" />
+                  <option name="mobileSdkAppId" value="1:943899074299:android:3cbefb9a210ccba1909a5e" />
+                  <option name="projectId" value="parquiateno-v1" />
+                  <option name="projectNumber" value="943899074299" />
+                </ConnectionSetting>
+              </option>
               <option name="signal" value="SIGNAL_UNSPECIFIED" />
               <option name="timeIntervalDays" value="THIRTY_DAYS" />
               <option name="visibilityType" value="ALL" />

@@ -8,6 +8,8 @@ import android.os.Build
 import android.os.Bundle
 import com.google.android.material.button.MaterialButton
 import android.content.Intent
+import android.util.Log
+import android.widget.TextView
 import android.widget.Toast
 import androidx.core.app.NotificationCompat
 import com.example.ZeusParking.BaseNavigationActivity
@@ -43,14 +45,6 @@ class Home_vigilante : BaseNavigationActivity() {
         "Motocicleta" to "ntHgnXs4Qbz074siOrvz"
     )
 
-    // Capacidades máximas
-    private val capacidadesMaximas = mapOf(
-        "Furgon" to 5,
-        "Vehiculo Particular" to 15,
-        "Bicicleta" to 50,
-        "Motocicleta" to 25
-    )
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home_vigilante)
@@ -59,7 +53,7 @@ class Home_vigilante : BaseNavigationActivity() {
         inicializarVistas()
         configurarPerfilUsuario()
         configurarListenersDisponibilidad()
-        crearCanalNotificacion()
+        crearCanalNotificacion(this)
 
 
         findViewById<MaterialButton>(R.id.scan_entrada_btn).setOnClickListener {
@@ -69,6 +63,46 @@ class Home_vigilante : BaseNavigationActivity() {
         findViewById<MaterialButton>(R.id.scan_salida_btn).setOnClickListener {
             startActivity(Intent(this, SalidaQrParqueadero::class.java))
         }
+        escucharDisponibilidad(
+            "0ctYNlFXwtVw9ylURFXi",
+            "Furgon",
+            notiFurgon,
+            listOf(
+                (0..0) to "Hola, no quedan espacios para Furgon",
+                (1..2) to "Hola, quedan pocos espacios en el parqueadero de Furgon, quedan: {espacios}",
+                (3..4) to "Hola, quedan {espacios} espacios para Furgon"
+            )
+        )
+        escucharDisponibilidad(
+            "UF0tfabGHGitcj7En6Wy",
+            "Vehiculo Particular",
+            notiVehiculo,
+            listOf(
+                (0..0) to "Hola, no quedan espacios para Vehiculo Particular",
+                (1..5) to "Hola, quedan pocos espacios en el parqueadero de Vehiculo Particular, quedan: {espacios}",
+                (6..10) to "Hola, quedan {espacios} espacios para Vehiculo Particular"
+            )
+        )
+        escucharDisponibilidad(
+            "IuDC5XlTyhxhqU4It8SD",
+            "Bicicleta",
+            notiBicicleta,
+            listOf(
+                (0..0) to "Hola, no quedan espacios para Bicicleta",
+                (1..5) to "Hola, quedan pocos espacios en el parqueadero de Bicicleta, quedan: {espacios}",
+                (6..10) to "Hola, quedan {espacios} espacios para Bicicleta"
+            )
+        )
+        escucharDisponibilidad(
+            "ntHgnXs4Qbz074siOrvz",
+            "Motocicleta",
+            notiMoto,
+            listOf(
+                (0..0) to "Hola, no quedan espacios para Motocicleta",
+                (1..5) to "Hola, quedan pocos espacios en el parqueadero de Motocicleta, quedan: {espacios}",
+                (6..10) to "Hola, quedan {espacios} espacios para Motocicleta"
+            )
+        )
 
     }
 
@@ -115,67 +149,73 @@ class Home_vigilante : BaseNavigationActivity() {
         progressBar: LinearProgressIndicator
     ) {
         val docId = documentosDisponibilidad[tipo] ?: return
-        val capacidadMaxima = capacidadesMaximas[tipo] ?: 0
+        val FijosId = when (tipo) {
+            "Furgon" -> "NLRmedawc0M0nrpDt9Ci"
+            "Vehiculo Particular" -> "edYUNbYSmPtvu1H6dI93"
+            "Bicicleta" -> "sPcLdzFgRF2eAY5BWvFC"
+            "Motocicleta" -> "AQjYvV224T01lrSEeQQY"
+            else -> return
+        }
 
         val listener = database.collection("Disponibilidad")
             .document(docId)
             .addSnapshotListener { document, error ->
                 error?.let {
-                    Toast.makeText(this, "Error al obtener disponibilidad", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, "Error al obtener disponibilidad", Toast.LENGTH_SHORT)
+                        .show()
                     return@addSnapshotListener
                 }
 
-                document?.let { doc ->
-                    val disponibles = doc.getLong(tipo)?.toInt() ?: 0
+                database.collection("EspaciosFijos").document(FijosId)
+                    .get().addOnSuccessListener { documents ->
+                        document?.let { doc ->
+                            val disponibles = doc.getLong(tipo)?.toInt() ?: 0
 
-                    // Actualizar UI
-                    runOnUiThread {
-                        // Mostrar "disponibles/total"
-                        textView.text = "$disponibles/$capacidadMaxima espacios para $tipo"
+                            // Actualizar UI
+                            runOnUiThread {
+                                // Mostrar "disponibles/total"
+                                val espacios = documents.getLong(tipo)?:0
+                                textView.text = "$disponibles/$espacios espacios para $tipo"
 
-                        // Calcular y actualizar progress bar
-                        val porcentaje = (disponibles.toFloat() / capacidadMaxima.toFloat() * 100).toInt()
-                        progressBar.progress = porcentaje
+                                // Calcular y actualizar progress bar
+                                val porcentaje =
+                                    (disponibles.toFloat() / espacios.toFloat() * 100).toInt()
+                                progressBar.progress = porcentaje
 
-                        // color según disponibilidad
-                        progressBar.setIndicatorColor(
-                            when {
-                                porcentaje < 20 -> Color.RED
-                                porcentaje < 50 -> Color.YELLOW
-                                else -> Color.GREEN
+                                // color según disponibilidad
+                                progressBar.setIndicatorColor(
+                                    when {
+                                        porcentaje < 20 -> Color.RED
+                                        porcentaje < 50 -> Color.YELLOW
+                                        else -> Color.GREEN
+                                    }
+                                )
                             }
-                        )
-
-                        // Notificación si quedan pocos espacios
-                        if (disponibles <= 2) {
-                            mostrarNotificacion(
-                                "Alerta de Disponibilidad",
-                                "Quedan pocos espacios para $tipo ($disponibles)"
-                            )
                         }
                     }
-                }
             }
 
         listeners.add(listener)
     }
 
-    private fun crearCanalNotificacion() {
+    fun crearCanalNotificacion(context: Context) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val nombre = "Canal ZeusParking"
-            val descripcion = "Notificaciones de disponibilidad"
+            val descripcion = "Descripción del canal ZeusParking"
             val importancia = NotificationManager.IMPORTANCE_DEFAULT
             val canal = NotificationChannel("ZeusParking", nombre, importancia).apply {
                 description = descripcion
             }
-            val manager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            val manager =
+                context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
             manager.createNotificationChannel(canal)
         }
     }
 
-    private fun mostrarNotificacion(titulo: String, mensaje: String) {
-        val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-        val builder = NotificationCompat.Builder(this, "ZeusParking")
+    fun mostrarNotificacion(context: Context, titulo: String, mensaje: String) {
+        val notificationManager =
+            context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        val builder = NotificationCompat.Builder(context, "ZeusParking")
             .setSmallIcon(R.drawable.icon_zeusparking)
             .setContentTitle(titulo)
             .setContentText(mensaje)
@@ -183,7 +223,51 @@ class Home_vigilante : BaseNavigationActivity() {
             .setColor(Color.BLUE)
             .setAutoCancel(true)
 
-        notificationManager.notify(System.currentTimeMillis().toInt(), builder.build())
+        val notificationId =
+            System.currentTimeMillis().toInt() // Genera un ID único basado en el tiempo
+        notificationManager.notify(notificationId, builder.build())
+    }
+
+    fun escucharDisponibilidad(
+        documentId: String,
+        campo: String,
+        textoView: TextView,
+        umbrales: List<Pair<IntRange, String>>
+    ) {
+        database.collection("Disponibilidad")
+            .document(documentId)
+            .addSnapshotListener { document, e ->
+                if (e != null) {
+                    Log.d("Firestore", "Error al escuchar: $documentId", e)
+                    return@addSnapshotListener
+                }
+
+                val espacios = document?.getLong(campo)?.toInt() ?: 0
+                Log.d("Firestore", "Actualizado $campo -> $espacios")
+
+                // 🧩 Seleccionamos el emoji según el tipo de vehículo
+                val emoji = when (campo.lowercase()) {
+                    "furgon" -> "🚐"
+                    "bicicleta" -> "🚲"
+                    "motocicleta" -> "🏍️"
+                    "vehiculo particular" -> "🚗"
+                    else -> "NADA"
+                }
+
+                // 🧾 Mostramos mensaje en el TextView con emoji
+                textoView.text = "$emoji Quedan $espacios espacios para $campo"
+
+                for ((rango, mensaje) in umbrales) {
+                    if (espacios in rango) {
+                        mostrarNotificacion(
+                            this,
+                            "ZeusParking",
+                            "$emoji " + mensaje.replace("{espacios}", espacios.toString())
+                        )
+                        break
+                    }
+                }
+            }
     }
 
     // Navegación
