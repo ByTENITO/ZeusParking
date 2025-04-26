@@ -22,11 +22,11 @@
         app:srcCompat="@drawable/zeuspass"
         tools:ignore="ContentDescription" />
 
-    <!-- White QR Code Container (smaller and centered) -->
+    <!-- White QR Code Container with centered date/time -->
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/qrCard"
         android:layout_width="300dp"
-        android:layout_height="300dp"
+        android:layout_height="340dp"
         app:cardBackgroundColor="@android:color/white"
         app:cardCornerRadius="12dp"
         app:cardElevation="4dp"
@@ -35,15 +35,35 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/imageView">
 
-        <ImageView
-            android:id="@+id/ivCodigoSalida"
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:padding="20dp"
-            android:scaleType="fitCenter"/>
+            android:layout_height="match_parent">
+
+            <!-- QR Image -->
+            <ImageView
+                android:id="@+id/ivCodigoSalida"
+                android:layout_width="260dp"
+                android:layout_height="260dp"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="10dp"
+                android:scaleType="fitCenter"/>
+
+            <!-- Centered Date/Time -->
+            <TextView
+                android:id="@+id/tvDateTime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/ivCodigoSalida"
+                android:layout_centerHorizontal="true"
+                android:textColor="@color/Navegacion"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:padding="8dp"
+                tools:text="25/04/2025 - 14:30" />
+        </RelativeLayout>
     </com.google.android.material.card.MaterialCardView>
 
-    <!-- Bottom Navigation (EXACTLY AS YOU HAD IT) -->
+    <!-- Bottom Navigation (unchanged) -->
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottom_navigation"
         android:layout_width="match_parent"

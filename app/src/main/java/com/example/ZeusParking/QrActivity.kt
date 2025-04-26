@@ -1,6 +1,5 @@
 package com.example.parquiatenov10
 
-import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.Color
 import android.os.Bundle
@@ -8,30 +7,39 @@ import android.os.Handler
 import android.os.Looper
 import android.view.animation.AnimationUtils
 import android.widget.ImageView
+import android.widget.TextView
 import com.example.ZeusParking.BaseNavigationActivity
 import com.google.zxing.BarcodeFormat
 import com.google.zxing.EncodeHintType
 import com.google.zxing.MultiFormatWriter
 import com.google.zxing.WriterException
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 class QrActivity : BaseNavigationActivity() {
     private lateinit var ivCodigoQR: ImageView
+    private lateinit var tvDateTime: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_entrada_qr)
 
-        // Initialize views
+
         ivCodigoQR = findViewById(R.id.ivCodigoSalida)
+        tvDateTime = findViewById(R.id.tvDateTime)
 
-        // Setup navigation
+
         setupNavigation()
-
-        // Generate and display QR code
         generateAndDisplayQrCode()
-
-        // Start animations
+        updateDateTime()
         startAnimationsWithDelay()
+    }
+
+    private fun updateDateTime() {
+        val sdf = SimpleDateFormat("d/MMMM/yyyy - HH:mm:ss", Locale("es", "ES"))
+        val currentDateTime = sdf.format(Date())
+        tvDateTime.text = currentDateTime
     }
 
     private fun generateAndDisplayQrCode() {
@@ -43,7 +51,6 @@ class QrActivity : BaseNavigationActivity() {
             ivCodigoQR.setImageBitmap(qrBitmap)
         } catch (e: Exception) {
             e.printStackTrace()
-
         }
     }
 
@@ -87,6 +94,6 @@ class QrActivity : BaseNavigationActivity() {
     }
 
     override fun getCurrentNavigationItem(): Int {
-        return R.id.qr 
+        return R.id.qr
     }
 }
