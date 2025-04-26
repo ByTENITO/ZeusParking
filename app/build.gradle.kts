@@ -94,7 +94,8 @@ dependencies {
     implementation ("com.google.android.material:material:1.6.0")
     implementation ("com.google.zxing:core:3.4.1")
 
-
+    //Messagin
+    implementation("com.google.firebase:firebase-messaging:24.1.1")
 
     //Android Studio
     implementation(libs.androidx.core.ktx)
