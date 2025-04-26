@@ -1,6 +1,6 @@
 package com.example.parquiatenov10
 
-import android.animation.ValueAnimator
+
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
@@ -14,7 +14,6 @@ import android.view.View
 import android.view.animation.AccelerateDecelerateInterpolator
 import android.widget.Button
 import androidx.activity.enableEdgeToEdge
-import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.auth.FirebaseAuth
 import android.widget.TextView
 import android.widget.ImageView
@@ -24,7 +23,6 @@ import androidx.core.app.NotificationCompat
 import com.example.ZeusParking.BaseNavigationActivity
 import com.google.firebase.firestore.FirebaseFirestore
 import com.squareup.picasso.Picasso
-import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.imageview.ShapeableImageView
 import com.google.firebase.storage.FirebaseStorage
 import java.io.File
