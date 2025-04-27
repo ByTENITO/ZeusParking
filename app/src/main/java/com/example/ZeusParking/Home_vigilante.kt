@@ -32,11 +32,9 @@ class Home_vigilante : BaseNavigationActivity() {
     private lateinit var progressBicicleta: LinearProgressIndicator
     private lateinit var progressMoto: LinearProgressIndicator
 
-
     // Firebase
     private val database = FirebaseFirestore.getInstance()
     private val listeners = mutableListOf<ListenerRegistration>()
-
 
     private val documentosDisponibilidad = mapOf(
         "Furgon" to "0ctYNlFXwtVw9ylURFXi",

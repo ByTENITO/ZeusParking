@@ -11,6 +11,7 @@ import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Spinner
+import android.widget.Toast
 import androidx.annotation.OptIn
 import androidx.appcompat.app.AppCompatActivity
 import androidx.camera.core.*
@@ -18,6 +19,7 @@ import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.camera.view.PreviewView
 import androidx.core.content.ContextCompat
 import com.example.ZeusParking.BaseNavigationActivity
+import com.google.firebase.firestore.FirebaseFirestore
 import com.google.mlkit.vision.barcode.BarcodeScanning
 import com.google.mlkit.vision.common.InputImage
 import java.util.concurrent.ExecutorService
@@ -25,6 +27,7 @@ import java.util.concurrent.Executors
 
 class EntradaQrParqueadero : BaseNavigationActivity() {
     private lateinit var camaraEjecutarEntrada: ExecutorService
+    private var database = FirebaseFirestore.getInstance()
     private lateinit var tiposSpinnerEntrada: Spinner
     private lateinit var marcoNumEntrada: EditText
     private var escaneoRealizado: Boolean = false
@@ -135,15 +138,9 @@ class EntradaQrParqueadero : BaseNavigationActivity() {
                     val id = marcoNumEntrada.text.toString()
                     val qrText = barcode.displayValue
                     qrText?.let {
-                        Log.d("QRScanner", "Código QR detectado: $qrText")
                         escaneoRealizado = true
-                        val intent = Intent(this, DatosUsuarioEntrada::class.java).apply {
-                            putExtra("correo", qrText)
-                            putExtra("tipo",tiposSpinner)
-                            putExtra("id",id)
-                        }
-                        Log.d("IntentData", "Correo: $qrText, Tipo: $tiposSpinner, ID: $id")
-                        startActivity(intent)
+                        verificarEntrada(qrText, tiposSpinner, id)
+                        Log.d("QRScanner", "Código QR detectado: $qrText")
                     }
                 }
             }
@@ -152,6 +149,47 @@ class EntradaQrParqueadero : BaseNavigationActivity() {
             }
             .addOnCompleteListener {
                 imageProxy.close()
+            }
+    }
+
+    private fun verificarEntrada(correo: String, vehiculo: String, idVehiculo: String) {
+        database.collection("Entrada")
+            .whereEqualTo("correo", correo)
+            .get()
+            .addOnSuccessListener { documents ->
+                if (documents.isEmpty) {
+                    // El usuario no ha ingresado, proceder a verificar salida
+                    verificarSalida(correo, vehiculo, idVehiculo)
+                } else {
+                    Toast.makeText(this, "El usuario ya entro", Toast.LENGTH_SHORT).show()
+                }
+            }
+            .addOnFailureListener { e ->
+                Log.e("Firestore", "Error al verificar entrada: ", e)
+            }
+    }
+
+    private fun verificarSalida(correo: String, vehiculo: String, idVehiculo: String) {
+        database.collection("Salida")
+            .whereEqualTo("correo", correo)
+            .get()
+            .addOnSuccessListener { documents ->
+                if (!documents.isEmpty) {
+                    // Si existe salida, eliminarla
+                    for (document in documents) {
+                        database.collection("Salida").document(document.id).delete()
+                    }
+                }
+                val intent = Intent(this, DatosUsuarioEntrada::class.java).apply {
+                    putExtra("correo", correo)
+                    putExtra("tipo",vehiculo)
+                    putExtra("id",idVehiculo)
+                }
+                Log.d("IntentData", "Correo: $correo, Tipo: $vehiculo, ID: $idVehiculo")
+                startActivity(intent)
+            }
+            .addOnFailureListener { e ->
+                Log.e("Firestore", "Error al verificar salida: ", e)
             }
     }
 

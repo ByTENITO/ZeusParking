@@ -60,7 +60,7 @@ class AuthActivity : AppCompatActivity() {
     private lateinit var Acceder_BTN: Button
     private lateinit var Registrarse_BTN: Button
     private lateinit var Correo_ED: EditText
-    private lateinit var Contraseña_ED: EditText
+    private lateinit var Contrasena_ED: EditText
     private lateinit var ForgotPassword_TV: TextView
     private lateinit var auth: FirebaseAuth
 
@@ -77,7 +77,7 @@ class AuthActivity : AppCompatActivity() {
         Acceder_BTN = findViewById(R.id.Acceder_BTN)
         Registrarse_BTN = findViewById(R.id.Registrarse_BTN)
         Correo_ED = findViewById(R.id.Correo_ED)
-        Contraseña_ED = findViewById(R.id.Contraseña_ED)
+        Contrasena_ED = findViewById(R.id.Contraseña_ED)
         ForgotPassword_TV = findViewById(R.id.OlvidasteContrasena_TV)
         val text5 = findViewById<TextView>(R.id.textView5)
         val text6 = findViewById<TextView>(R.id.textView6)
@@ -92,7 +92,7 @@ class AuthActivity : AppCompatActivity() {
         Acceder_BTN.startAnimation(fadeIn)
         Registrarse_BTN.startAnimation(fadeIn)
         Correo_ED.startAnimation(fadeIn)
-        Contraseña_ED.startAnimation(fadeIn)
+        Contrasena_ED.startAnimation(fadeIn)
         ForgotPassword_TV.startAnimation(fadeIn)
         text5.startAnimation(fadeIn)
         text6.startAnimation(fadeIn)
@@ -147,7 +147,7 @@ class AuthActivity : AppCompatActivity() {
         Imagen.layoutParams = params
     }
 
-    private fun tamañoPantalla(porcentaje: Float): Int {
+    private fun tamanoPantalla(porcentaje: Float): Int {
         val alto = resources.displayMetrics.heightPixels
         return (alto * porcentaje).toInt()
     }
@@ -167,7 +167,7 @@ class AuthActivity : AppCompatActivity() {
         }
     }
 
-    private fun tamaños(Google_BTN: Button, startHeight: Int) {
+    private fun tamanos(Google_BTN: Button, startHeight: Int) {
         val animator = ValueAnimator.ofInt(startHeight)
 
         animator.addUpdateListener { animation ->
@@ -182,10 +182,10 @@ class AuthActivity : AppCompatActivity() {
     }
 
     private fun setup() {
-        val tamañoGoogle = tamañoPantalla(0.05f)
+        val tamanoGoogle = tamanoPantalla(0.05f)
         title = "Autenticación"
 
-        tamaños(Google_BTN, tamañoGoogle)
+        tamanos(Google_BTN, tamanoGoogle)
 
         Google_BTN.setOnClickListener {
             val googleConf = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -200,7 +200,7 @@ class AuthActivity : AppCompatActivity() {
 
         Acceder_BTN.setOnClickListener {
             val email = Correo_ED.text.toString().trim()
-            val password = Contraseña_ED.text.toString()
+            val password = Contrasena_ED.text.toString()
 
             if (!validateEmailWithFeedback(email)) {
                 return@setOnClickListener
@@ -256,7 +256,7 @@ class AuthActivity : AppCompatActivity() {
 
         Registrarse_BTN.setOnClickListener {
             val email = Correo_ED.text.toString().trim()
-            val password = Contraseña_ED.text.toString()
+            val password = Contrasena_ED.text.toString()
 
             if (!validateEmailWithFeedback(email)) {
                 return@setOnClickListener
@@ -282,7 +282,7 @@ class AuthActivity : AppCompatActivity() {
                                 if (verificationTask.isSuccessful) {
                                     showSuccessSnackbar("Registro exitoso. Se ha enviado un correo de verificación. Por favor verifica tu correo antes de iniciar sesión.")
                                     Correo_ED.text.clear()
-                                    Contraseña_ED.text.clear()
+                                    Contrasena_ED.text.clear()
                                 } else {
                                     showErrorSnackbar("Error al enviar el correo de verificación: ${verificationTask.exception?.message}")
                                 }

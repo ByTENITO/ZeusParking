@@ -88,14 +88,13 @@ dependencies {
     implementation ("com.google.android.material:material:1.9.0")
     implementation ("androidx.constraintlayout:constraintlayout:2.1.4")
 
-
     //Lottie json gif - animaciones
     implementation ("com.airbnb.android:lottie:6.0.0")
     implementation ("com.google.android.material:material:1.6.0")
     implementation ("com.google.zxing:core:3.4.1")
 
     //Messagin
-    implementation("com.google.firebase:firebase-messaging:24.1.1")
+    implementation("com.google.firebase:firebase-messaging:23.4.1")
 
     //Android Studio
     implementation(libs.androidx.core.ktx)

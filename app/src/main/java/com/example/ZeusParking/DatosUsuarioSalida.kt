@@ -82,15 +82,15 @@ class DatosUsuarioSalida : AppCompatActivity() {
                     for (document in documents){
                         val userId = document.getString("id")
                         val cedula = document.getString("cedula")
-                        val idVehi = document.getString("numero")
                         buscarImagenUser(userId,cedula)
-                        buscarImagenVehi(userId,document.id,idVehi)
+                        buscarImagenVehi(userId,document.id,idVehiculo)
                         Log.d("FireStorage","id -> ${document.id} ")
                         Log.d("FireStorage","usuario -> $cedula")
                     }
                 }
             }
-        verificarSalida(correo, vehiculo, idVehiculo)
+
+        registrarIngreso(correo, vehiculo, idVehiculo)
 
         botonSalida.setOnClickListener {
             finish()
@@ -120,42 +120,6 @@ class DatosUsuarioSalida : AppCompatActivity() {
         }.addOnFailureListener { e ->
             Log.e("FireStorage","Error en URL:",e)
         }
-    }
-
-    private fun verificarSalida(correo: String, vehiculo: String, idVehiculo: String) {
-        database.collection("Salida")
-            .whereEqualTo("correo", correo)
-            .get()
-            .addOnSuccessListener { documents ->
-                if (documents.isEmpty) {
-                    // El usuario no ha ingresado, proceder a verificar salida
-                    verificarEntrada(correo, vehiculo, idVehiculo)
-                } else {
-                    Toast.makeText(this, "El usuario ya salio", Toast.LENGTH_SHORT).show()
-                }
-            }
-            .addOnFailureListener { e ->
-                Log.e("Firestore", "Error al verificar entrada: ", e)
-            }
-    }
-
-    private fun verificarEntrada(correo: String, vehiculo: String, idVehiculo: String) {
-        database.collection("Entrada")
-            .whereEqualTo("correo", correo)
-            .get()
-            .addOnSuccessListener { documents ->
-                if (!documents.isEmpty) {
-                    // Si existe entrada, eliminarla
-                    for (document in documents) {
-                        database.collection("Entrada").document(document.id).delete()
-                    }
-                }
-                // Proceder a registrar la salida
-                registrarIngreso(correo, vehiculo, idVehiculo)
-            }
-            .addOnFailureListener { e ->
-                Log.e("Firestore", "Error al verificar salida: ", e)
-            }
     }
 
     private fun registrarIngreso(correo: String, vehiculo: String, idVehiculo: String) {
