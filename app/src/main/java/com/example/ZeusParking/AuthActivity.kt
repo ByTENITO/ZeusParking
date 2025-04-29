@@ -54,7 +54,18 @@ enum class ProviderType {
 class AuthActivity : AppCompatActivity() {
 
     private var database = FirebaseFirestore.getInstance()
+    private var isShowingTermsDialog = true
+    private var termsMenuDialog: AlertDialog? = null
+    private var termsAlreadyShown = false
+    private var isShowingTerms = false
 
+    //Terminos y condiciones
+    private val TERMS_PREFS = "TermsPrefs"
+    private val TERMS_ACCEPTED = "terms_accepted"
+    private val URL_TERMINOS = "https://1drv.ms/b/c/5de107aba11da42a/EVSAWbFjha1NpZ6AB6auxjkBawPGbBlKUmds8m2M-1-WgQ?e=yhCybw"
+    private val URL_PRIVACIDAD = "https://1drv.ms/b/c/5de107aba11da42a/Ed1PHGPhXR5HndpgXPT7f50B0YMKp8pVocW5wCHDhw9kjg?e=Duv9CY"
+
+    //Proyecto
     private val GOOGLE_SIGN_IN = 100
     private lateinit var Google_BTN: Button
     private lateinit var Acceder_BTN: Button
@@ -64,10 +75,19 @@ class AuthActivity : AppCompatActivity() {
     private lateinit var ForgotPassword_TV: TextView
     private lateinit var auth: FirebaseAuth
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.activity_auth)
+
+        //Terminos Acepatado
+        if (!terminosAceptados() && !isShowingTermsDialog) {
+            mostrarDialogoTerminos()
+        }
+
+        //Terminos y condiciones
+        mostrarDialogoTerminos()
 
         //Inicio de firebase
         FirebaseApp.initializeApp(this)
@@ -140,6 +160,95 @@ class AuthActivity : AppCompatActivity() {
         session()
     }
 
+    //Terminos y condiciones guardar
+    override fun onResume() {
+        super.onResume()
+        if (!terminosAceptados() && !isShowingTermsDialog) {
+            mostrarDialogoTerminos()
+        }
+    }
+
+    fun showTermsDialogAfterWebViewClose() {
+        Handler(Looper.getMainLooper()).postDelayed({
+            if (!terminosAceptados()) {
+                mostrarDialogoTerminos()
+            }
+        }, 300)
+    }
+
+    private fun showTermsDialogWithDelay() {
+        Handler(Looper.getMainLooper()).postDelayed({
+            if (!terminosAceptados()) {
+                mostrarDialogoTerminos()
+            }
+        }, 500)
+    }
+
+    //Terminos y condiciones
+    private fun mostrarDialogoTerminos() {
+        if (terminosAceptados()) return
+
+        termsMenuDialog?.dismiss() // Dismiss any existing dialog
+
+        termsMenuDialog = MaterialAlertDialogBuilder(this)
+            .setTitle("📝 Términos y Privacidad")
+            .setMessage("Para usar esta app, debes aceptar nuestros:\n\n• Términos y Condiciones\n• Política de Tratamiento de Datos\n\nRevisa cómo procesamos tus datos.")
+            .setCancelable(false)
+            .setPositiveButton("Aceptar") { _, _ ->
+                guardarAceptacionTerminos(true)
+            }
+            .setNegativeButton("Rechazar y Salir") { _, _ ->
+                finishAffinity()
+            }
+            .setNeutralButton("Ver Detalles") { _, _ ->
+                mostrarDialogoEnlaces()
+            }
+            .create()
+
+        termsMenuDialog?.setOnShowListener {
+            termsMenuDialog?.getButton(AlertDialog.BUTTON_NEUTRAL)?.setTextColor(
+                ContextCompat.getColor(this, R.color.Botones)
+            )
+        }
+        termsMenuDialog?.show()
+    }
+
+    private fun mostrarDialogoEnlaces() {
+        MaterialAlertDialogBuilder(this)
+            .setTitle("Documentos Legales")
+            .setItems(arrayOf("Términos y Condiciones", "Política de Tratamiento de Datos")) { _, which ->
+                when (which) {
+                    0 -> abrirEnlace(URL_TERMINOS, "Términos y Condiciones")
+                    1 -> abrirEnlace(URL_PRIVACIDAD, "Política de Tratamiento de Datos")
+                }
+            }
+            .setNegativeButton("Cerrar", null)
+            .show()
+    }
+
+    private fun abrirEnlace(url: String, titulo: String) {
+        try {
+            val dialog = TerminosCondicionesDialogFragment.newInstance(url, titulo)
+            dialog.show(supportFragmentManager, "TerminosCondicionesDialog")
+        } catch (e: Exception) {
+            Toast.makeText(this, "Error al cargar el documento", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun guardarAceptacionTerminos(aceptado: Boolean) {
+        val prefs = getSharedPreferences(TERMS_PREFS, MODE_PRIVATE).edit()
+        prefs.putBoolean(TERMS_ACCEPTED, aceptado)
+        prefs.apply()
+        termsMenuDialog?.dismiss()    }
+
+
+    private fun terminosAceptados(): Boolean {
+        val prefs = getSharedPreferences(TERMS_PREFS, MODE_PRIVATE)
+        return prefs.getBoolean(TERMS_ACCEPTED, false)
+    }
+
+
+    //Responsividad de imagenes
     private fun responsividadImagenes(Imagen: ImageView, Alto: Int, Ancho: Int) {
         val params = Imagen.layoutParams
         params.width = Ancho // Ancho en píxeles
@@ -153,6 +262,8 @@ class AuthActivity : AppCompatActivity() {
     }
 
     private fun session() {
+        if (!terminosAceptados()) return
+
         val prefs = getSharedPreferences("Sesion", MODE_PRIVATE)
         val email = prefs.getString("email", null)
         val inputCorreo = prefs.getString("inputCorreo", null)
