@@ -167,13 +167,13 @@ class RegistrarBiciActivity : BaseNavigationActivity() {
             when (requestCode) {
                 1 -> {
                     fotoUri1 = data.data
-                    Toast.makeText(this, "Primera Foto Guardada Con Éxito", Toast.LENGTH_SHORT)
+                    Toast.makeText(this, "Segunda Foto Guardada Con Éxito", Toast.LENGTH_SHORT)
                         .show()
                 }
 
                 2 -> {
                     fotoUri2 = data.data
-                    Toast.makeText(this, "Segunda Foto Guardada Con Éxito", Toast.LENGTH_SHORT)
+                    Toast.makeText(this, "Primera Foto Guardada Con Éxito", Toast.LENGTH_SHORT)
                         .show()
                 }
             }
@@ -190,45 +190,66 @@ class RegistrarBiciActivity : BaseNavigationActivity() {
         val sharedPref = getSharedPreferences("MisDatos", MODE_PRIVATE)
         val correo = sharedPref.getString("nombreUsuario", "Desconocido")
         val id = FirebaseAuth.getInstance().currentUser?.uid
+
         if (nombre.isEmpty() || apellidos.isEmpty() || color.isEmpty() || cedula.isEmpty() || marco.isEmpty()) {
             Toast.makeText(this, "Llene Todos los Campos Por Favor", Toast.LENGTH_SHORT).show()
             return
         }
 
-        // Creación de la instancia de BiciData
-        val biciData = BiciData(nombre, apellidos, color, cedula, marco, tipoVehiculo, correo.toString(), id.toString())
-
+        // First check if vehicle already exists
         db.collection("Bici_Usuarios")
             .whereEqualTo("numero", marco)
-            .addSnapshotListener { documents, e ->
-                if (documents != null) {
-                    for (document in documents) {
-                        if (document.exists()) {
-                            Toast.makeText(this, "Error, el vehiculo ya esta registrado", Toast.LENGTH_LONG).show()
-                            limpiarCampos()
-                        } else {
-                            db.collection("Bici_Usuarios").add(biciData)
-                                .addOnSuccessListener { documentReference ->
-                                    User(fotoUri1, cedula)
-                                    subirFoto(fotoUri2, marco, documentReference.id)
-                                    Toast.makeText(
-                                        this,
-                                        "Datos guardados exitosamente",
-                                        Toast.LENGTH_SHORT
-                                    )
-                                        .show()
-                                    limpiarCampos()
+            .get()
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    if (task.result?.isEmpty == false) {
+                        // Vehicle already exists
+                        Toast.makeText(this, "Error, el vehículo ya está registrado", Toast.LENGTH_LONG).show()
+                        limpiarCampos()
+                    } else {
+                        // Vehicle doesn't exist, proceed with registration
+                        val biciData = BiciData(
+                            nombre,
+                            apellidos,
+                            color,
+                            cedula,
+                            marco,
+                            tipoVehiculo,
+                            correo.toString(),
+                            id.toString()
+                        )
+
+                        db.collection("Bici_Usuarios")
+                            .add(biciData)
+                            .addOnSuccessListener { documentReference ->
+                                // Upload photos after successful registration
+                                fotoUri1?.let { uri ->
+                                    User(uri, cedula)
                                 }
-                                .addOnFailureListener {
-                                    Toast.makeText(
-                                        this,
-                                        "Error al guardar los datos",
-                                        Toast.LENGTH_SHORT
-                                    )
-                                        .show()
+                                fotoUri2?.let { uri ->
+                                    subirFoto(uri, marco, documentReference.id)
                                 }
-                        }
+                                Toast.makeText(
+                                    this,
+                                    "Datos guardados exitosamente",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                                limpiarCampos()
+                            }
+                            .addOnFailureListener {
+                                Toast.makeText(
+                                    this,
+                                    "Error al guardar los datos",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            }
                     }
+                } else {
+                    Toast.makeText(
+                        this,
+                        "Error al verificar el registro: ${task.exception?.message}",
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
             }
     }
