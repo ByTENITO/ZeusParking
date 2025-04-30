@@ -185,7 +185,7 @@
                             android:layout_marginBottom="16dp">
 
                             <com.google.android.material.button.MaterialButton
-                                android:id="@+id/AgregarFoto2_BTN"
+                                android:id="@+id/AgregarFoto1_BTN"
                                 style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
@@ -196,7 +196,7 @@
                                 app:strokeColor="@color/Botones"/>
 
                             <com.google.android.material.button.MaterialButton
-                                android:id="@+id/AgregarFoto1_BTN"
+                                android:id="@+id/AgregarFoto2_BTN"
                                 style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"

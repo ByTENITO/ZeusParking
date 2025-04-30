@@ -167,13 +167,13 @@ class RegistrarBiciActivity : BaseNavigationActivity() {
             when (requestCode) {
                 1 -> {
                     fotoUri1 = data.data
-                    Toast.makeText(this, "Segunda Foto Guardada Con Éxito", Toast.LENGTH_SHORT)
+                    Toast.makeText(this, "Foto Guardada Con Éxito", Toast.LENGTH_SHORT)
                         .show()
                 }
 
                 2 -> {
                     fotoUri2 = data.data
-                    Toast.makeText(this, "Primera Foto Guardada Con Éxito", Toast.LENGTH_SHORT)
+                    Toast.makeText(this, "Foto Guardada Con Éxito", Toast.LENGTH_SHORT)
                         .show()
                 }
             }
