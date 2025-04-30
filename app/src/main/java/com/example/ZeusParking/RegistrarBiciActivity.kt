@@ -45,7 +45,7 @@ class RegistrarBiciActivity : BaseNavigationActivity() {
         val color: String,
         val cedula: String,
         val numero: String,
-        val tipo: String,
+        var tipo: String,
         val correo: String,
         val id: String
     ) : java.io.Serializable
@@ -87,17 +87,17 @@ class RegistrarBiciActivity : BaseNavigationActivity() {
                 id: Long
             ) {
                 when (position) {
-                    1 -> {
+                    1, 2 -> {
                         marcoNum.hint = "4 Ultimos Numeros"
                         marcoNum.inputType = InputType.TYPE_CLASS_NUMBER
                         marcoNum.filters = arrayOf(InputFilter.LengthFilter(20))
                     }
 
-                    2, 3, 4 -> {
+                    3, 4, 5 -> {
                         marcoNum.hint = when (position) {
-                            2 -> "Placa (Ej. abc123)"
                             3 -> "Placa (Ej. abc123)"
-                            4 -> "Número de Furgón"
+                            4 -> "Placa (Ej. abc123)"
+                            5 -> "Número de Furgón"
                             else -> "Número de Marco"
                         }
                         marcoNum.inputType =
@@ -186,7 +186,7 @@ class RegistrarBiciActivity : BaseNavigationActivity() {
         val color = colorEd.text.toString()
         val cedula = cedulaNum.text.toString()
         val marco = marcoNum.text.toString()
-        val tipoVehiculo = tiposSpinner.selectedItem.toString()
+        var tipoVehiculo = tiposSpinner.selectedItem.toString()
         val sharedPref = getSharedPreferences("MisDatos", MODE_PRIVATE)
         val correo = sharedPref.getString("nombreUsuario", "Desconocido")
         val id = FirebaseAuth.getInstance().currentUser?.uid
@@ -208,6 +208,9 @@ class RegistrarBiciActivity : BaseNavigationActivity() {
                         limpiarCampos()
                     } else {
                         // Vehicle doesn't exist, proceed with registration
+                        if (tipoVehiculo == "Patineta Electrica"){
+                            tipoVehiculo = "Bicicleta"
+                        }
                         val biciData = BiciData(
                             nombre,
                             apellidos,

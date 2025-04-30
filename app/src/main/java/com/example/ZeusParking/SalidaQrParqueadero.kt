@@ -55,17 +55,17 @@ class SalidaQrParqueadero : BaseNavigationActivity() {
                 id: Long
             ) {
                 when (position) {
-                    1 -> {
+                    1, 2 -> {
                         marcoNumSalida.hint = "Número de Marco"
                         marcoNumSalida.inputType = InputType.TYPE_CLASS_NUMBER
                         marcoNumSalida.filters = arrayOf(InputFilter.LengthFilter(20))
                     }
 
-                    2, 3, 4 -> {
+                    3, 4, 5 -> {
                         marcoNumSalida.hint = when (position) {
-                            2 -> "Placa (Ej. ABC-123)"
                             3 -> "Placa (Ej. ABC-123)"
-                            4 -> "Numero de Furgon"
+                            4 -> "Placa (Ej. ABC-123)"
+                            5 -> "Numero de Furgon"
                             else -> "Numero de Marco"
                         }
                         marcoNumSalida.inputType =
@@ -131,9 +131,12 @@ class SalidaQrParqueadero : BaseNavigationActivity() {
         scanner.process(image)
             .addOnSuccessListener { barcodes ->
                 for (barcode in barcodes) {
-                    val tiposSpinner = tiposSpinnerSalida.selectedItem.toString()
+                    var tiposSpinner = tiposSpinnerSalida.selectedItem.toString()
                     val id = marcoNumSalida.text.toString()
                     val qrText = barcode.displayValue
+                    if (tiposSpinner == "Patineta Electrica"){
+                        tiposSpinner = "Bicicleta"
+                    }
                     qrText?.let {
                         escaneoRealizado = true
                         verificarSalida(qrText, tiposSpinner, id)

@@ -3,6 +3,7 @@
     <string-array name="items">
         <item>Tipo de Vehiculo</item>
         <item>Bicicleta</item>
+        <item>Patineta Electrica</item>
         <item>Motocicleta</item>
         <item>Vehiculo Particular</item>
         <item>Furgon</item>
