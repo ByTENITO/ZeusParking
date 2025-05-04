@@ -1,14 +1,22 @@
 package com.example.parquiatenov10
 
+import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.Color
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import android.view.animation.AnimationUtils
+import android.widget.ArrayAdapter
+import android.widget.Button
 import android.widget.ImageView
+import android.widget.Spinner
 import android.widget.TextView
+import android.widget.Toast
 import com.example.ZeusParking.BaseNavigationActivity
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 import com.google.zxing.BarcodeFormat
 import com.google.zxing.EncodeHintType
 import com.google.zxing.MultiFormatWriter
@@ -18,22 +26,53 @@ import java.util.Date
 import java.util.Locale
 
 class QrActivity : BaseNavigationActivity() {
+    private var database = FirebaseFirestore.getInstance()
     private lateinit var ivCodigoQR: ImageView
     private lateinit var tvDateTime: TextView
+    private lateinit var  tiposSpinner: Spinner
+    private lateinit var  reserva: Button
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_entrada_qr)
 
-
         ivCodigoQR = findViewById(R.id.ivCodigoSalida)
         tvDateTime = findViewById(R.id.tvDateTime)
+        tiposSpinner = findViewById(R.id.Tipos_SpinnerQR)
+        reserva = findViewById(R.id.Reserva_BTN)
 
+        val adapter = ArrayAdapter.createFromResource(this, R.array.items, R.layout.estilo_spinner)
+        adapter.setDropDownViewResource(R.layout.estilo_spinner)
+        tiposSpinner.adapter = adapter
 
         setupNavigation()
         generateAndDisplayQrCode()
         updateDateTime()
         startAnimationsWithDelay()
+
+        reserva.setOnClickListener {
+            val tipoVehi = tiposSpinner.selectedItem.toString()
+            val userId = FirebaseAuth.getInstance().currentUser?.uid.toString()
+            if (tipoVehi == "Tipo de Vehiculo" || userId.isEmpty()){
+                Toast.makeText(this, "Seleccione el tipo del vehiculo que desea reservar", Toast.LENGTH_SHORT).show()
+            }else{
+                database.collection("Reservas")
+                    .whereEqualTo("id",userId)
+                    .get()
+                    .addOnSuccessListener { documents ->
+                        if (documents.isEmpty){
+                            val intent = Intent(this, Reservacion::class.java).apply{
+                                putExtra("ID",userId)
+                                putExtra("Tipo",tipoVehi)
+                                Log.d("tipo de vehiculo", tipoVehi)
+                            }
+                            startActivity(intent)
+                        }else{
+                            Toast.makeText(this, "La reserva ya fue realizada", Toast.LENGTH_SHORT).show()
+                        }
+                    }
+            }
+        }
     }
 
     private fun updateDateTime() {

@@ -74,6 +74,18 @@ class DatosUsuarioSalida : AppCompatActivity() {
             return
         }
 
+        database.collection("Reservas")
+            .whereEqualTo("tipo",vehiculo)
+            .whereEqualTo("numero",idVehiculo)
+            .get()
+            .addOnSuccessListener { documents ->
+                if (!documents.isEmpty){
+                    for (document in documents) {
+                        database.collection("Reservas").document(document.id).delete()
+                    }
+                }
+            }
+
         database.collection("Bici_Usuarios")
             .whereEqualTo("correo",correo)
             .whereEqualTo("tipo",vehiculo)
@@ -180,6 +192,7 @@ class DatosUsuarioSalida : AppCompatActivity() {
             "Furgon" -> "0ctYNlFXwtVw9ylURFXi"
             "Vehiculo Particular" -> "UF0tfabGHGitcj7En6Wy"
             "Bicicleta" -> "IuDC5XlTyhxhqU4It8SD"
+            "Patineta Electrica" -> "IuDC5XlTyhxhqU4It8SD"
             "Motocicleta" -> "ntHgnXs4Qbz074siOrvz"
             else -> return
         }
@@ -187,10 +200,18 @@ class DatosUsuarioSalida : AppCompatActivity() {
             "Furgon" -> "NLRmedawc0M0nrpDt9Ci"
             "Vehiculo Particular" -> "edYUNbYSmPtvu1H6dI93"
             "Bicicleta" -> "sPcLdzFgRF2eAY5BWvFC"
+            "Patineta Electrica" -> "sPcLdzFgRF2eAY5BWvFC"
             "Motocicleta" -> "AQjYvV224T01lrSEeQQY"
             else -> return
         }
+        if (tipoVehiculo == "Patineta Electrica"){
+            Consulta(documentId,"Bicicleta",FijosId)
+        }else{
+            Consulta(documentId, tipoVehiculo, FijosId)
+        }
+    }
 
+    private fun Consulta(documentId: String, tipoVehiculo: String, FijosId: String){
         database.collection("Disponibilidad")
             .document(documentId).get()
             .addOnSuccessListener { document ->

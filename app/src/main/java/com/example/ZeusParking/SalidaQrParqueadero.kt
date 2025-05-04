@@ -131,16 +131,17 @@ class SalidaQrParqueadero : BaseNavigationActivity() {
         scanner.process(image)
             .addOnSuccessListener { barcodes ->
                 for (barcode in barcodes) {
-                    var tiposSpinner = tiposSpinnerSalida.selectedItem.toString()
+                    val tiposSpinner = tiposSpinnerSalida.selectedItem.toString()
                     val id = marcoNumSalida.text.toString()
                     val qrText = barcode.displayValue
-                    if (tiposSpinner == "Patineta Electrica"){
-                        tiposSpinner = "Bicicleta"
-                    }
-                    qrText?.let {
-                        escaneoRealizado = true
-                        verificarSalida(qrText, tiposSpinner, id)
-                        Log.d("QRScanner", "Código QR detectado: $qrText")
+                    if (tiposSpinner == "Tipo de Vehiculo" || id.isEmpty()){
+                        Toast.makeText(this, "Porfavor llene todos los campos", Toast.LENGTH_SHORT).show()
+                    }else {
+                        qrText?.let {
+                            escaneoRealizado = true
+                            verificarSalida(qrText, tiposSpinner, id)
+                            Log.d("QRScanner", "Código QR detectado: $qrText")
+                        }
                     }
                 }
             }

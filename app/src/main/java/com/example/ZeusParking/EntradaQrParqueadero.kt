@@ -55,7 +55,7 @@ class EntradaQrParqueadero : BaseNavigationActivity() {
                 id: Long
             ) {
                 when (position) {
-                    1, 2-> {
+                    1, 2 -> {
                         marcoNumEntrada.hint = "Número de Marco"
                         marcoNumEntrada.inputType = InputType.TYPE_CLASS_NUMBER
                         marcoNumEntrada.filters = arrayOf(InputFilter.LengthFilter(20))
@@ -84,6 +84,7 @@ class EntradaQrParqueadero : BaseNavigationActivity() {
             override fun onNothingSelected(parent: AdapterView<*>) {}
         }
     }
+
     //Navegacion del Sistema
     override fun getCurrentNavigationItem(): Int = R.id.entrada
 
@@ -134,16 +135,17 @@ class EntradaQrParqueadero : BaseNavigationActivity() {
         scanner.process(image)
             .addOnSuccessListener { barcodes ->
                 for (barcode in barcodes) {
-                    var tiposSpinner = tiposSpinnerEntrada.selectedItem.toString()
+                    val tiposSpinner = tiposSpinnerEntrada.selectedItem.toString()
                     val id = marcoNumEntrada.text.toString()
                     val qrText = barcode.displayValue
-                    if (tiposSpinner == "Patineta Electrica"){
-                        tiposSpinner = "Bicicleta"
-                    }
-                    qrText?.let {
-                        escaneoRealizado = true
-                        verificarEntrada(qrText, tiposSpinner, id)
-                        Log.d("QRScanner", "Código QR detectado: $qrText")
+                    if (tiposSpinner == "Tipo de Vehiculo" || id.isEmpty()){
+                        Toast.makeText(this, "Porfavor llene todos los campos", Toast.LENGTH_SHORT).show()
+                    }else{
+                        qrText?.let {
+                            escaneoRealizado = true
+                            verificarEntrada(qrText, tiposSpinner, id)
+                            Log.d("QRScanner", "Código QR detectado: $qrText")
+                        }
                     }
                 }
             }
@@ -182,14 +184,14 @@ class EntradaQrParqueadero : BaseNavigationActivity() {
                     for (document in documents) {
                         database.collection("Salida").document(document.id).delete()
                     }
+                    val intent = Intent(this, DatosUsuarioEntrada::class.java).apply {
+                        putExtra("correo", correo)
+                        putExtra("tipo", vehiculo)
+                        putExtra("id", idVehiculo)
+                    }
+                    Log.d("IntentData", "Correo: $correo, Tipo: $vehiculo, ID: $idVehiculo")
+                    startActivity(intent)
                 }
-                val intent = Intent(this, DatosUsuarioEntrada::class.java).apply {
-                    putExtra("correo", correo)
-                    putExtra("tipo",vehiculo)
-                    putExtra("id",idVehiculo)
-                }
-                Log.d("IntentData", "Correo: $correo, Tipo: $vehiculo, ID: $idVehiculo")
-                startActivity(intent)
             }
             .addOnFailureListener { e ->
                 Log.e("Firestore", "Error al verificar salida: ", e)

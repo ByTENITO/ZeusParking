@@ -14,7 +14,6 @@ import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import com.squareup.picasso.Picasso
-import java.io.File
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 
@@ -87,8 +86,17 @@ class DatosUsuarioEntrada : AppCompatActivity() {
                     }
                 }
             }
-
-        registrarIngreso(correo, vehiculo, idVehiculo)
+        database.collection("Reservas")
+            .whereEqualTo("tipo",vehiculo)
+            .whereEqualTo("numero",idVehiculo)
+            .get()
+            .addOnSuccessListener { documents ->
+                if (documents.isEmpty){
+                    registrarIngreso(correo, vehiculo, idVehiculo)
+                }else{
+                    registroEntrada(correo, vehiculo, idVehiculo)
+                }
+            }
 
         botonSalida.setOnClickListener {
             finish()
@@ -164,6 +172,49 @@ class DatosUsuarioEntrada : AppCompatActivity() {
             }
     }
 
+    private fun registroEntrada(correo: String, vehiculo: String, idVehiculo: String) {
+        database.collection("Bici_Usuarios")
+            .whereEqualTo("correo", correo)
+            .whereEqualTo("tipo", vehiculo)
+            .whereEqualTo("numero", idVehiculo)
+            .get()
+            .addOnSuccessListener { documents ->
+                if (documents.isEmpty) {
+                    Log.d("Firestore", "No se encontraron documentos con correo: $correo")
+                    Toast.makeText(this, "No se encontraron datos del usuario", Toast.LENGTH_SHORT).show()
+                } else {
+                    for (document in documents) {
+                        val biciData = BiciData(
+                            nombre = document.getString("nombre") ?: "",
+                            apellidos = document.getString("apellidos") ?: "",
+                            color = document.getString("color") ?: "",
+                            cedula = document.getString("cedula") ?: "",
+                            placa = document.getString("numero") ?: "",
+                            tipo = document.getString("tipo") ?: "",
+                            correo = document.getString("correo") ?: "",
+                            fechaHora = fechaHoraFormateada.toString()
+                        )
+
+                        // Actualizar la interfaz
+                        actualizarInterfaz(biciData)
+
+                        // Registrar el entrada
+                        database.collection("Entrada")
+                            .add(biciData)
+                            .addOnSuccessListener {
+                                Toast.makeText(this, "Datos cargados", Toast.LENGTH_SHORT).show()
+                            }
+                            .addOnFailureListener {
+                                Toast.makeText(this, "No se cargaron los datos", Toast.LENGTH_SHORT).show()
+                            }
+                    }
+                }
+            }
+            .addOnFailureListener { e ->
+                Log.e("Firestore", "Error al registrar salio: ", e)
+            }
+    }
+
     private fun actualizarInterfaz(biciData: BiciData) {
         correoTXT.text = biciData.correo
         colorTXT.text = biciData.color
@@ -178,10 +229,17 @@ class DatosUsuarioEntrada : AppCompatActivity() {
             "Furgon" -> "0ctYNlFXwtVw9ylURFXi"
             "Vehiculo Particular" -> "UF0tfabGHGitcj7En6Wy"
             "Bicicleta" -> "IuDC5XlTyhxhqU4It8SD"
+            "Patineta Electrica" -> "IuDC5XlTyhxhqU4It8SD"
             "Motocicleta" -> "ntHgnXs4Qbz074siOrvz"
             else -> return
         }
-
+        if (tipoVehiculo == "Patineta Electrica"){
+            Consulta(documentId,"Bicicleta")
+        }else{
+            Consulta(documentId, tipoVehiculo)
+        }
+    }
+    private fun Consulta(documentId: String, tipoVehiculo: String){
         database.collection("Disponibilidad").document(documentId)
             .get()
             .addOnSuccessListener { document ->

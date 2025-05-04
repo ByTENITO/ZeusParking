@@ -56,5 +56,6 @@
     <string name="nombres">Nombres</string>
     <string name="cedula">Cedula</string>
     <string name="sube_aqui_tus_fotos">Sube aqui tus fotos 👇🏼</string>
+    <string name="reservar">Reservar</string>
 
 </resources>

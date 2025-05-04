@@ -186,7 +186,7 @@ class RegistrarBiciActivity : BaseNavigationActivity() {
         val color = colorEd.text.toString()
         val cedula = cedulaNum.text.toString()
         val marco = marcoNum.text.toString()
-        var tipoVehiculo = tiposSpinner.selectedItem.toString()
+        val tipoVehiculo = tiposSpinner.selectedItem.toString()
         val sharedPref = getSharedPreferences("MisDatos", MODE_PRIVATE)
         val correo = sharedPref.getString("nombreUsuario", "Desconocido")
         val id = FirebaseAuth.getInstance().currentUser?.uid
@@ -208,9 +208,6 @@ class RegistrarBiciActivity : BaseNavigationActivity() {
                         limpiarCampos()
                     } else {
                         // Vehicle doesn't exist, proceed with registration
-                        if (tipoVehiculo == "Patineta Electrica"){
-                            tipoVehiculo = "Bicicleta"
-                        }
                         val biciData = BiciData(
                             nombre,
                             apellidos,
