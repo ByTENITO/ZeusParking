@@ -3,6 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:background="@drawable/fondo"
     android:padding="16dp">
 
     <WebView
@@ -20,7 +21,7 @@
         android:layout_marginTop="16dp"
         android:text="Cerrar"
         android:minWidth="120dp"
-        android:backgroundTint="@color/Botones"
-        android:textColor="@android:color/white" />
+        android:backgroundTint="@color/Principal"
+        android:textColor="@color/Texto_pastel" />
 
 </LinearLayout>

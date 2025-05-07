@@ -12,84 +12,83 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:fillViewport="true"
-        android:clipToPadding="false">
+        android:clipToPadding="false"
+        android:paddingBottom="16dp">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:gravity="center_horizontal"
-            android:padding="16dp">
+            android:padding="12dp">
 
-            <!-- Title -->
+            <!-- Título compacto -->
             <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/DatosUsuario"
-                style="@style/TextAppearance.MaterialComponents.Headline5"
+                style="@style/TextAppearance.MaterialComponents.Headline6"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:layout_marginBottom="24dp"
+                android:layout_marginTop="12dp"
+                android:layout_marginBottom="16dp"
                 android:text="Datos de Usuario"
-                android:textColor="@color/white"/>
+                android:textColor="@color/Texto_pastel"/>
 
-            <!-- User Section -->
+            <!-- Sección Usuario compacta -->
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:cardBackgroundColor="@color/Navegacion"
-                app:cardCornerRadius="12dp"
-                app:cardElevation="6dp"
-                app:strokeColor="@color/white"
+                app:cardCornerRadius="10dp"
+                app:cardElevation="4dp"
+                app:strokeColor="@color/Principal"
                 app:strokeWidth="1dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:padding="8dp">
+                    android:padding="6dp">
 
-                    <!-- User Photo Title -->
                     <com.google.android.material.textview.MaterialTextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal"
-                        android:layout_marginTop="8dp"
+                        android:layout_marginTop="6dp"
                         android:text="Foto del Usuario"
-                        android:textColor="@color/white"
-                        android:textSize="16sp"
+                        android:textColor="@color/Texto_pastel"
+                        android:textSize="15sp"
                         android:textStyle="bold"/>
 
-                    <!-- User Image -->
                     <com.google.android.material.imageview.ShapeableImageView
                         android:id="@+id/fotoUsuario"
-                        android:layout_width="150dp"
-                        android:layout_height="150dp"
+                        android:layout_width="120dp"
+                        android:layout_height="120dp"
                         android:layout_gravity="center_horizontal"
-                        android:layout_margin="16dp"
+                        android:layout_margin="12dp"
                         android:contentDescription="@string/todo"
                         android:scaleType="centerCrop"
                         app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.App.CircleImage"
                         tools:srcCompat="@tools:sample/avatars" />
 
-                    <!-- User Info -->
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="vertical"
-                        android:padding="16dp">
+                        android:padding="12dp">
 
-                        <!-- Email Row -->
+                        <!-- Filas de información compactas -->
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginBottom="12dp"
+                            android:layout_marginBottom="8dp"
                             android:orientation="horizontal">
 
                             <com.google.android.material.textview.MaterialTextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="Correo:"
-                                android:textColor="@color/white"
+                                android:textColor="@color/Texto_pastel"
+                                android:textSize="14sp"
                                 android:textStyle="bold"/>
 
                             <com.google.android.material.textview.MaterialTextView
@@ -97,23 +96,24 @@
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
-                                android:layout_marginStart="12dp"
+                                android:layout_marginStart="8dp"
                                 android:text="No disponible"
-                                android:textColor="@color/white"/>
+                                android:textColor="@color/Blanco"
+                                android:textSize="14sp"/>
                         </LinearLayout>
 
-                        <!-- Name Row -->
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginBottom="12dp"
+                            android:layout_marginBottom="8dp"
                             android:orientation="horizontal">
 
                             <com.google.android.material.textview.MaterialTextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="Nombre:"
-                                android:textColor="@color/white"
+                                android:textColor="@color/Texto_pastel"
+                                android:textSize="14sp"
                                 android:textStyle="bold"/>
 
                             <com.google.android.material.textview.MaterialTextView
@@ -121,12 +121,12 @@
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
-                                android:layout_marginStart="12dp"
+                                android:layout_marginStart="8dp"
                                 android:text="No disponible"
-                                android:textColor="@color/white"/>
+                                android:textColor="@color/Blanco"
+                                android:textSize="14sp"/>
                         </LinearLayout>
 
-                        <!-- Last Name Row -->
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -136,7 +136,8 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="Apellido:"
-                                android:textColor="@color/white"
+                                android:textColor="@color/Texto_pastel"
+                                android:textSize="14sp"
                                 android:textStyle="bold"/>
 
                             <com.google.android.material.textview.MaterialTextView
@@ -144,73 +145,71 @@
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
-                                android:layout_marginStart="12dp"
+                                android:layout_marginStart="8dp"
                                 android:text="No disponible"
-                                android:textColor="@color/white"/>
+                                android:textColor="@color/Blanco"
+                                android:textSize="14sp"/>
                         </LinearLayout>
                     </LinearLayout>
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
-            <!-- Vehicle Section -->
+            <!-- Sección Vehículo compacta -->
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
+                android:layout_marginTop="16dp"
                 app:cardBackgroundColor="@color/Navegacion"
-                app:cardCornerRadius="12dp"
-                app:cardElevation="6dp"
-                app:strokeColor="@color/white"
+                app:cardCornerRadius="10dp"
+                app:cardElevation="4dp"
+                app:strokeColor="@color/Principal"
                 app:strokeWidth="1dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:padding="8dp">
+                    android:padding="6dp">
 
-                    <!-- Vehicle Photo Title -->
                     <com.google.android.material.textview.MaterialTextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal"
-                        android:layout_marginTop="8dp"
+                        android:layout_marginTop="6dp"
                         android:text="Foto del Vehículo"
-                        android:textColor="@color/white"
-                        android:textSize="16sp"
+                        android:textColor="@color/Texto_pastel"
+                        android:textSize="15sp"
                         android:textStyle="bold"/>
 
-                    <!-- Vehicle Image -->
                     <com.google.android.material.imageview.ShapeableImageView
                         android:id="@+id/fotoBici"
-                        android:layout_width="150dp"
-                        android:layout_height="150dp"
+                        android:layout_width="120dp"
+                        android:layout_height="120dp"
                         android:layout_gravity="center_horizontal"
-                        android:layout_margin="16dp"
+                        android:layout_margin="12dp"
                         android:contentDescription="@string/todo"
                         android:scaleType="centerCrop"
                         app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.App.CircleImage"
                         tools:srcCompat="@tools:sample/avatars" />
 
-                    <!-- Vehicle Info -->
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="vertical"
-                        android:padding="16dp">
+                        android:padding="12dp">
 
-                        <!-- Color Row -->
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginBottom="12dp"
+                            android:layout_marginBottom="8dp"
                             android:orientation="horizontal">
 
                             <com.google.android.material.textview.MaterialTextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="Color:"
-                                android:textColor="@color/white"
+                                android:textColor="@color/Texto_pastel"
+                                android:textSize="14sp"
                                 android:textStyle="bold"/>
 
                             <com.google.android.material.textview.MaterialTextView
@@ -218,23 +217,24 @@
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
-                                android:layout_marginStart="12dp"
+                                android:layout_marginStart="8dp"
                                 android:text="No disponible"
-                                android:textColor="@color/white"/>
+                                android:textColor="@color/Blanco"
+                                android:textSize="14sp"/>
                         </LinearLayout>
 
-                        <!-- ID Row -->
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginBottom="12dp"
+                            android:layout_marginBottom="8dp"
                             android:orientation="horizontal">
 
                             <com.google.android.material.textview.MaterialTextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Placa/Num.marco:"
-                                android:textColor="@color/white"
+                                android:text="Placa - Num Marco:"
+                                android:textColor="@color/Texto_pastel"
+                                android:textSize="14sp"
                                 android:textStyle="bold"/>
 
                             <com.google.android.material.textview.MaterialTextView
@@ -242,12 +242,12 @@
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
-                                android:layout_marginStart="12dp"
+                                android:layout_marginStart="8dp"
                                 android:text="No disponible"
-                                android:textColor="@color/white"/>
+                                android:textColor="@color/Blanco"
+                                android:textSize="14sp"/>
                         </LinearLayout>
 
-                        <!-- Type Row -->
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -257,7 +257,8 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="Tipo:"
-                                android:textColor="@color/white"
+                                android:textColor="@color/Texto_pastel"
+                                android:textSize="14sp"
                                 android:textStyle="bold"/>
 
                             <com.google.android.material.textview.MaterialTextView
@@ -265,24 +266,27 @@
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
-                                android:layout_marginStart="12dp"
+                                android:layout_marginStart="8dp"
                                 android:text="No disponible"
-                                android:textColor="@color/white"/>
+                                android:textColor="@color/Blanco"
+                                android:textSize="14sp"/>
                         </LinearLayout>
                     </LinearLayout>
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
-            <!-- Exit Button -->
+            <!-- Botón Salir compacto -->
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/Salida"
                 style="@style/Widget.MaterialComponents.Button"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="32dp"
-                android:layout_marginBottom="32dp"
+                android:layout_height="44dp"
+                android:layout_marginTop="24dp"
+                android:layout_marginBottom="16dp"
                 android:text="Salir"
-                app:backgroundTint="@color/Botones"/>
+                android:textSize="15sp"
+                app:backgroundTint="@color/Principal"
+                app:cornerRadius="22dp"/>
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

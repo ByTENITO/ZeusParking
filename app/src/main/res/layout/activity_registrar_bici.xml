@@ -5,216 +5,218 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/fondo_regis"
+    android:background="@drawable/fondo"
     tools:context=".RegistrarBiciActivity">
 
-    <!-- Scrollable content area -->
+    <!-- Área de contenido desplazable con padding ajustado -->
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:fillViewport="true"
         android:clipToPadding="false"
-        android:paddingBottom="72dp"
-        android:paddingTop="32dp">
+        android:paddingBottom="68dp"
+        android:paddingTop="20dp">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="16dp">
+            android:padding="12dp">
 
-            <!-- Contenedor centrado -->
+            <!-- Contenedor principal mejor balanceado -->
             <LinearLayout
                 android:id="@+id/centerContainer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:gravity="center"
-                android:layout_centerVertical="true"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.5">
+                app:layout_constraintTop_toTopOf="parent">
 
-                <!-- Card de formulario -->
+                <!-- Tarjeta de formulario con espacio adecuado -->
                 <com.google.android.material.card.MaterialCardView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="16dp"
+                    android:layout_marginHorizontal="12dp"
                     app:cardCornerRadius="8dp"
-                    app:cardElevation="4dp"
-                    app:strokeColor="@color/Botones"
+                    app:cardElevation="3dp"
+                    app:strokeColor="@color/Principal"
                     app:strokeWidth="1dp">
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="vertical"
-                        android:padding="24dp">
+                        android:padding="16dp">
 
-                        <!-- Campo de Nombre -->
+                        <!-- Campos de entrada con mejor espaciado -->
                         <com.google.android.material.textfield.TextInputLayout
                             android:id="@+id/NombreLayout"
                             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginBottom="8dp"
+                            android:layout_marginBottom="6dp"
                             android:hint="@string/nombres"
-                            app:boxStrokeColor="@color/Botones"
-                            app:hintTextColor="@android:color/white">
+                            app:boxStrokeColor="@color/Secundario"
+                            app:hintTextColor="@color/Texto_pastel">
 
                             <com.google.android.material.textfield.TextInputEditText
                                 android:id="@+id/Nombre_ED"
                                 android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
+                                android:layout_height="48dp"
                                 android:inputType="text"
-                                android:textColor="@android:color/white"/>
+                                android:textColor="@color/Texto_pastel"/>
                         </com.google.android.material.textfield.TextInputLayout>
 
-                        <!-- Campo de Apellidos -->
                         <com.google.android.material.textfield.TextInputLayout
                             android:id="@+id/ApellidosLayout"
                             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginBottom="8dp"
+                            android:layout_marginBottom="6dp"
                             android:hint="@string/apellidos"
-                            app:boxStrokeColor="@color/Botones"
-                            app:hintTextColor="@android:color/white">
+                            app:boxStrokeColor="@color/Secundario"
+                            app:hintTextColor="@color/Texto_pastel">
 
                             <com.google.android.material.textfield.TextInputEditText
                                 android:id="@+id/Apellidos_ED"
                                 android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
+                                android:layout_height="48dp"
                                 android:inputType="text"
-                                android:textColor="@android:color/white"/>
+                                android:textColor="@color/Texto_pastel"/>
                         </com.google.android.material.textfield.TextInputLayout>
 
-                        <!-- Campo de Cédula -->
                         <com.google.android.material.textfield.TextInputLayout
                             android:id="@+id/CedulaLayout"
                             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginBottom="8dp"
+                            android:layout_marginBottom="6dp"
                             android:hint="@string/cedula"
-                            app:boxStrokeColor="@color/Botones"
-                            app:hintTextColor="@android:color/white">
+                            app:boxStrokeColor="@color/Secundario"
+                            app:hintTextColor="@color/Texto_pastel">
 
                             <com.google.android.material.textfield.TextInputEditText
                                 android:id="@+id/Cedula_NUM"
                                 android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
+                                android:layout_height="48dp"
                                 android:inputType="number"
-                                android:textColor="@android:color/white"/>
+                                android:textColor="@color/Texto_pastel"/>
                         </com.google.android.material.textfield.TextInputLayout>
 
-                        <!-- Spinner de Tipo -->
+                        <!-- Spinner con TextInputLayout para consistencia -->
                         <com.google.android.material.textfield.TextInputLayout
                             android:id="@+id/spinnerContainer"
                             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginBottom="8dp"
+                            android:layout_marginBottom="6dp"
                             android:hint="Tipo"
-                            app:boxStrokeColor="@color/Botones"
-                            app:hintTextColor="@android:color/white">
+                            app:boxStrokeColor="@color/Secundario"
+                            app:hintTextColor="@color/Texto_pastel">
 
                             <Spinner
                                 android:id="@+id/Tipos_Spinner"
                                 android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
+                                android:layout_height="48dp"
                                 android:backgroundTint="@color/Navegacion"
                                 android:popupBackground="@color/Navegacion"
-                                android:textColor="@android:color/white"/>
+                                android:textColor="@color/Texto_pastel"/>
                         </com.google.android.material.textfield.TextInputLayout>
 
-                        <!-- Campo de Número de Marco -->
                         <com.google.android.material.textfield.TextInputLayout
                             android:id="@+id/MarcoLayout"
                             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginBottom="8dp"
-                            app:boxStrokeColor="@color/Botones"
-                            app:hintTextColor="@android:color/white">
+                            android:layout_marginBottom="6dp"
+                            app:boxStrokeColor="@color/Secundario"
+                            app:hintTextColor="@color/Texto_pastel">
 
                             <com.google.android.material.textfield.TextInputEditText
                                 android:id="@+id/Marco_NUM"
                                 android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
+                                android:layout_height="48dp"
                                 android:inputType="number"
-                                android:textColor="@android:color/white"/>
+                                android:textColor="@color/Texto_pastel"/>
                         </com.google.android.material.textfield.TextInputLayout>
 
-                        <!-- Campo de Color -->
                         <com.google.android.material.textfield.TextInputLayout
                             android:id="@+id/ColorLayout"
                             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginBottom="16dp"
+                            android:layout_marginBottom="12dp"
                             android:hint="@string/color"
-                            app:boxStrokeColor="@color/Botones"
-                            app:hintTextColor="@android:color/white">
+                            app:boxStrokeColor="@color/Secundario"
+                            app:hintTextColor="@color/Texto_pastel">
 
                             <com.google.android.material.textfield.TextInputEditText
                                 android:id="@+id/Color_ED"
                                 android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
+                                android:layout_height="48dp"
                                 android:inputType="text"
-                                android:textColor="@android:color/white"/>
+                                android:textColor="@color/Texto_pastel"/>
                         </com.google.android.material.textfield.TextInputLayout>
 
-                        <!-- Sección de Subida de Foto -->
+                        <!-- Sección de fotos con mejor espaciado -->
                         <TextView
                             android:id="@+id/textView3"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/sube_aqui_tus_fotos"
                             android:textColor="@android:color/white"
-                            android:textSize="16sp"
+                            android:textSize="15sp"
                             android:layout_gravity="center_horizontal"
-                            android:layout_marginBottom="16dp"/>
+                            android:layout_marginBottom="12dp"/>
 
-                        <!-- Botones de Foto -->
+                        <!-- Botones de foto con mejor proporción -->
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:orientation="horizontal"
-                            android:layout_marginBottom="16dp">
+                            android:layout_marginBottom="12dp">
 
                             <com.google.android.material.button.MaterialButton
                                 android:id="@+id/AgregarFoto1_BTN"
                                 style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                                 android:layout_width="0dp"
-                                android:layout_height="wrap_content"
+                                android:layout_height="40dp"
                                 android:layout_weight="1"
-                                android:layout_marginEnd="8dp"
+                                android:layout_marginEnd="6dp"
                                 android:text="Usuario"
-                                android:textColor="@android:color/white"
-                                app:strokeColor="@color/Botones"/>
+                                android:textSize="13sp"
+                                android:textColor="@color/Texto_pastel"
+                                app:cornerRadius="6dp"
+                                app:strokeColor="@color/Principal"/>
 
                             <com.google.android.material.button.MaterialButton
                                 android:id="@+id/AgregarFoto2_BTN"
                                 style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                                 android:layout_width="0dp"
-                                android:layout_height="wrap_content"
+                                android:layout_height="40dp"
                                 android:layout_weight="1"
                                 android:text="Vehiculo"
-                                android:textColor="@android:color/white"
-                                app:strokeColor="@color/Botones"/>
+                                android:textSize="13sp"
+                                android:textColor="@color/Texto_pastel"
+                                app:cornerRadius="6dp"
+                                app:strokeColor="@color/Principal"/>
                         </LinearLayout>
 
-                        <!-- Botón de Guardar -->
+                        <!-- Botón de guardar con mejor tamaño -->
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/Guardar_BTN"
                             style="@style/Widget.MaterialComponents.Button"
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
+                            android:layout_height="48dp"
                             android:text="@string/guardar"
-                            android:textColor="@color/Navegacion"
-                            app:backgroundTint="@color/Botones"/>
+                            android:textSize="15sp"
+                            app:iconTint="@null"
+                            app:strokeColor="@color/Secundario"
+                            android:textColor="@color/Texto_pastel"
+                            app:backgroundTint="@color/Principal"
+                            app:cornerRadius="8dp"/>
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
             </LinearLayout>

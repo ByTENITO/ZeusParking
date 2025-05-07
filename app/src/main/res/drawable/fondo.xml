@@ -1,0 +1,49 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:aapt="http://schemas.android.com/aapt"
+    android:width="360dp"
+    android:height="640dp"
+    android:viewportWidth="360"
+    android:viewportHeight="640">
+
+    <!-- Fondo con gradiente vertical oscuro -->
+    <path
+        android:pathData="M0,0h360v640h-360z">
+        <aapt:attr name="android:fillColor">
+            <gradient
+                android:type="linear"
+                android:startY="0"
+                android:endY="640"
+                android:startColor="#000000"
+                android:endColor="#1A1A1A"/>
+        </aapt:attr>
+    </path>
+
+    <!-- Ola media (naranja intenso) -->
+    <path
+        android:fillAlpha="0.9"
+        android:pathData="M0,480 C90,520 270,520 360,480 L360,640 L0,640 Z">
+        <aapt:attr name="android:fillColor">
+            <gradient
+                android:type="linear"
+                android:angle="0"
+                android:startColor="#E65100"
+                android:centerColor="#F4511E"
+                android:endColor="#EF6C00"/>
+        </aapt:attr>
+    </path>
+
+    <!-- Ola inferior (amarillo vibrante) -->
+    <path
+        android:fillAlpha="0.9"
+        android:pathData="M0,540 C120,600 240,580 360,620 L360,640 L0,640 Z">
+        <aapt:attr name="android:fillColor">
+            <gradient
+                android:type="linear"
+                android:angle="0"
+                android:startColor="#FFA000"
+                android:centerColor="#FFB300"
+                android:endColor="#FFC107"/>
+        </aapt:attr>
+    </path>
+</vector>
+

@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#121212"
+    tools:context=".RegistroActivity">
+
+    <!-- Sección de logo compacta -->
+    <LinearLayout
+        android:id="@+id/logoSection"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center_horizontal"
+        android:layout_marginTop="12dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintWidth_percent="0.8">
+
+        <ImageView
+            android:id="@+id/logoImageView"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:src="@drawable/logo"
+            android:contentDescription="@string/app_name"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="CREACIÓN DE CUENTA"
+            android:textColor="#FFFFFF"
+            android:textSize="20sp"
+            android:textAlignment="center"
+            android:fontFamily="sans-serif-medium"/>
+    </LinearLayout>
+
+    <!-- Tarjeta de formulario compacta -->
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/formCard"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_marginHorizontal="16dp"
+        app:cardCornerRadius="12dp"
+        app:cardElevation="4dp"
+        app:cardBackgroundColor="#1E1E1E"
+        app:layout_constraintTop_toBottomOf="@id/logoSection"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="REGISTRO DE DATOS"
+                android:textColor="@color/blanco"
+                android:textSize="16sp"
+                android:layout_marginBottom="12dp"/>
+
+            <!-- Campos de entrada compactos -->
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/nombre_input_layout"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="12dp"
+                android:hint="Nombre"
+                app:boxStrokeColor="@color/Secundario"
+                app:hintTextColor="@color/blanco">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/nombre_edittext"
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:inputType="textPersonName"
+                    android:textColor="#FFFFFF"/>
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/apellido_input_layout"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="12dp"
+                android:hint="Apellido"
+                app:boxStrokeColor="@color/Secundario"
+                app:hintTextColor="@color/blanco">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/apellido_edittext"
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:inputType="textPersonName"
+                    android:textColor="#FFFFFF"/>
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/correo_input_layout"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="12dp"
+                android:hint="Correo electrónico"
+                app:boxStrokeColor="@color/Secundario"
+                app:hintTextColor="@color/blanco">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/correo_edittext"
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:inputType="textEmailAddress"
+                    android:textColor="#FFFFFF"/>
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/contrasena_input_layout"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="12dp"
+                android:hint="Contraseña"
+                app:boxStrokeColor="@color/Secundario"
+                app:endIconMode="password_toggle"
+                app:endIconTint="@color/Principal"
+                app:hintTextColor="@color/blanco">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/contrasena_edittext"
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:inputType="textPassword"
+                    android:textColor="#FFFFFF"/>
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/confirmar_contrasena_input_layout"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:hint="Confirmar contraseña"
+                app:boxStrokeColor="@color/Secundario"
+                app:endIconMode="password_toggle"
+                app:endIconTint="@color/Principal"
+                app:hintTextColor="@color/blanco">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/confirmar_contrasena_edittext"
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:inputType="textPassword"
+                    android:textColor="#FFFFFF"/>
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <!-- Botón compacto -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/registrar_button"
+                android:layout_width="match_parent"
+                android:layout_height="44dp"
+                android:text="Registrarse"
+                android:textColor="@color/Negro"
+                android:textSize="15sp"
+                app:cornerRadius="22dp"
+                app:backgroundTint="@color/Principal"/>
+
+            <!-- Texto de volver más compacto -->
+            <TextView
+                android:id="@+id/volver_login_textview"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:text="¿Ya tienes cuenta? Inicia sesión"
+                android:textColor="@color/blanco"
+                android:textSize="13sp"
+                android:layout_gravity="center_horizontal"/>
+        </LinearLayout>
+    </com.google.android.material.card.MaterialCardView>
+
+    <!-- Fondo inferior más compacto -->
+    <ImageView
+        android:id="@+id/waveBackgroundBottom"
+        android:layout_width="match_parent"
+        android:layout_height="400dp"
+        android:scaleType="fitXY"
+        android:src="@drawable/gradient_abajo"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+</androidx.constraintlayout.widget.ConstraintLayout>

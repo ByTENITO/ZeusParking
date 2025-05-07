@@ -3,9 +3,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.webkit.WebView
-import android.webkit.WebViewClient
 import android.widget.Button
-import android.widget.Toast
 import androidx.fragment.app.DialogFragment
 import com.example.parquiatenov10.AuthActivity
 import com.example.parquiatenov10.R
@@ -13,13 +11,13 @@ import com.example.parquiatenov10.R
 class TerminosCondicionesDialogFragment : DialogFragment() {
 
     companion object {
-        private const val ARG_URL = "url"
+        private const val ARG_CONTENT = "content"
         private const val ARG_TITLE = "title"
 
-        fun newInstance(url: String, title: String): TerminosCondicionesDialogFragment {
+        fun newInstance(content: String, title: String): TerminosCondicionesDialogFragment {
             val fragment = TerminosCondicionesDialogFragment()
             val args = Bundle()
-            args.putString(ARG_URL, url)
+            args.putString(ARG_CONTENT, content)
             args.putString(ARG_TITLE, title)
             fragment.arguments = args
             return fragment
@@ -31,14 +29,14 @@ class TerminosCondicionesDialogFragment : DialogFragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        isCancelable = false // Prevent accidental dismissal
+        isCancelable = false
         return inflater.inflate(R.layout.dialog_terminos_condiciones, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val url = arguments?.getString(ARG_URL) ?: ""
+        val content = arguments?.getString(ARG_CONTENT) ?: ""
         val title = arguments?.getString(ARG_TITLE) ?: ""
 
         dialog?.setTitle(title)
@@ -47,13 +45,16 @@ class TerminosCondicionesDialogFragment : DialogFragment() {
         val webView = view.findViewById<WebView>(R.id.webView)
         val closeButton = view.findViewById<Button>(R.id.btnCerrar)
 
-        webView.webViewClient = WebViewClient()
-        webView.settings.javaScriptEnabled = true
-        webView.loadUrl(url)
+        webView.loadDataWithBaseURL(
+            null,
+            content,
+            "text/html",
+            "UTF-8",
+            null
+        )
 
         closeButton.setOnClickListener {
             dismiss()
-            // Notify parent activity to show terms dialog again
             (activity as? AuthActivity)?.showTermsDialogAfterWebViewClose()
         }
     }

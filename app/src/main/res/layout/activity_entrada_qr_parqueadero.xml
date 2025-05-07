@@ -6,156 +6,113 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/fondo"
-    tools:context=".EntradaQrParqueadero">
+    tools:context=".SalidaQrParqueadero">
 
-    <!-- App Bar -->
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@android:color/transparent"
-        android:elevation="0dp">
+        android:background="@android:color/transparent">
 
         <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="@android:color/transparent"
-            app:title="Registro de Entrada"
-            app:titleTextColor="@color/white"
-            app:titleTextAppearance="@style/TextAppearance.MaterialComponents.Headline6"/>
+            app:title="Registro de Salida"
+            app:titleTextColor="@color/Texto_pastel"/>
     </com.google.android.material.appbar.AppBarLayout>
 
-    <!-- Main Content -->
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:fillViewport="true"
+        android:padding="12dp"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:paddingHorizontal="24dp"
-            android:paddingTop="16dp">
+            android:orientation="vertical">
 
-            <!-- Scanner Section -->
             <TextView
                 android:id="@+id/sectionScanner"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="12dp"
                 android:text="ESCANEAR CÓDIGO QR"
-                android:textColor="#E4CC00"
-                android:textSize="14sp"
-                android:textStyle="bold"
-                android:letterSpacing="0.05"/>
+                android:textColor="@color/Principal"
+                android:textSize="13sp"
+                android:textStyle="bold"/>
 
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
-                android:layout_height="380dp"
-                android:layout_marginBottom="32dp"
-                app:cardBackgroundColor="#1E1E1E"
-                app:cardCornerRadius="16dp"
-                app:cardElevation="4dp"
-                app:strokeColor="#E4CC00"
-                app:strokeWidth="1dp">
+                android:layout_height="300dp"
+                app:cardCornerRadius="12dp"
+                app:strokeColor="@color/Principal"
+                app:cardElevation="2dp"
+                app:cardBackgroundColor="@color/Navegacion">
 
-                <RelativeLayout
+                <androidx.camera.view.PreviewView
+                    android:id="@+id/ScannerEntrada"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent">
-
-                    <androidx.camera.view.PreviewView
-                        android:id="@+id/ScannerEntrada"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        app:scaleType="fitCenter"/>
-
-                    <!-- Scanner Frame Overlay -->
-                    <ImageView
-                        android:layout_width="280dp"
-                        android:layout_height="280dp"
-                        android:layout_centerInParent="true"
-                        android:contentDescription="QR frame"/>
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_above="@id/ScannerEntrada"
-                        android:layout_centerHorizontal="true"
-                        android:layout_marginBottom="16dp"
-                        android:text="Apunta al código QR"
-                        android:textColor="#FFFFFF"
-                        android:textSize="16sp"/>
-                </RelativeLayout>
+                    android:layout_height="match_parent"
+                    app:scaleType="fitCenter"/>
             </com.google.android.material.card.MaterialCardView>
-
 
             <TextView
                 android:id="@+id/sectionVehicle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
+                android:layout_marginTop="12dp"
                 android:text="INFORMACIÓN DEL VEHÍCULO"
-                android:textColor="#E4CC00"
-                android:textSize="14sp"
-                android:textStyle="bold"
-                android:letterSpacing="0.05"/>
+                android:textColor="@color/Principal"
+                android:textSize="13sp"
+                android:textStyle="bold"/>
 
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="32dp"
-                app:cardBackgroundColor="#1E1E1E"
-                app:cardCornerRadius="16dp"
-                app:cardElevation="4dp">
+                app:cardCornerRadius="12dp"
+                app:strokeColor="@color/Principal"
+                app:cardElevation="2dp"
+                app:cardBackgroundColor="@color/Navegacion">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:padding="24dp">
+                    android:padding="13dp">
 
-                    <!-- Vehicle Type - Fixed Spinner -->
                     <com.google.android.material.textfield.TextInputLayout
                         android:id="@+id/spinnerLayout"
                         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:minHeight="56dp"
-                        app:boxStrokeColor="#E4CC00"
-                        app:hintTextColor="#E4CC00">
+                        app:boxStrokeColor="@color/Principal">
 
                         <Spinner
                             android:id="@+id/Tipos_SpinnerVigiEntrada"
                             android:layout_width="match_parent"
-                            android:layout_height="56dp"
-                            android:minHeight="56dp"
-                            android:backgroundTint="#E4CC00"
-                            android:popupBackground="#2F2F2F"
-                            android:textColor="#FFFFFF"/>
+                            android:layout_height="48dp"
+                            android:backgroundTint="@color/Principal"
+                            android:popupBackground="@color/Navegacion"/>
                     </com.google.android.material.textfield.TextInputLayout>
-
 
                     <com.google.android.material.textfield.TextInputLayout
                         android:id="@+id/marcoInputLayout"
                         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="24dp"
-                        app:boxStrokeColor="#E4CC00"
+                        android:layout_marginTop="8dp"
+                        app:boxStrokeColor="@color/Principal"
                         app:counterEnabled="true"
                         app:counterMaxLength="20"
-                        app:errorEnabled="true"
-                        app:hintTextColor="#E4CC00">
+                        app:errorEnabled="true">
 
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/Marco_NUMVigiEntrada"
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:inputType="textCapCharacters|textNoSuggestions"
-                            android:textColor="#FFFFFF"
-                            android:textColorHint="#AAAAAA"/>
+                            android:layout_height="48dp"
+                            android:hint="Placa o N° de Marco"
+                            android:textColor="@color/Texto_pastel"/>
                     </com.google.android.material.textfield.TextInputLayout>
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
@@ -168,19 +125,16 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
         android:background="@color/Navegacion"
-        app:labelVisibilityMode="labeled"
         app:menu="@menu/menu_vigi"
         app:itemIconTint="@drawable/nav_item_color"
-        app:itemTextColor="@drawable/nav_text_color"
-        app:layout_constraintBottom_toBottomOf="parent"/>
+        app:itemTextColor="@drawable/nav_text_color"/>
 
-    <!-- Loading Indicator -->
     <com.google.android.material.progressindicator.CircularProgressIndicator
         android:id="@+id/progressIndicator"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
         android:layout_gravity="center"
         android:indeterminate="true"
         android:visibility="gone"
-        app:indicatorColor="#E4CC00"/>
+        app:indicatorColor="@color/Principal"/>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

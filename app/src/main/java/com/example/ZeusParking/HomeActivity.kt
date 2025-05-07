@@ -45,6 +45,9 @@ class HomeActivity : BaseNavigationActivity() {
         setContentView(R.layout.activity_home)
         enableEdgeToEdge()
 
+        //Responsividad
+        Responsividad.inicializar(this)
+
         //Navegacion
         setupNavigation()
 

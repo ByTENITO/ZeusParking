@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <style name="Theme.App.Splash" parent="Theme.AppCompat.Light.NoActionBar">
-        <item name="android:windowBackground">@color/white</item>
+        <item name="android:windowBackground">@color/Blanco</item>
         <item name="android:statusBarColor">@android:color/transparent</item>
     </style>
     <style name="Theme.App.Home" parent="Theme.AppCompat.Light.NoActionBar">
-        <item name="android:windowBackground">@color/white</item>
+        <item name="android:windowBackground">@color/Blanco</item>
         <item name="android:statusBarColor">@android:color/transparent</item>
     </style>
     <style name="ShapeAppearanceOverlay.App.CircleImage" parent="">
@@ -15,6 +15,6 @@
     <!-- In res/values/styles.xml -->
     <style name="ProgressDialogText" parent="TextAppearance.AppCompat.Body2">
         <item name="android:textSize">14sp</item>
-        <item name="android:textColor">@color/white</item>
+        <item name="android:textColor">@color/Blanco</item>
     </style>
 </resources>

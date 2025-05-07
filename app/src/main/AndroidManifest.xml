@@ -30,6 +30,10 @@
             android:screenOrientation="portrait"
             android:exported="false"/>
         <activity
+            android:name=".RegistroActivity"
+            android:screenOrientation="portrait"
+            android:exported="false"/>
+        <activity
             android:name=".DatosUsuarioEntrada"
             android:screenOrientation="portrait"
             android:exported="false" />

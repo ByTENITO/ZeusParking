@@ -1,5 +1,3 @@
-@file:Suppress("DEPRECATION")
-
 package com.example.parquiatenov10
 
 import android.Manifest
@@ -56,20 +54,19 @@ class AuthActivity : AppCompatActivity() {
     private var database = FirebaseFirestore.getInstance()
     private var isShowingTermsDialog = true
     private var termsMenuDialog: AlertDialog? = null
-    private var termsAlreadyShown = false
-    private var isShowingTerms = false
+
 
     //Terminos y condiciones
     private val TERMS_PREFS = "TermsPrefs"
     private val TERMS_ACCEPTED = "terms_accepted"
-    private val URL_TERMINOS = "https://1drv.ms/b/c/5de107aba11da42a/EVSAWbFjha1NpZ6AB6auxjkBawPGbBlKUmds8m2M-1-WgQ?e=yhCybw"
-    private val URL_PRIVACIDAD = "https://1drv.ms/b/c/5de107aba11da42a/Ed1PHGPhXR5HndpgXPT7f50B0YMKp8pVocW5wCHDhw9kjg?e=Duv9CY"
+    private val TERMINOS = "Terminos y Condiciones.HTML"
+    private val TRATAMIENTO = "Tratamiento de Datos.HTML"
 
     //Proyecto
     private val GOOGLE_SIGN_IN = 100
     private lateinit var Google_BTN: Button
     private lateinit var Acceder_BTN: Button
-    private lateinit var Registrarse_BTN: Button
+    private lateinit var Registrarse_BTN: TextView
     private lateinit var Correo_ED: EditText
     private lateinit var Contrasena_ED: EditText
     private lateinit var ForgotPassword_TV: TextView
@@ -86,6 +83,9 @@ class AuthActivity : AppCompatActivity() {
             mostrarDialogoTerminos()
         }
 
+        //Responsividad
+        Responsividad.inicializar(this)
+
         //Terminos y condiciones
         mostrarDialogoTerminos()
 
@@ -99,8 +99,7 @@ class AuthActivity : AppCompatActivity() {
         Correo_ED = findViewById(R.id.Correo_ED)
         Contrasena_ED = findViewById(R.id.Contraseña_ED)
         ForgotPassword_TV = findViewById(R.id.OlvidasteContrasena_TV)
-        val text5 = findViewById<TextView>(R.id.textView5)
-        val text6 = findViewById<TextView>(R.id.textView6)
+
 
         val logo = findViewById<ImageView>(R.id.imageView8)
         val analytics = FirebaseAnalytics.getInstance(this)
@@ -114,8 +113,7 @@ class AuthActivity : AppCompatActivity() {
         Correo_ED.startAnimation(fadeIn)
         Contrasena_ED.startAnimation(fadeIn)
         ForgotPassword_TV.startAnimation(fadeIn)
-        text5.startAnimation(fadeIn)
-        text6.startAnimation(fadeIn)
+
 
         bundle.putString("message", "Integración de Firebase completa")
         analytics.logEvent("InitScreen", bundle)
@@ -207,7 +205,7 @@ class AuthActivity : AppCompatActivity() {
 
         termsMenuDialog?.setOnShowListener {
             termsMenuDialog?.getButton(AlertDialog.BUTTON_NEUTRAL)?.setTextColor(
-                ContextCompat.getColor(this, R.color.Botones)
+                ContextCompat.getColor(this, R.color.Principal)
             )
         }
         termsMenuDialog?.show()
@@ -218,17 +216,18 @@ class AuthActivity : AppCompatActivity() {
             .setTitle("Documentos Legales")
             .setItems(arrayOf("Términos y Condiciones", "Política de Tratamiento de Datos")) { _, which ->
                 when (which) {
-                    0 -> abrirEnlace(URL_TERMINOS, "Términos y Condiciones")
-                    1 -> abrirEnlace(URL_PRIVACIDAD, "Política de Tratamiento de Datos")
+                    0 -> abrirEnlace(TERMINOS, "Términos y Condiciones")
+                    1 -> abrirEnlace(TRATAMIENTO, "Política de Tratamiento de Datos")
                 }
             }
             .setNegativeButton("Cerrar", null)
             .show()
     }
 
-    private fun abrirEnlace(url: String, titulo: String) {
+    private fun abrirEnlace(fileName: String, titulo: String) {
         try {
-            val dialog = TerminosCondicionesDialogFragment.newInstance(url, titulo)
+            val content = LectorAssets.readFileFromAssets(this, fileName)
+            val dialog = TerminosCondicionesDialogFragment.newInstance(content, titulo)
             dialog.show(supportFragmentManager, "TerminosCondicionesDialog")
         } catch (e: Exception) {
             Toast.makeText(this, "Error al cargar el documento", Toast.LENGTH_SHORT).show()
@@ -363,49 +362,11 @@ class AuthActivity : AppCompatActivity() {
                             }
                     }
                 }
-            }
+        }
 
         Registrarse_BTN.setOnClickListener {
-            val email = Correo_ED.text.toString().trim()
-            val password = Contrasena_ED.text.toString()
-
-            if (!validateEmailWithFeedback(email)) {
-                return@setOnClickListener
-            }
-
-            if (!validatePasswordWithFeedback(password)) {
-                return@setOnClickListener
-            }
-
-            auth.fetchSignInMethodsForEmail(email).addOnCompleteListener { task ->
-                if (task.isSuccessful) {
-                    val signInMethods = task.result?.signInMethods ?: emptyList()
-                    if (signInMethods.isNotEmpty()) {
-                        showErrorSnackbar("Ya existe una cuenta con este correo electrónico")
-                        return@addOnCompleteListener
-                    }
-
-                    // Continue with registration if email is not in use
-                    auth.createUserWithEmailAndPassword(email, password).addOnCompleteListener {
-                        if (it.isSuccessful) {
-                            val user = auth.currentUser
-                            user?.sendEmailVerification()?.addOnCompleteListener { verificationTask ->
-                                if (verificationTask.isSuccessful) {
-                                    showSuccessSnackbar("Registro exitoso. Se ha enviado un correo de verificación. Por favor verifica tu correo antes de iniciar sesión.")
-                                    Correo_ED.text.clear()
-                                    Contrasena_ED.text.clear()
-                                } else {
-                                    showErrorSnackbar("Error al enviar el correo de verificación: ${verificationTask.exception?.message}")
-                                }
-                            }
-                        } else {
-                            handleRegistrationError(it.exception)
-                        }
-                    }
-                } else {
-                    showErrorSnackbar("Error al verificar el correo: ${task.exception?.message}")
-                }
-            }
+            val intent = Intent(this, RegistroActivity::class.java)
+            startActivity(intent)
         }
 
         ForgotPassword_TV.setOnClickListener {
@@ -688,7 +649,7 @@ class AuthActivity : AppCompatActivity() {
             message,
             Snackbar.LENGTH_LONG
         ).apply {
-            setBackgroundTint(ContextCompat.getColor(this@AuthActivity, R.color.success_green))
+            setBackgroundTint(ContextCompat.getColor(this@AuthActivity, R.color.Verde_bien))
             setTextColor(ContextCompat.getColor(this@AuthActivity, android.R.color.white))
             show()
         }
@@ -713,7 +674,7 @@ class AuthActivity : AppCompatActivity() {
                 layoutParams = LinearLayout.LayoutParams(dpToPx(48), dpToPx(48))
                 isIndeterminate = true
                 indeterminateTintList = ColorStateList.valueOf(
-                    ContextCompat.getColor(this@AuthActivity, R.color.Botones)
+                    ContextCompat.getColor(this@AuthActivity, R.color.Principal)
                 )
             })
 
@@ -733,7 +694,7 @@ class AuthActivity : AppCompatActivity() {
             message,
             Snackbar.LENGTH_LONG
         ).apply {
-            setBackgroundTint(ContextCompat.getColor(this@AuthActivity, R.color.Botones))
+            setBackgroundTint(ContextCompat.getColor(this@AuthActivity, R.color.Principal))
             setTextColor(Color.BLACK)
             show()
         }

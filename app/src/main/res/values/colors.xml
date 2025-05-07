@@ -1,22 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="black">#FF000000</color>
-    <color name="white">#FFFFFFFF</color>
-    <color name="Botones">#E4CC00</color>
-    <color name="Navegacion">#1C1D1C</color>
-    <color name="primario">#F8BD00</color>
-    <color name="secundario">#03DAC5</color>
-    <color name="blanco">#FFFFFF</color>
-    <color name="negro">#000000</color>
-    <color name="gris">#BDBDBD</color>
 
-    <color name="success_green">#4CAF50</color>
+    <color name="Negro">#FF000000</color>
+    <color name="Blanco">#FFFFFFFF</color>
+    <color name="blanco">#FFFFFFFF</color>
+    <color name="Principal">#f77f00</color>
+    <color name="Secundario">#ff4118</color>
+    <color name="Tercero">#fcbf49</color>
+    <color name="Texto_pastel">#eae2b7</color>
+
+    <color name="Verde_bien">#4CAF50</color>
     <color name="error_red">#F44336</color>
 
+
     //Navegacion
-    <color name="Seleccionado">#FFC107</color>
-    <color name="No_seleccionado">#FFFFFF</color>
-    <color name="text_seleccionado">#FFC107</color>
-    <color name="text_no_seleccionado">#FFFFFF</color>
+    <color name="Seleccionado">@color/Principal</color>
+    <color name="No_seleccionado">@color/Texto_pastel</color>
+    <color name="text_seleccionado">@color/Principal</color>
+    <color name="text_no_seleccionado">@color/Texto_pastel</color>
+    <color name="Navegacion">#1A1A1A</color>
+
 
 </resources>

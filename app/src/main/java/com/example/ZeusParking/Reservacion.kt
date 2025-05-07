@@ -58,6 +58,11 @@ class Reservacion : AppCompatActivity() {
         colorTxT = findViewById(R.id.ColorTxt)
         horaTxT = findViewById(R.id.Hora)
         salir = findViewById(R.id.SalidaReser)
+
+        //Responsividad
+        Responsividad.inicializar(this)
+
+
         val userId = intent.getStringExtra("ID") ?: "No disponible"
         val vehiculo = intent.getStringExtra("Tipo") ?: "No disponible"
         Log.d("Datos","Datos recibios, tipo $vehiculo , id:$userId")

@@ -10,7 +10,6 @@ import android.provider.MediaStore
 import android.view.View
 import android.widget.*
 import androidx.activity.enableEdgeToEdge
-import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
@@ -18,7 +17,6 @@ import android.text.InputType
 import android.text.InputFilter
 import android.view.animation.AnimationUtils
 import com.example.ZeusParking.BaseNavigationActivity
-import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class RegistrarBiciActivity : BaseNavigationActivity() {
     private lateinit var nombreEd: EditText
@@ -55,6 +53,9 @@ class RegistrarBiciActivity : BaseNavigationActivity() {
         setContentView(R.layout.activity_registrar_bici)
         enableEdgeToEdge()
         startAnimationsWithDelay()
+
+        //Responsividad
+        Responsividad.inicializar(this)
 
         //Navegacion
         setupNavigation()

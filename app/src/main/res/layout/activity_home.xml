@@ -6,7 +6,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/fondo_home"
+    android:background="@drawable/fondo"
     tools:context=".HomeActivity">
 
 
@@ -60,27 +60,27 @@
     <!-- MENU DESPLEGABLE PERFIL -->
     <LinearLayout
         android:id="@+id/menuPerfil"
-        android:layout_width="250dp"
-        android:layout_height="450dp"
+        android:layout_width="220dp"
+        android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="16dp"
+        android:padding="12dp"
         android:background="@color/Navegacion"
         android:visibility="gone"
-        android:elevation="6dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
+        android:elevation="4dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginEnd="4dp"
         app:layout_constraintTop_toBottomOf="@id/FotoPerfil_ImageView"
         app:layout_constraintEnd_toStartOf="@id/FotoPerfil_ImageView">
 
-    <com.google.android.material.imageview.ShapeableImageView
+        <com.google.android.material.imageview.ShapeableImageView
             android:id="@+id/perfil_grande"
-            android:layout_width="70dp"
-            android:layout_height="70dp"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
             android:src="@drawable/fondo_vigilante"
             android:scaleType="centerCrop"
             app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.App.CircleImage"
             android:layout_gravity="center"
-            android:layout_marginBottom="12dp" />
+            android:layout_marginBottom="8dp" />
 
         <TextView
             android:id="@+id/usuario_tv"
@@ -88,7 +88,8 @@
             android:layout_height="wrap_content"
             android:text="Usuario"
             android:textStyle="bold"
-            android:textSize="18sp"
+            android:textSize="16sp"
+            android:textColor="@android:color/white"
             android:layout_gravity="center" />
 
         <TextView
@@ -96,65 +97,62 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="correo@ejemplo.com"
-            android:textSize="14sp"
-            android:textColor="#777777"
+            android:textSize="12sp"
+            android:textColor="#B0B0B0"
             android:layout_gravity="center"
-            android:layout_marginBottom="16dp" />
+            android:layout_marginBottom="12dp" />
 
-        <!-- BOTÓN DISPONIBILIDAD -->
         <Button
             android:id="@+id/gestionar_btn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="@color/Navegacion"
+            android:text="Disponibilidad"
+            android:textColor="@color/Texto_pastel"
             android:backgroundTint="#FFC107"
-            android:text="Disponibilidad" />
+            android:textSize="13sp" />
 
-        <!-- SECCIÓN DE NOTIFICACIONES INTEGRADA -->
         <LinearLayout
             android:id="@+id/seccionDisponibilidad"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:visibility="gone"
-            android:layout_marginTop="4dp"
-            android:layout_marginBottom="4dp">
+            android:layout_marginTop="2dp"
+            android:layout_marginBottom="2dp">
 
             <TextView
                 android:id="@+id/notificacionFurgon"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/blanco"
-                android:textSize="15sp"
-                android:layout_marginBottom="6dp" />
+                android:textSize="13sp"
+                android:layout_marginBottom="4dp" />
 
             <TextView
                 android:id="@+id/notificacionVehiculoParticular"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/blanco"
-                android:textSize="15sp"
-                android:layout_marginBottom="6dp" />
+                android:textSize="13sp"
+                android:layout_marginBottom="4dp" />
 
             <TextView
                 android:id="@+id/notificacionBicicleta"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/blanco"
-                android:textSize="15sp"
-                android:layout_marginBottom="6dp" />
+                android:textSize="13sp"
+                android:layout_marginBottom="4dp" />
 
             <TextView
                 android:id="@+id/notificacionMotocicleta"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/blanco"
-                android:textSize="15sp"
-                android:layout_marginBottom="6dp" />
+                android:textSize="13sp"
+                android:layout_marginBottom="4dp" />
         </LinearLayout>
 
-
-        <!-- BOTÓN CERRAR SESIÓN -->
         <Button
             android:id="@+id/cerrar_sesion_btn"
             android:layout_width="match_parent"
@@ -162,8 +160,10 @@
             android:text="Cerrar sesión"
             android:textColor="@android:color/white"
             android:backgroundTint="#D32F2F"
-            android:layout_marginTop="20dp" />
+            android:textSize="13sp"
+            android:layout_marginTop="12dp" />
     </LinearLayout>
+
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

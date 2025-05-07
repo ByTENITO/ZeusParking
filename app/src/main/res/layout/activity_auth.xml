@@ -6,70 +6,70 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/fondo"
-    android:padding="20dp"
+    android:padding="16dp"
     tools:context=".AuthActivity">
 
-    <!-- Logo Section (Top) -->
+    <!-- Logo Section (Top) - Exactamente igual -->
     <LinearLayout
         android:id="@+id/logoSection"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
+        android:layout_marginTop="8dp"
         android:gravity="center"
-        android:layout_marginTop="20dp"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
+        android:orientation="vertical"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
         <ImageView
             android:id="@+id/imageView8"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
             android:contentDescription="Logo ZeusParking"
-            app:srcCompat="@drawable/logo"/>
+            app:srcCompat="@drawable/logo" />
 
         <TextView
             android:id="@+id/textView5"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
+            android:layout_marginTop="8dp"
+            android:lineSpacingExtra="2dp"
             android:text="Esta es una app dedicada a facilitar el ingreso al parqueadero de UNIMINUTO, sede Soacha."
             android:textAlignment="center"
-            android:textColor="#FFFFFF"
-            android:textSize="14sp"
-            android:lineSpacingExtra="4dp"/>
+            android:textColor="@color/Texto_pastel"
+            android:textSize="12sp" />
 
         <TextView
             android:id="@+id/textView6"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="4dp"
             android:text="Por favor, identifícate para continuar."
             android:textAlignment="center"
-            android:textColor="#FFFFFF"
-            android:textSize="13sp"/>
+            android:textColor="@color/Texto_pastel"
+            android:textSize="11sp" />
     </LinearLayout>
 
-    <!-- Form Section (Center) -->
+    <!-- Form Section (Center) - Exactamente igual -->
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/formCard"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="16dp"
         app:cardBackgroundColor="#1E1E1E"
-        app:cardCornerRadius="16dp"
-        app:cardElevation="4dp"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
+        app:cardCornerRadius="12dp"
+        app:cardElevation="2dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/logoSection"
-        app:strokeColor="#E4CC00"
+        app:strokeColor="@color/Principal"
         app:strokeWidth="1dp">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="20dp">
+            android:padding="16dp">
 
             <!-- Email Field -->
             <com.google.android.material.textfield.TextInputLayout
@@ -77,10 +77,10 @@
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="12dp"
-                app:boxStrokeColor="#E4CC00"
-                app:hintTextColor="#E4CC00"
-                app:errorEnabled="true">
+                android:layout_marginBottom="8dp"
+                app:boxStrokeColor="@color/Secundario"
+                app:errorEnabled="true"
+                app:hintTextColor="@color/Texto_pastel">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/Correo_ED"
@@ -88,8 +88,8 @@
                     android:layout_height="wrap_content"
                     android:hint="Correo electrónico"
                     android:inputType="textEmailAddress"
-                    android:textColor="#FFFFFF"
-                    android:textColorHint="#FFFFFF"/>
+                    android:textColor="@color/Texto_pastel"
+                    android:textColorHint="@color/Texto_pastel" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <!-- Password Field -->
@@ -99,10 +99,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="8dp"
-                app:boxStrokeColor="#E4CC00"
+                app:boxStrokeColor="@color/Secundario"
                 app:endIconMode="password_toggle"
-                app:endIconTint="#E4CC00"
-                app:hintTextColor="#E4CC00">
+                app:endIconTint="@color/Principal"
+                app:hintTextColor="@color/Texto_pastel">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/Contraseña_ED"
@@ -110,8 +110,8 @@
                     android:layout_height="wrap_content"
                     android:hint="Contraseña"
                     android:inputType="textPassword"
-                    android:textColor="#FFFFFF"
-                    android:textColorHint="#FFFFFF"/>
+                    android:textColor="@color/Texto_pastel"
+                    android:textColorHint="@color/Texto_pastel" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <!-- Forgot Password -->
@@ -121,89 +121,106 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="end"
                 android:text="¿Olvidaste tu contraseña?"
-                android:textColor="#E4CC00"
-                android:textSize="12sp"/>
+                android:textColor="@color/Texto_pastel"
+                android:textSize="11sp" />
         </LinearLayout>
     </com.google.android.material.card.MaterialCardView>
 
-    <!-- Buttons Section (Bottom) -->
+    <!-- Buttons Section - Reorganizada según tu ejemplo -->
     <LinearLayout
         android:id="@+id/buttonsSection"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
         android:orientation="vertical"
-        android:layout_marginTop="16dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/formCard">
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/formCard"
+        app:layout_constraintVertical_bias="0">
 
-        <!-- Action Buttons -->
+        <!-- Login Button - Exactamente igual -->
         <com.google.android.material.button.MaterialButton
             android:id="@+id/Acceder_BTN"
-            style="@style/Widget.MaterialComponents.Button"
-            android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:text="Acceder"
-            android:textColor="#000000"
-            android:textSize="15sp"
-            app:backgroundTint="#E4CC00"
-            app:cornerRadius="10dp"/>
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/Registrarse_BTN"
             style="@style/Widget.MaterialComponents.Button.OutlinedButton"
             android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:layout_marginTop="8dp"
-            android:text="Registrarse"
-            android:textColor="#E4CC00"
-            android:textSize="15sp"
-            app:cornerRadius="10dp"
-            app:strokeColor="#E4CC00"
-            app:strokeWidth="2dp"/>
+            android:layout_height="40dp"
+            android:text="Acceder"
+            android:textSize="14sp"
+            android:textColor="@color/Texto_pastel"
+            app:cornerRadius="8dp"
+            app:iconGravity="textStart"
+            app:iconPadding="4dp"
+            app:iconTint="@null"
+            app:strokeColor="@color/Principal"
+            app:strokeWidth="1dp"
+            app:backgroundTint="@color/Negro" />
 
-        <!-- Social Login Divider -->
+        <!-- Social Login Divider - Exactamente igual -->
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:layout_marginBottom="8dp">
+            android:layout_marginTop="12dp"
+            android:layout_marginBottom="4dp">
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:layout_centerVertical="true"
-                android:background="#555555"/>
+                android:background="#555555" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
                 android:background="@android:color/transparent"
-                android:paddingStart="12dp"
-                android:paddingEnd="12dp"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"
                 android:text="O inicia sesión con"
-                android:textColor="#FFFFFF"
-                android:textSize="12sp"/>
+                android:textColor="@color/Texto_pastel"
+                android:textSize="11sp" />
         </RelativeLayout>
 
-        <!-- Google Login Button -->
+        <!-- Google Login Button - Exactamente igual -->
         <com.google.android.material.button.MaterialButton
             android:id="@+id/Google_BTN"
             style="@style/Widget.MaterialComponents.Button.OutlinedButton"
             android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:layout_marginBottom="20dp"
+            android:layout_height="40dp"
             android:text="Continuar con Google"
-            android:textColor="#FFFFFF"
-            android:textSize="15sp"
-            app:cornerRadius="10dp"
+            android:textColor="@color/Texto_pastel"
+            android:textSize="14sp"
+            app:cornerRadius="8dp"
             app:icon="@drawable/ic_google"
             app:iconGravity="textStart"
-            app:iconPadding="6dp"
+            app:iconPadding="4dp"
             app:iconTint="@null"
-            app:strokeColor="#555555"
-            app:strokeWidth="1dp"/>
+            app:strokeColor="@color/Secundario"
+            app:strokeWidth="1dp" />
+
+        <!-- Register Text - Cambiado a TextView como pediste -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:layout_marginTop="12dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="¿No tienes una cuenta?"
+                android:textColor="@color/Texto_pastel"
+                android:textSize="12sp"/>
+
+            <TextView
+                android:id="@+id/Registrarse_BTN"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:text="Registrarse"
+                android:textColor="@color/Tercero"
+                android:textSize="12sp"/>
+        </LinearLayout>
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

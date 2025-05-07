@@ -9,7 +9,6 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
-import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
@@ -48,6 +47,9 @@ class DatosUsuarioEntrada : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_datos_usuario_entrada)
+
+        //Responsividad
+        Responsividad.inicializar(this)
 
         // Inicializar vistas
         botonSalida = findViewById(R.id.Salida)

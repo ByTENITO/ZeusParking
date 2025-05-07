@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/fondo"
+    android:background="#121212"
     tools:context=".Reservacion">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -23,214 +22,199 @@
             android:paddingBottom="72dp"
             android:paddingTop="32dp">
 
-        <!-- Contenedor centrado -->
-        <LinearLayout
-            android:id="@+id/centerContainer"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:gravity="center"
-            android:orientation="vertical"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.5">
-
-            <com.google.android.material.textview.MaterialTextView
-                android:id="@+id/ReservaTXT"
-                style="@style/TextAppearance.MaterialComponents.Headline5"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:layout_marginBottom="24dp"
-                android:text="Reservacion"
-                android:textColor="@color/white" />
-
-            <com.google.android.material.card.MaterialCardView
-                android:id="@+id/qrCard"
-                android:layout_width="300dp"
-                android:layout_height="340dp"
-                app:cardBackgroundColor="@android:color/white"
-                app:cardCornerRadius="12dp"
-                app:cardElevation="4dp"
-                app:layout_constraintBottom_toTopOf="@+id/bottom_navigation"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/imageView">
-
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent">
-
-                    <!-- QR Image -->
-                    <ImageView
-                        android:id="@+id/CodigoReserva"
-                        android:layout_width="260dp"
-                        android:layout_height="260dp"
-                        android:layout_centerHorizontal="true"
-                        android:layout_marginTop="10dp"
-                        android:scaleType="fitCenter" />
-
-                    <!-- Centered Date/Time -->
-                    <TextView
-                        android:id="@+id/Hora"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@id/CodigoReserva"
-                        android:layout_centerHorizontal="true"
-                        android:padding="8dp"
-                        android:textColor="@color/Navegacion"
-                        android:textSize="16sp"
-                        android:textStyle="bold"
-                        tools:text="25/04/2025 - 14:30" />
-                </RelativeLayout>
-            </com.google.android.material.card.MaterialCardView>
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:id="@+id/centerContainer"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:padding="10dp">
-            <com.google.android.material.card.MaterialCardView
-                app:cardBackgroundColor="@android:color/white"
-                app:cardCornerRadius="12dp"
-                app:cardElevation="4dp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="16dp"
-                app:strokeWidth="1dp">
+                android:orientation="vertical"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.5">
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/ReservaTXT"
+                    style="@style/TextAppearance.MaterialComponents.Headline5"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginBottom="24dp"
+                    android:text="Reservacion"
+                    android:textColor="@color/Texto_pastel" />
+
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/qrCard"
+                    android:layout_width="300dp"
+                    android:layout_height="340dp"
+                    app:cardBackgroundColor="@android:color/white"
+                    app:cardCornerRadius="12dp"
+                    app:cardElevation="4dp">
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                        <ImageView
+                            android:id="@+id/CodigoReserva"
+                            android:layout_width="260dp"
+                            android:layout_height="260dp"
+                            android:layout_centerHorizontal="true"
+                            android:layout_marginTop="10dp"
+                            android:scaleType="fitCenter" />
+
+                        <TextView
+                            android:id="@+id/Hora"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@id/CodigoReserva"
+                            android:layout_centerHorizontal="true"
+                            android:padding="8dp"
+                            android:textColor="@color/Navegacion"
+                            android:textSize="16sp"
+                            android:textStyle="bold"
+                            tools:text="25/04/2025 - 14:30" />
+                    </RelativeLayout>
+                </com.google.android.material.card.MaterialCardView>
+
                 <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:padding="10dp">
+
+                    <com.google.android.material.card.MaterialCardView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="16dp"
+                        app:cardBackgroundColor="@color/Navegacion"
+                        app:cardCornerRadius="12dp"
+                        app:cardElevation="4dp"
+                        app:strokeWidth="1dp">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:padding="15dp">
+
+
+
+                            <!-- Nombre -->
+                            <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+                                android:layout_marginBottom="12dp" android:orientation="horizontal">
+                                <com.google.android.material.textview.MaterialTextView
+                                    android:id="@+id/nombreLabel"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="Nombre:"
+                                    android:textColor="@color/Texto_pastel"
+                                    android:textStyle="bold" />
+                                <com.google.android.material.textview.MaterialTextView
+                                    android:id="@+id/NombreTxt"
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="12dp"
+                                    android:layout_weight="1"
+                                    android:text="Nombre"
+                                    android:textColor="@color/Blanco" />
+                            </LinearLayout>
+
+                            <!-- Cédula -->
+                            <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+                                android:layout_marginBottom="12dp" android:orientation="horizontal">
+                                <com.google.android.material.textview.MaterialTextView
+                                    android:id="@+id/cedulaLabel"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="Cedula:"
+                                    android:textColor="@color/Texto_pastel"
+                                    android:textStyle="bold" />
+                                <com.google.android.material.textview.MaterialTextView
+                                    android:id="@+id/cedulaTxt"
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="12dp"
+                                    android:layout_weight="1"
+                                    android:text="Cedula"
+                                    android:textColor="@color/Blanco" />
+                            </LinearLayout>
+
+                            <!-- Tipo -->
+                            <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+                                android:layout_marginBottom="12dp" android:orientation="horizontal">
+                                <com.google.android.material.textview.MaterialTextView
+                                    android:id="@+id/tipoLabel"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="Tipo:"
+                                    android:textColor="@color/Texto_pastel"
+                                    android:textStyle="bold" />
+                                <com.google.android.material.textview.MaterialTextView
+                                    android:id="@+id/TipoTxt"
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="12dp"
+                                    android:layout_weight="1"
+                                    android:text="Tipo"
+                                    android:textColor="@color/Blanco" />
+                            </LinearLayout>
+
+                            <!-- Placa -->
+                            <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+                                android:layout_marginBottom="12dp" android:orientation="horizontal">
+                                <com.google.android.material.textview.MaterialTextView
+                                    android:id="@+id/idVehiLabel"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="Placa/Num.marco:"
+                                    android:textColor="@color/Texto_pastel"
+                                    android:textStyle="bold" />
+                                <com.google.android.material.textview.MaterialTextView
+                                    android:id="@+id/idVehiTxt"
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="12dp"
+                                    android:layout_weight="1"
+                                    android:text="Placa/Num.marco"
+                                    android:textColor="@color/Blanco" />
+                            </LinearLayout>
+
+                            <!-- Color -->
+                            <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+                                android:layout_marginBottom="12dp" android:orientation="horizontal">
+                                <com.google.android.material.textview.MaterialTextView
+                                    android:id="@+id/colorLabel"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="Color:"
+                                    android:textColor="@color/Texto_pastel"
+                                    android:textStyle="bold" />
+                                <com.google.android.material.textview.MaterialTextView
+                                    android:id="@+id/ColorTxt"
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="12dp"
+                                    android:layout_weight="1"
+                                    android:text="Color"
+                                    android:textColor="@color/Blanco" />
+                            </LinearLayout>
+                        </LinearLayout>
+                    </com.google.android.material.card.MaterialCardView>
+                </LinearLayout>
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/SalidaReser"
+                    style="@style/Widget.MaterialComponents.Button"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="15dp">
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="12dp"
-                        android:orientation="horizontal">
-                        <com.google.android.material.textview.MaterialTextView
-                            android:id="@+id/nombreLabel"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Nombre:"
-                            android:textColor="@color/black"
-                            android:textStyle="bold"/>
-                        <com.google.android.material.textview.MaterialTextView
-                            android:id="@+id/NombreTxt"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:layout_marginStart="12dp"
-                            android:text="Nombre"
-                            android:textColor="@color/black"/>
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="12dp"
-                        android:orientation="horizontal">
-
-                        <com.google.android.material.textview.MaterialTextView
-                            android:id="@+id/cedulaLabel"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Cedula:"
-                            android:textColor="@color/black"
-                            android:textStyle="bold"/>
-                        <com.google.android.material.textview.MaterialTextView
-                            android:id="@+id/cedulaTxt"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:layout_marginStart="12dp"
-                            android:text="Cedula"
-                            android:textColor="@color/black"/>
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="12dp"
-                        android:orientation="horizontal">
-
-                        <com.google.android.material.textview.MaterialTextView
-                            android:id="@+id/tipoLabel"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Tipo:"
-                            android:textColor="@color/black"
-                            android:textStyle="bold"/>
-                        <com.google.android.material.textview.MaterialTextView
-                            android:id="@+id/TipoTxt"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:layout_marginStart="12dp"
-                            android:text="Tipo"
-                            android:textColor="@color/black"/>
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="12dp"
-                        android:orientation="horizontal">
-
-                        <com.google.android.material.textview.MaterialTextView
-                            android:id="@+id/idVehiLabel"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Placa/Num.marco:"
-                            android:textColor="@color/black"
-                            android:textStyle="bold"/>
-                        <com.google.android.material.textview.MaterialTextView
-                            android:id="@+id/idVehiTxt"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:layout_marginStart="12dp"
-                            android:text="Placa/Num.marco"
-                            android:textColor="@color/black"/>
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="12dp"
-                        android:orientation="horizontal">
-
-                        <com.google.android.material.textview.MaterialTextView
-                            android:id="@+id/colorLabel"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Color:"
-                            android:textColor="@color/black"
-                            android:textStyle="bold"/>
-                        <com.google.android.material.textview.MaterialTextView
-                            android:id="@+id/ColorTxt"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:layout_marginStart="12dp"
-                            android:text="Color"
-                            android:textColor="@color/black"/>
-                    </LinearLayout>
-                </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
+                    android:layout_marginTop="5dp"
+                    android:layout_marginBottom="32dp"
+                    android:text="Salir"
+                    android:textColor="@color/Negro"
+                    app:backgroundTint="@color/Principal" />
             </LinearLayout>
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/SalidaReser"
-                style="@style/Widget.MaterialComponents.Button"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:layout_marginBottom="32dp"
-                android:text="Salir"
-                android:textColor="@color/black"
-                app:backgroundTint="@color/Botones"/>
-        </LinearLayout>
         </androidx.core.widget.NestedScrollView>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

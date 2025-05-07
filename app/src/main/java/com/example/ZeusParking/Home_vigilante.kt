@@ -13,6 +13,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.core.app.NotificationCompat
 import com.example.ZeusParking.BaseNavigationActivity
+import com.example.parquiatenov10.Responsividad
 import com.google.android.material.progressindicator.LinearProgressIndicator
 import com.google.android.material.textview.MaterialTextView
 import com.google.firebase.auth.FirebaseAuth
@@ -46,6 +47,9 @@ class Home_vigilante : BaseNavigationActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home_vigilante)
+
+        //Responsividad
+        Responsividad.inicializar(this)
 
         setupNavigation()
         inicializarVistas()

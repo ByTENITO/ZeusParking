@@ -36,6 +36,9 @@ class QrActivity : BaseNavigationActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_entrada_qr)
 
+        //Responsividad
+        Responsividad.inicializar(this)
+
         ivCodigoQR = findViewById(R.id.ivCodigoSalida)
         tvDateTime = findViewById(R.id.tvDateTime)
         tiposSpinner = findViewById(R.id.Tipos_SpinnerQR)

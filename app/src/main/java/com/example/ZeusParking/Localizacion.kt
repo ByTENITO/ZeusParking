@@ -1,13 +1,10 @@
 package com.example.parquiatenov10
 
 import android.Manifest
-import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.Location
 import android.os.Bundle
-import android.widget.Button
 import androidx.core.app.ActivityCompat
-import androidx.fragment.app.FragmentActivity
 import com.example.ZeusParking.BaseNavigationActivity
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
@@ -33,6 +30,9 @@ class Localizacion : BaseNavigationActivity(), OnMapReadyCallback {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_localizacion)
+
+        //Responsividad
+        Responsividad.inicializar(this)
 
         //Navegacion
         setupNavigation()
