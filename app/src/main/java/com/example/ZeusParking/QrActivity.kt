@@ -6,10 +6,15 @@ import android.graphics.Color
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.text.InputFilter
+import android.text.InputType
 import android.util.Log
+import android.view.View
 import android.view.animation.AnimationUtils
+import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Button
+import android.widget.EditText
 import android.widget.ImageView
 import android.widget.Spinner
 import android.widget.TextView
@@ -29,8 +34,9 @@ class QrActivity : BaseNavigationActivity() {
     private var database = FirebaseFirestore.getInstance()
     private lateinit var ivCodigoQR: ImageView
     private lateinit var tvDateTime: TextView
-    private lateinit var  tiposSpinner: Spinner
-    private lateinit var  reserva: Button
+    private lateinit var marcoNum: EditText
+    private lateinit var tiposSpinner: Spinner
+    private lateinit var reserva: Button
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,10 +49,48 @@ class QrActivity : BaseNavigationActivity() {
         tvDateTime = findViewById(R.id.tvDateTime)
         tiposSpinner = findViewById(R.id.Tipos_SpinnerQR)
         reserva = findViewById(R.id.Reserva_BTN)
+        marcoNum = findViewById(R.id.numero)
 
         val adapter = ArrayAdapter.createFromResource(this, R.array.items, R.layout.estilo_spinner)
         adapter.setDropDownViewResource(R.layout.estilo_spinner)
         tiposSpinner.adapter = adapter
+
+        tiposSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(
+                parent: AdapterView<*>,
+                view: View?,
+                position: Int,
+                id: Long
+            ) {
+                when (position) {
+                    1, 2 -> {
+                        marcoNum.hint = "4 Ultimos Numeros"
+                        marcoNum.inputType = InputType.TYPE_CLASS_NUMBER
+                        marcoNum.filters = arrayOf(InputFilter.LengthFilter(20))
+                    }
+
+                    3, 4, 5 -> {
+                        marcoNum.hint = when (position) {
+                            3 -> "Placa (Ej. abc123)"
+                            4 -> "Placa (Ej. abc123)"
+                            5 -> "Número de Furgón"
+                            else -> "Número de Marco"
+                        }
+                        marcoNum.inputType =
+                            InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD
+                        marcoNum.filters = arrayOf(InputFilter.LengthFilter(7))
+                    }
+
+                    else -> {
+                        marcoNum.hint = ""
+                        marcoNum.inputType = InputType.TYPE_CLASS_NUMBER
+                        marcoNum.filters = arrayOf(InputFilter.LengthFilter(20))
+                    }
+                }
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>) {}
+        }
 
         setupNavigation()
         generateAndDisplayQrCode()
@@ -56,22 +100,47 @@ class QrActivity : BaseNavigationActivity() {
         reserva.setOnClickListener {
             val tipoVehi = tiposSpinner.selectedItem.toString()
             val userId = FirebaseAuth.getInstance().currentUser?.uid.toString()
-            if (tipoVehi == "Tipo de Vehiculo" || userId.isEmpty()){
-                Toast.makeText(this, "Seleccione el tipo del vehiculo que desea reservar", Toast.LENGTH_SHORT).show()
-            }else{
-                database.collection("Reservas")
-                    .whereEqualTo("id",userId)
+            val numero = marcoNum.text.toString()
+            if (tipoVehi == "Tipo de Vehiculo" || userId.isEmpty() || numero == "" || numero.isEmpty()) {
+                Toast.makeText(
+                    this,
+                    "Debe llenar todos los campos",
+                    Toast.LENGTH_SHORT
+                ).show()
+            } else {
+                database.collection("Bici_Usuarios")
+                    .whereEqualTo("id", userId)
+                    .whereEqualTo("tipo", tipoVehi)
+                    .whereEqualTo("numero",numero)
                     .get()
                     .addOnSuccessListener { documents ->
-                        if (documents.isEmpty){
-                            val intent = Intent(this, Reservacion::class.java).apply{
-                                putExtra("ID",userId)
-                                putExtra("Tipo",tipoVehi)
-                                Log.d("tipo de vehiculo", tipoVehi)
-                            }
-                            startActivity(intent)
-                        }else{
-                            Toast.makeText(this, "La reserva ya fue realizada", Toast.LENGTH_SHORT).show()
+                        if (!documents.isEmpty) {
+                            database.collection("Reservas")
+                                .whereEqualTo("id", userId)
+                                .get()
+                                .addOnSuccessListener { documents ->
+                                    if (documents.isEmpty) {
+                                        val intent = Intent(this, Reservacion::class.java).apply {
+                                            putExtra("ID", userId)
+                                            putExtra("Tipo", tipoVehi)
+                                            putExtra("numero",numero)
+                                            Log.d("tipo de vehiculo", tipoVehi)
+                                        }
+                                        startActivity(intent)
+                                    } else {
+                                        Toast.makeText(
+                                            this,
+                                            "La reserva ya fue realizada",
+                                            Toast.LENGTH_SHORT
+                                        ).show()
+                                    }
+                                }
+                        } else {
+                            Toast.makeText(
+                                this,
+                                "No hay registro de este vehiculo",
+                                Toast.LENGTH_SHORT
+                            ).show()
                         }
                     }
             }

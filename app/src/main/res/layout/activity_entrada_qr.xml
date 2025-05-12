@@ -125,6 +125,25 @@
                             android:textColor="@color/Texto_pastel" />
                     </com.google.android.material.textfield.TextInputLayout>
 
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/textInputLayout"
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="8dp"
+                        app:boxStrokeColor="@color/Principal"
+                        app:errorEnabled="true"
+                        app:hintTextColor="@color/Texto_pastel">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/numero"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:inputType="textEmailAddress"
+                            android:textColor="@color/Texto_pastel"
+                            android:textColorHint="@color/Texto_pastel" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
                     <!-- Botón de Reserva -->
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/Reserva_BTN"

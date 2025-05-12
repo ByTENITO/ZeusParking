@@ -65,18 +65,20 @@ class Reservacion : AppCompatActivity() {
 
         val userId = intent.getStringExtra("ID") ?: "No disponible"
         val vehiculo = intent.getStringExtra("Tipo") ?: "No disponible"
-        Log.d("Datos","Datos recibios, tipo $vehiculo , id:$userId")
+        val numero = intent.getStringExtra("numero") ?: "No disponible"
+        Log.d("Datos","Datos recibios, tipo $vehiculo ,numero: $numero ,id:$userId")
         generateAndDisplayQrCode()
-        consulta(userId, vehiculo)
+        consulta(userId, vehiculo, numero)
         salir.setOnClickListener {
             finish()
         }
     }
 
-    private fun consulta(userId: String, vehiculo: String) {
+    private fun consulta(userId: String, vehiculo: String, numero: String) {
         database.collection("Bici_Usuarios")
             .whereEqualTo("id", userId)
             .whereEqualTo("tipo", vehiculo)
+            .whereEqualTo("numero",numero)
             .addSnapshotListener { documents, e ->
                 if (documents != null) {
                     for (document in documents) {

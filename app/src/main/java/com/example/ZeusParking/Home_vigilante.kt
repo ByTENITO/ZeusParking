@@ -138,6 +138,7 @@ class Home_vigilante : BaseNavigationActivity() {
                         .contains(texto)
                     }
                     mostrarFiltro(filtradosNombre)
+                    Log.d("lista","$filtradosNombre")
                 }
 
                 if (texto.length <=6){
@@ -146,8 +147,8 @@ class Home_vigilante : BaseNavigationActivity() {
                         .contains(texto)
                     }
                     mostrarFiltro(filtradoNumero)
+                    Log.d("lista","$filtradoNumero")
                 }
-
             }
 
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
