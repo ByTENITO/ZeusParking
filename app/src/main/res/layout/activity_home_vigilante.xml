@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -82,7 +81,7 @@
                         android:text="Bienvenido, Vigilante"
                         android:textColor="@color/Texto_pastel"
                         android:textSize="14sp"
-                        android:textStyle="bold"/>
+                        android:textStyle="bold" />
 
                     <com.google.android.material.textview.MaterialTextView
                         android:id="@+id/email_text"
@@ -91,7 +90,7 @@
                         android:layout_marginTop="2dp"
                         android:text="vigilanteuniminuto@gmail.com"
                         android:textColor="@color/Texto_pastel"
-                        android:textSize="12sp"/>
+                        android:textSize="12sp" />
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
@@ -118,7 +117,7 @@
                         android:text="Acciones Rápidas"
                         android:textColor="@color/Texto_pastel"
                         android:textSize="14sp"
-                        android:textStyle="bold"/>
+                        android:textStyle="bold" />
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -132,26 +131,26 @@
                             style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                             android:layout_width="0dp"
                             android:layout_height="36dp"
-                            android:layout_weight="1"
                             android:layout_marginEnd="4dp"
+                            android:layout_weight="1"
                             android:text="Entrada"
-                            android:textSize="12sp"
                             android:textColor="@color/Texto_pastel"
+                            android:textSize="12sp"
                             app:strokeColor="@color/Principal"
-                            app:strokeWidth="1dp"/>
+                            app:strokeWidth="1dp" />
 
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/scan_salida_btn"
                             style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                             android:layout_width="0dp"
                             android:layout_height="36dp"
-                            android:layout_weight="1"
                             android:layout_marginStart="4dp"
+                            android:layout_weight="1"
                             android:text="Salida"
-                            android:textSize="12sp"
                             android:textColor="@color/Texto_pastel"
+                            android:textSize="12sp"
                             app:strokeColor="@color/Principal"
-                            app:strokeWidth="1dp"/>
+                            app:strokeWidth="1dp" />
                     </LinearLayout>
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
@@ -160,6 +159,7 @@
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="12dp"
                 app:cardBackgroundColor="@color/Navegacion"
                 app:cardCornerRadius="8dp"
                 app:cardElevation="2dp"
@@ -178,7 +178,7 @@
                         android:text="Disponibilidad Actual"
                         android:textColor="@color/Texto_pastel"
                         android:textSize="14sp"
-                        android:textStyle="bold"/>
+                        android:textStyle="bold" />
 
                     <!-- Vehicle Availability Indicators - Compacto -->
                     <LinearLayout
@@ -200,7 +200,7 @@
                                 android:layout_height="24dp"
                                 android:layout_marginEnd="8dp"
                                 android:src="@drawable/ic_furgon"
-                                app:tint="@color/Principal"/>
+                                app:tint="@color/Principal" />
 
                             <LinearLayout
                                 android:layout_width="0dp"
@@ -213,7 +213,7 @@
                                     android:layout_height="wrap_content"
                                     android:text="Furgones"
                                     android:textColor="@color/Texto_pastel"
-                                    android:textSize="12sp"/>
+                                    android:textSize="12sp" />
 
                                 <com.google.android.material.textview.MaterialTextView
                                     android:id="@+id/notiFurgon"
@@ -221,7 +221,7 @@
                                     android:layout_height="wrap_content"
                                     android:text="0/0 disponibles"
                                     android:textColor="@color/Texto_pastel"
-                                    android:textSize="11sp"/>
+                                    android:textSize="11sp" />
                             </LinearLayout>
 
                             <com.google.android.material.progressindicator.LinearProgressIndicator
@@ -230,7 +230,7 @@
                                 android:layout_height="4dp"
                                 android:layout_gravity="center_vertical"
                                 app:indicatorColor="@color/Verde_bien"
-                                app:trackColor="@color/Texto_pastel"/>
+                                app:trackColor="@color/Texto_pastel" />
                         </LinearLayout>
 
                         <!-- Vehiculo Particular Availability -->
@@ -246,7 +246,7 @@
                                 android:layout_height="24dp"
                                 android:layout_marginEnd="8dp"
                                 android:src="@drawable/ic_carro"
-                                app:tint="@color/Principal"/>
+                                app:tint="@color/Principal" />
 
                             <LinearLayout
                                 android:layout_width="0dp"
@@ -259,7 +259,7 @@
                                     android:layout_height="wrap_content"
                                     android:text="Vehículos"
                                     android:textColor="@color/Texto_pastel"
-                                    android:textSize="12sp"/>
+                                    android:textSize="12sp" />
 
                                 <com.google.android.material.textview.MaterialTextView
                                     android:id="@+id/notiVehiculo"
@@ -267,7 +267,7 @@
                                     android:layout_height="wrap_content"
                                     android:text="0/0 disponibles"
                                     android:textColor="@color/Texto_pastel"
-                                    android:textSize="11sp"/>
+                                    android:textSize="11sp" />
                             </LinearLayout>
 
                             <com.google.android.material.progressindicator.LinearProgressIndicator
@@ -276,7 +276,7 @@
                                 android:layout_height="4dp"
                                 android:layout_gravity="center_vertical"
                                 app:indicatorColor="@color/Verde_bien"
-                                app:trackColor="@color/Texto_pastel"/>
+                                app:trackColor="@color/Texto_pastel" />
                         </LinearLayout>
 
                         <!-- Bicicleta Availability -->
@@ -292,7 +292,7 @@
                                 android:layout_height="24dp"
                                 android:layout_marginEnd="8dp"
                                 android:src="@drawable/ic_bici"
-                                app:tint="@color/Principal"/>
+                                app:tint="@color/Principal" />
 
                             <LinearLayout
                                 android:layout_width="0dp"
@@ -305,7 +305,7 @@
                                     android:layout_height="wrap_content"
                                     android:text="Bicicletas"
                                     android:textColor="@color/Texto_pastel"
-                                    android:textSize="12sp"/>
+                                    android:textSize="12sp" />
 
                                 <com.google.android.material.textview.MaterialTextView
                                     android:id="@+id/notiBicicleta"
@@ -313,7 +313,7 @@
                                     android:layout_height="wrap_content"
                                     android:text="0/0 disponibles"
                                     android:textColor="@color/Texto_pastel"
-                                    android:textSize="11sp"/>
+                                    android:textSize="11sp" />
                             </LinearLayout>
 
                             <com.google.android.material.progressindicator.LinearProgressIndicator
@@ -322,7 +322,7 @@
                                 android:layout_height="4dp"
                                 android:layout_gravity="center_vertical"
                                 app:indicatorColor="@color/Verde_bien"
-                                app:trackColor="@color/Texto_pastel"/>
+                                app:trackColor="@color/Texto_pastel" />
                         </LinearLayout>
 
                         <!-- Motocicleta Availability -->
@@ -337,7 +337,7 @@
                                 android:layout_height="24dp"
                                 android:layout_marginEnd="8dp"
                                 android:src="@drawable/ic_moto"
-                                app:tint="@color/Principal"/>
+                                app:tint="@color/Principal" />
 
                             <LinearLayout
                                 android:layout_width="0dp"
@@ -350,7 +350,7 @@
                                     android:layout_height="wrap_content"
                                     android:text="Motocicletas"
                                     android:textColor="@color/Texto_pastel"
-                                    android:textSize="12sp"/>
+                                    android:textSize="12sp" />
 
                                 <com.google.android.material.textview.MaterialTextView
                                     android:id="@+id/notiMoto"
@@ -358,7 +358,7 @@
                                     android:layout_height="wrap_content"
                                     android:text="0/0 disponibles"
                                     android:textColor="@color/Texto_pastel"
-                                    android:textSize="11sp"/>
+                                    android:textSize="11sp" />
                             </LinearLayout>
 
                             <com.google.android.material.progressindicator.LinearProgressIndicator
@@ -367,11 +367,113 @@
                                 android:layout_height="4dp"
                                 android:layout_gravity="center_vertical"
                                 app:indicatorColor="@color/Verde_bien"
-                                app:trackColor="@color/Texto_pastel"/>
+                                app:trackColor="@color/Texto_pastel" />
                         </LinearLayout>
                     </LinearLayout>
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cardBackgroundColor="@color/Navegacion"
+                app:cardCornerRadius="8dp"
+                app:cardElevation="2dp"
+                app:strokeColor="@color/Principal"
+                app:strokeWidth="1dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="12sp">
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Reservas"
+                        android:textColor="@color/Texto_pastel"
+                        android:textSize="14sp"
+                        android:textStyle="bold" />
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/textInputLayout"
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="8dp"
+                        app:boxStrokeColor="@color/Principal"
+                        app:errorEnabled="true"
+                        app:hintTextColor="@color/Texto_pastel">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/Buscador"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="Buscar"
+                            android:inputType="textEmailAddress"
+                            android:textColor="@color/Texto_pastel"
+                            android:textColorHint="@color/Texto_pastel" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <ScrollView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <TableLayout
+                            android:id="@+id/TablaReservas"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:padding="5dp"
+                            android:stretchColumns="*">
+
+                            <TableRow>
+
+                                <com.google.android.material.textview.MaterialTextView
+                                    android:background="@drawable/borde_celda"
+                                    android:gravity="center"
+                                    android:padding="3dp"
+                                    android:text="@string/nombres"
+                                    android:textColor="@color/Texto_pastel"
+                                    android:textSize="10sp"
+                                    android:textStyle="bold" />
+
+                                <com.google.android.material.textview.MaterialTextView
+                                    android:background="@drawable/borde_celda"
+                                    android:gravity="center"
+                                    android:padding="3dp"
+                                    android:text="Fecha y hora"
+                                    android:textColor="@color/Texto_pastel"
+                                    android:textSize="10sp"
+                                    android:textStyle="bold" />
+
+                                <com.google.android.material.textview.MaterialTextView
+                                    android:background="@drawable/borde_celda"
+                                    android:gravity="center"
+                                    android:padding="3dp"
+                                    android:text="Vehiculo"
+                                    android:textColor="@color/Texto_pastel"
+                                    android:textSize="10sp"
+                                    android:textStyle="bold" />
+
+                                <com.google.android.material.textview.MaterialTextView
+                                    android:background="@drawable/borde_celda"
+                                    android:gravity="center"
+                                    android:padding="3dp"
+                                    android:text="Numero"
+                                    android:textColor="@color/Texto_pastel"
+                                    android:textSize="10sp"
+                                    android:textStyle="bold" />
+
+                            </TableRow>
+                        </TableLayout>
+                    </ScrollView>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="80dp" />
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 
@@ -385,5 +487,5 @@
         app:itemIconTint="@drawable/nav_item_color"
         app:itemTextColor="@drawable/nav_text_color"
         app:labelVisibilityMode="labeled"
-        app:menu="@menu/menu_vigi"/>
+        app:menu="@menu/menu_vigi" />
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

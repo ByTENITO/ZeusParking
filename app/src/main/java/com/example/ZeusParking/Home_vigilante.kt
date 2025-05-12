@@ -8,17 +8,26 @@ import android.os.Build
 import android.os.Bundle
 import com.google.android.material.button.MaterialButton
 import android.content.Intent
+import android.graphics.drawable.Drawable
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
+import android.widget.EditText
+import android.widget.TableLayout
+import android.widget.TableRow
 import android.widget.TextView
 import android.widget.Toast
 import androidx.core.app.NotificationCompat
+import androidx.core.content.ContextCompat
 import com.example.ZeusParking.BaseNavigationActivity
 import com.example.parquiatenov10.Responsividad
+import com.google.android.material.datepicker.MaterialTextInputPicker
 import com.google.android.material.progressindicator.LinearProgressIndicator
 import com.google.android.material.textview.MaterialTextView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ListenerRegistration
+import kotlin.enums.enumEntries
 
 
 class Home_vigilante : BaseNavigationActivity() {
@@ -32,10 +41,15 @@ class Home_vigilante : BaseNavigationActivity() {
     private lateinit var progressVehiculo: LinearProgressIndicator
     private lateinit var progressBicicleta: LinearProgressIndicator
     private lateinit var progressMoto: LinearProgressIndicator
+    private lateinit var ReservasTabla: TableLayout
+    private lateinit var Buscador: EditText
 
     // Firebase
     private val database = FirebaseFirestore.getInstance()
     private val listeners = mutableListOf<ListenerRegistration>()
+
+    //Lista Buscador
+    private val datosOriginales = mutableListOf<ReservData>()
 
     private val documentosDisponibilidad = mapOf(
         "Furgon" to "0ctYNlFXwtVw9ylURFXi",
@@ -43,6 +57,14 @@ class Home_vigilante : BaseNavigationActivity() {
         "Bicicleta" to "IuDC5XlTyhxhqU4It8SD",
         "Motocicleta" to "ntHgnXs4Qbz074siOrvz"
     )
+
+    data class ReservData(
+        val nombre: String,
+        val apellido: String,
+        val fecha: String,
+        val vehiculo: String,
+        val numero: String
+    ) : java.io.Serializable
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -55,6 +77,7 @@ class Home_vigilante : BaseNavigationActivity() {
         inicializarVistas()
         configurarPerfilUsuario()
         configurarListenersDisponibilidad()
+        consultaReserva()
         crearCanalNotificacion(this)
 
 
@@ -106,6 +129,31 @@ class Home_vigilante : BaseNavigationActivity() {
             )
         )
 
+        Buscador.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(s: Editable?) {
+                val texto = s.toString().lowercase()
+                if (texto.length >= 7){
+                    val filtradosNombre = datosOriginales.filter { "${it.apellido},${it.nombre}"
+                        .lowercase()
+                        .contains(texto)
+                    }
+                    mostrarFiltro(filtradosNombre)
+                }
+
+                if (texto.length <=6){
+                    val filtradoNumero = datosOriginales.filter { "${it.numero}"
+                        .lowercase()
+                        .contains(texto)
+                    }
+                    mostrarFiltro(filtradoNumero)
+                }
+
+            }
+
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+        })
+
     }
 
 
@@ -126,6 +174,12 @@ class Home_vigilante : BaseNavigationActivity() {
         progressVehiculo = findViewById(R.id.progressVehiculo)
         progressBicicleta = findViewById(R.id.progressBicicleta)
         progressMoto = findViewById(R.id.progressMoto)
+
+        //Tabla
+        ReservasTabla = findViewById(R.id.TablaReservas)
+
+        //Buscador
+        Buscador = findViewById(R.id.Buscador)
     }
 
     private fun configurarPerfilUsuario() {
@@ -176,7 +230,7 @@ class Home_vigilante : BaseNavigationActivity() {
                             // Actualizar UI
                             runOnUiThread {
                                 // Mostrar "disponibles/total"
-                                val espacios = documents.getLong(tipo)?:0
+                                val espacios = documents.getLong(tipo) ?: 0
                                 textView.text = "$disponibles/$espacios espacios para $tipo"
 
                                 // Calcular y actualizar progress bar
@@ -270,6 +324,133 @@ class Home_vigilante : BaseNavigationActivity() {
                     }
                 }
             }
+    }
+
+    private fun consultaReserva() {
+        val inicializador = "inicializador"
+        database.collection("Reservas")
+            .addSnapshotListener { documents, e ->
+                if (documents != null) {
+                    for (i in ReservasTabla.childCount - 1 downTo 1) {
+                        ReservasTabla.removeViewAt(i)
+                    }
+                    datosOriginales.clear()
+                    for (document in documents) {
+                        if (document.id != inicializador && document.exists()) {
+
+                            val nombres = document.getString("nombre").toString()
+                            val apellidos = document.getString("apellidos").toString()
+                            val fecha = document.getString("fechaHora").toString()
+                            val vehiculo = document.getString("tipo").toString()
+                            val idVehi = document.getString("numero").toString()
+
+                            Log.d(
+                                "Reservas",
+                                "Nombres:$nombres,Apellidos:$apellidos,Fecha:$fecha,Vehiculo:$vehiculo,Numero:$idVehi"
+                            )
+
+                            val datos = ReservData(
+                                nombres,
+                                apellidos,
+                                fecha,
+                                vehiculo,
+                                idVehi
+                            )
+                            datosOriginales.add(datos)
+                            tabla(datos)
+                        }
+                    }
+                }
+
+            }
+    }
+
+    private fun tabla(datos: ReservData) {
+        val celdaNombre = MaterialTextView(this)
+        acortarTexto("${datos.apellido},${datos.nombre}", celdaNombre)
+        celdaNombre.textSize = 10F
+        celdaNombre.setTextColor(ContextCompat.getColor(this, R.color.Texto_pastel))
+        celdaNombre.background = ContextCompat.getDrawable(this, R.drawable.borde_celda)
+
+        val celdaFecha = TextView(this)
+        acortarTexto(datos.fecha, celdaFecha)
+        celdaFecha.textSize = 10F
+        celdaFecha.setTextColor(ContextCompat.getColor(this, R.color.Texto_pastel))
+        celdaFecha.background = ContextCompat.getDrawable(this, R.drawable.borde_celda)
+
+        val celdaVehi = TextView(this)
+        acortarTexto(datos.vehiculo, celdaVehi)
+        celdaVehi.textSize = 10F
+        celdaVehi.setTextColor(ContextCompat.getColor(this, R.color.Texto_pastel))
+        celdaVehi.background = ContextCompat.getDrawable(this, R.drawable.borde_celda)
+
+        val celdaIdVehi = TextView(this)
+        acortarTexto(datos.numero, celdaIdVehi)
+        celdaIdVehi.textSize = 10F
+        celdaIdVehi.setTextColor(ContextCompat.getColor(this, R.color.Texto_pastel))
+        celdaIdVehi.background = ContextCompat.getDrawable(this, R.drawable.borde_celda)
+
+        val fila = TableRow(this)
+        fila.addView(celdaNombre)
+        fila.addView(celdaFecha)
+        fila.addView(celdaVehi)
+        fila.addView(celdaIdVehi)
+
+        ReservasTabla.addView(fila)
+    }
+
+    private fun mostrarFiltro(lista: List<ReservData>) {
+        for (i in ReservasTabla.childCount - 1 downTo 1) {
+            ReservasTabla.removeViewAt(i)
+        }
+
+        for (usuario in lista) {
+            val fila = TableRow(this)
+
+            val celdaNombre = TextView(this)
+            celdaNombre.text = "${usuario.apellido},${usuario.nombre}"
+            acortarTexto("${usuario.apellido},${usuario.nombre}", celdaNombre)
+            celdaNombre.textSize = 10F
+            celdaNombre.setTextColor(ContextCompat.getColor(this, R.color.Texto_pastel))
+            celdaNombre.background = ContextCompat.getDrawable(this, R.drawable.borde_celda)
+
+            val celdaFecha = TextView(this)
+            celdaFecha.text = usuario.fecha
+            acortarTexto(usuario.fecha, celdaFecha)
+            celdaFecha.textSize = 10F
+            celdaFecha.setTextColor(ContextCompat.getColor(this, R.color.Texto_pastel))
+            celdaFecha.background = ContextCompat.getDrawable(this, R.drawable.borde_celda)
+
+            val celdaVehi = TextView(this)
+            celdaVehi.text = usuario.vehiculo
+            acortarTexto(usuario.vehiculo, celdaVehi)
+            celdaVehi.textSize = 10F
+            celdaVehi.setTextColor(ContextCompat.getColor(this, R.color.Texto_pastel))
+            celdaVehi.background = ContextCompat.getDrawable(this, R.drawable.borde_celda)
+
+            val celdaIdVehi = TextView(this)
+            celdaIdVehi.text = usuario.numero
+            acortarTexto(usuario.numero, celdaIdVehi)
+            celdaIdVehi.textSize = 10F
+            celdaIdVehi.setTextColor(ContextCompat.getColor(this, R.color.Texto_pastel))
+            celdaIdVehi.background = ContextCompat.getDrawable(this, R.drawable.borde_celda)
+
+            fila.addView(celdaNombre)
+            fila.addView(celdaFecha)
+            fila.addView(celdaVehi)
+            fila.addView(celdaIdVehi)
+
+            ReservasTabla.addView(fila)
+        }
+    }
+
+    private fun acortarTexto(texto: String, textView: TextView) {
+        val textoCorto = if (texto.length > 11) {
+            texto.substring(0, 11) + "..."
+        } else {
+            texto
+        }
+        textView.text = textoCorto
     }
 
     // Navegación
