@@ -1,5 +1,8 @@
 package com.example.parquiatenov10
 
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Color
 import android.os.Build
@@ -11,14 +14,18 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.NotificationCompat
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.zxing.BarcodeFormat
 import com.google.zxing.EncodeHintType
 import com.google.zxing.MultiFormatWriter
 import com.google.zxing.WriterException
+import java.text.SimpleDateFormat
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
+import java.util.*
 
 @RequiresApi(Build.VERSION_CODES.O)
 class Reservacion : AppCompatActivity() {
@@ -59,9 +66,7 @@ class Reservacion : AppCompatActivity() {
         horaTxT = findViewById(R.id.Hora)
         salir = findViewById(R.id.SalidaReser)
 
-        //Responsividad
         Responsividad.inicializar(this)
-
 
         val userId = intent.getStringExtra("ID") ?: "No disponible"
         val vehiculo = intent.getStringExtra("Tipo") ?: "No disponible"
@@ -72,6 +77,8 @@ class Reservacion : AppCompatActivity() {
         salir.setOnClickListener {
             finish()
         }
+
+        crearCanalNotificacion(this)
     }
 
     private fun consulta(userId: String, vehiculo: String, numero: String) {
@@ -93,24 +100,87 @@ class Reservacion : AppCompatActivity() {
                             id = document.getString("id")?:""
                         )
                         actualizarInterfaz(reserData)
-                        Reserva(reserData.numero,vehiculo,reserData)
+                        verificarYRealizarReserva(numero, vehiculo, reserData)
                     }
                 }
             }
     }
 
-    private fun Reserva(numero: String, tipo: String, reserva: ReserData){
+    private fun verificarYRealizarReserva(numero: String, tipo: String, reserva: ReserData) {
+        val userId = FirebaseAuth.getInstance().currentUser?.uid ?: ""
+
+        // Primero verificar disponibilidad
+        verificarDisponibilidad(tipo) { hayEspacio ->
+            if (hayEspacio) {
+                realizarReserva(userId, numero, tipo, reserva)
+            } else {
+                Toast.makeText(this, "No hay espacios disponibles para $tipo", Toast.LENGTH_LONG).show()
+            }
+        }
+    }
+
+    private fun verificarDisponibilidad(tipoVehiculo: String, callback: (Boolean) -> Unit) {
+        val documentId = when (tipoVehiculo) {
+            "Furgon" -> "0ctYNlFXwtVw9ylURFXi"
+            "Vehiculo Particular" -> "UF0tfabGHGitcj7En6Wy"
+            "Bicicleta" -> "IuDC5XlTyhxhqU4It8SD"
+            "Patineta Electrica" -> "IuDC5XlTyhxhqU4It8SD"
+            "Motocicleta" -> "ntHgnXs4Qbz074siOrvz"
+            else -> {
+                callback(false)
+                return
+            }
+        }
+
+        val campo = if (tipoVehiculo == "Patineta Electrica") "Bicicleta" else tipoVehiculo
+
+        database.collection("Disponibilidad").document(documentId)
+            .get()
+            .addOnSuccessListener { document ->
+                if (document.exists()) {
+                    val espacios = document.getLong(campo) ?: 0
+                    callback(espacios > 0)
+                } else {
+                    callback(false)
+                }
+            }
+            .addOnFailureListener { e ->
+                Log.e("Firestore", "Error al obtener el documento de disponibilidad: ", e)
+                callback(false)
+            }
+    }
+
+    private fun realizarReserva(userId: String, numero: String, tipo: String, reserva: ReserData) {
         database.collection("Reservas")
             .whereEqualTo("tipo",tipo)
             .whereEqualTo("numero",numero)
+            .whereEqualTo("usuarioId", userId)
             .get()
             .addOnSuccessListener{ documents ->
-                database.collection("Reservas")
-                    .add(reserva)
-                    .addOnSuccessListener { document ->
-                        actualizarDisponibilidad(tipo)
-                        Toast.makeText(this, "Reserva realizada, guarda soporte de esta para que sea validada antes de ingresar", Toast.LENGTH_SHORT).show()
-                    }
+                if (documents.isEmpty()) {
+                    val reservaData = hashMapOf(
+                        "usuarioId" to userId,
+                        "numero" to reserva.numero,
+                        "tipoVehiculo" to reserva.tipo,
+                        "fecha" to SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date()),
+                        "hora" to SimpleDateFormat("HH:mm", Locale.getDefault()).format(Date()),
+                        "activa" to true
+                    )
+
+                    database.collection("Reservas")
+                        .add(reservaData)
+                        .addOnSuccessListener { document ->
+                            actualizarDisponibilidad(tipo)
+                            mostrarNotificacion(
+                                this,
+                                "Reserva exitosa",
+                                "Tu reserva para $tipo ha sido registrada"
+                            )
+                            Toast.makeText(this, "Reserva realizada, guarda soporte de esta para que sea validada antes de ingresar", Toast.LENGTH_SHORT).show()
+                        }
+                } else {
+                    Toast.makeText(this, "Ya tienes una reserva activa", Toast.LENGTH_SHORT).show()
+                }
             }
     }
 
@@ -170,6 +240,7 @@ class Reservacion : AppCompatActivity() {
             null
         }
     }
+
     private fun actualizarDisponibilidad(tipoVehiculo: String) {
         val documentId = when (tipoVehiculo) {
             "Furgon" -> "0ctYNlFXwtVw9ylURFXi"
@@ -179,36 +250,45 @@ class Reservacion : AppCompatActivity() {
             "Motocicleta" -> "ntHgnXs4Qbz074siOrvz"
             else -> return
         }
-        if (tipoVehiculo == "Patineta Electrica"){
-            Consulta(documentId,"Bicicleta")
-        }else{
-            Consulta(documentId, tipoVehiculo)
-        }
-    }
-    private fun Consulta(documentId: String, tipoVehiculo: String){
+
+        val campo = if (tipoVehiculo == "Patineta Electrica") "Bicicleta" else tipoVehiculo
+
         database.collection("Disponibilidad").document(documentId)
-            .get()
-            .addOnSuccessListener { document ->
-                if (document.exists()) {
-                    val espacios = document.getLong(tipoVehiculo) ?: 0
-                    if (espacios > 0) {
-                        database.collection("Disponibilidad").document(documentId)
-                            .update(tipoVehiculo, FieldValue.increment(-1))
-                            .addOnSuccessListener {
-                                Log.d("Firestore", "Campo '$tipoVehiculo' decrementado")
-                            }
-                            .addOnFailureListener { e ->
-                                Log.e("Firestore", "Error al actualizar el campo: ", e)
-                            }
-                    } else {
-                        Toast.makeText(this, "No hay espacios disponibles para $tipoVehiculo", Toast.LENGTH_LONG).show()
-                    }
-                } else {
-                    Log.d("Firestore", "No se encontró el documento para $tipoVehiculo")
-                }
+            .update(campo, FieldValue.increment(-1))
+            .addOnSuccessListener {
+                Log.d("Firestore", "Campo '$campo' decrementado")
             }
             .addOnFailureListener { e ->
-                Log.e("Firestore", "Error al obtener el documento de disponibilidad: ", e)
+                Log.e("Firestore", "Error al actualizar el campo: ", e)
             }
+    }
+
+    private fun crearCanalNotificacion(context: Context) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val nombre = "Canal ZeusParking"
+            val descripcion = "Notificaciones de reservas"
+            val importancia = NotificationManager.IMPORTANCE_DEFAULT
+            val canal = NotificationChannel("ZeusParking", nombre, importancia).apply {
+                description = descripcion
+            }
+            val manager =
+                context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            manager.createNotificationChannel(canal)
+        }
+    }
+
+    private fun mostrarNotificacion(context: Context, titulo: String, mensaje: String) {
+        val notificationManager =
+            context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        val builder = NotificationCompat.Builder(context, "ZeusParking")
+            .setSmallIcon(R.drawable.icon_zeusparking)
+            .setContentTitle(titulo)
+            .setContentText(mensaje)
+            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+            .setColor(Color.BLUE)
+            .setAutoCancel(true)
+
+        val notificationId = System.currentTimeMillis().toInt()
+        notificationManager.notify(notificationId, builder.build())
     }
 }

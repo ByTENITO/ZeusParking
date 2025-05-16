@@ -5,87 +5,165 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
     android:layout_width="match_parent"
-    android:layout_marginTop="39dp"
     android:layout_height="match_parent"
     android:background="@drawable/fondo"
     tools:context=".HomeActivity">
 
-    <!-- Encabezado rediseñado con imagen centrada y texto debajo -->
+    <!-- Encabezado -->
     <LinearLayout
         android:id="@+id/header_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="20dp"
-        android:gravity="center_horizontal"
         android:layout_marginTop="16dp"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        android:padding="16dp"
         app:layout_constraintTop_toTopOf="parent">
 
         <com.google.android.material.imageview.ShapeableImageView
             android:id="@+id/FotoPerfil_ImageView"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_marginBottom="8dp"
             android:contentDescription="@string/todo"
-            android:scaleType="centerCrop"
             android:elevation="8dp"
+            android:scaleType="centerCrop"
+            app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.App.CircleImage"
             app:strokeColor="#FFFFFF"
             app:strokeWidth="2dp"
-            app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.App.CircleImage"
-            tools:srcCompat="@tools:sample/avatars"
-            android:layout_marginBottom="16dp"/>
+            tools:srcCompat="@tools:sample/avatars" />
 
         <TextView
             android:id="@+id/welcome_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Bienvenido"
-            android:textSize="24sp"
+            android:layout_marginBottom="4dp"
             android:fontFamily="sans-serif-medium"
+            android:text="Bienvenido"
             android:textColor="@color/Texto_pastel"
-            android:layout_marginBottom="8dp"/>
+            android:textSize="20sp" />
 
         <TextView
             android:id="@+id/user_email"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="16sp"
             android:fontFamily="sans-serif"
-            android:textColor="#E0E0E0"/>
+            android:textColor="#E0E0E0"
+            android:textSize="14sp" />
     </LinearLayout>
 
-    <!-- Resto del contenido permanece igual -->
+    <!-- Contenido principal con scroll -->
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        app:layout_constraintTop_toBottomOf="@id/header_layout"
+        android:fillViewport="true"
+        android:paddingBottom="8dp"
         app:layout_constraintBottom_toTopOf="@id/bottom_navigation"
-        android:fillViewport="true">
+        app:layout_constraintTop_toBottomOf="@id/header_layout">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="12dp">
+            android:padding="8dp">
 
+            <!-- Sección de reservas -->
             <androidx.cardview.widget.CardView
-                android:id="@+id/disponibilidad_card"
+                android:id="@+id/reserva_card"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
-                app:cardCornerRadius="16dp"
+                android:layout_marginBottom="12dp"
+                app:cardCornerRadius="12dp"
                 app:cardElevation="4dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
                     android:background="@color/Navegacion"
-                    android:padding="20dp">
+                    android:orientation="vertical"
+                    android:padding="16dp">
 
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="16dp"
+                        android:layout_marginBottom="12dp"
+                        android:fontFamily="sans-serif-medium"
+                        android:text="Mis Reservas"
+                        android:textColor="@color/Texto_pastel"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/reserva_text"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="No tienes reservas activas"
+                        android:textColor="@color/Texto_pastel"
+                        android:textSize="14sp" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_horizontal"
+                        android:layout_marginTop="8dp">
+
+                        <Button
+                            android:id="@+id/btn_ver_qr"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="8dp"
+                            android:text="Ver QR"
+                            android:visibility="gone"
+                            android:backgroundTint="@color/Principal"/>
+
+                        <Button
+                            android:id="@+id/btn_modificar_reserva"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="8dp"
+                            android:text="Modificar"
+                            android:visibility="gone"
+                            android:backgroundTint="@color/Principal"/>
+
+                        <Button
+                            android:id="@+id/btn_eliminar_reserva"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Cancelar"
+                            android:visibility="gone"
+                            android:backgroundTint="@color/error_red"/>
+                    </LinearLayout>
+
+                    <ImageView
+                        android:id="@+id/qr_image"
+                        android:layout_width="200dp"
+                        android:layout_height="200dp"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginTop="16dp"
+                        android:visibility="gone"/>
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <!-- Disponibilidad -->
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="12dp"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="4dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/Navegacion"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="12dp"
                         android:fontFamily="sans-serif-medium"
                         android:text="Disponibilidad"
                         android:textColor="@color/Texto_pastel"
@@ -96,117 +174,109 @@
                         android:id="@+id/disponibilidad_container"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical">
-                        <!-- Aquí se agregarán dinámicamente las disponibilidades -->
-                    </LinearLayout>
+                        android:orientation="vertical" />
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
 
-            <!-- Sección de vehículos registrados -->
+            <!-- Vehículos -->
             <androidx.cardview.widget.CardView
-                android:id="@+id/vehiculos_card"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
-                app:cardCornerRadius="16dp"
+                android:layout_marginBottom="12dp"
+                app:cardCornerRadius="12dp"
                 app:cardElevation="4dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
                     android:background="@color/Navegacion"
-                    android:padding="20dp">
+                    android:orientation="vertical"
+                    android:padding="16dp">
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal"
+                        android:layout_marginBottom="12dp"
                         android:gravity="center_vertical"
-                        android:layout_marginBottom="16dp">
+                        android:orientation="horizontal">
 
                         <TextView
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="Mis Vehículos"
-                            android:textSize="18sp"
-                            android:textStyle="bold"
                             android:fontFamily="sans-serif-medium"
-                            android:textColor="@color/Texto_pastel"/>
+                            android:text="Mis Vehículos"
+                            android:textColor="@color/Texto_pastel"
+                            android:textSize="18sp"
+                            android:textStyle="bold" />
 
                         <Button
                             android:id="@+id/btnRegistroVehi"
                             android:layout_width="wrap_content"
-                            android:layout_height="36dp"
-                            android:text="+ Nuevo"
-                            android:textSize="12sp"
-                            android:textAllCaps="false"
+                            android:layout_height="32dp"
                             android:backgroundTint="@color/Principal"
-                            android:padding="0dp"/>
+                            android:padding="0dp"
+                            android:text="+ Nuevo"
+                            android:textAllCaps="false"
+                            android:textSize="12sp" />
                     </LinearLayout>
 
                     <LinearLayout
                         android:id="@+id/vehiculos_container"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical">
-                        <!-- Aquí se agregarán dinámicamente los vehículos -->
-                    </LinearLayout>
+                        android:orientation="vertical" />
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
 
-            <!-- Sección de portátiles registrados -->
+            <!-- Portátiles -->
             <androidx.cardview.widget.CardView
-                android:id="@+id/portatiles_card"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
-                app:cardCornerRadius="16dp"
+                android:layout_marginBottom="12dp"
+                app:cardCornerRadius="12dp"
                 app:cardElevation="4dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
                     android:background="@color/Navegacion"
-                    android:padding="20dp">
+                    android:orientation="vertical"
+                    android:padding="16dp">
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal"
+                        android:layout_marginBottom="12dp"
                         android:gravity="center_vertical"
-                        android:layout_marginBottom="16dp">
+                        android:orientation="horizontal">
 
                         <TextView
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="Mis Portátiles"
-                            android:textSize="18sp"
-                            android:textStyle="bold"
                             android:fontFamily="sans-serif-medium"
-                            android:textColor="@color/Texto_pastel"/>
+                            android:text="Mis Portátiles"
+                            android:textColor="@color/Texto_pastel"
+                            android:textSize="18sp"
+                            android:textStyle="bold" />
 
                         <Button
                             android:id="@+id/btnRegistroPC"
                             android:layout_width="wrap_content"
-                            android:layout_height="36dp"
-                            android:text="+ Nuevo"
-                            android:textSize="12sp"
-                            android:textAllCaps="false"
+                            android:layout_height="32dp"
                             android:backgroundTint="@color/Principal"
-                            android:padding="0dp"/>
+                            android:padding="0dp"
+                            android:text="+ Nuevo"
+                            android:textAllCaps="false"
+                            android:textSize="12sp" />
                     </LinearLayout>
 
                     <LinearLayout
                         android:id="@+id/portatiles_container"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical">
-                        <!-- Aquí se agregarán dinámicamente los portátiles -->
-                    </LinearLayout>
+                        android:orientation="vertical" />
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
         </LinearLayout>
@@ -218,10 +288,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/Navegacion"
+        android:elevation="16dp"
         app:itemIconTint="@drawable/nav_item_color"
         app:itemTextColor="@drawable/nav_text_color"
-        app:menu="@menu/nav_menu"
         app:labelVisibilityMode="labeled"
         app:layout_constraintBottom_toBottomOf="parent"
-        android:elevation="16dp"/>
+        app:menu="@menu/nav_menu" />
 </androidx.constraintlayout.widget.ConstraintLayout>
