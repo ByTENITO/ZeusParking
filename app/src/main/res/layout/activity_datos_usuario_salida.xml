@@ -288,7 +288,7 @@
                 android:layout_height="44dp"
                 android:layout_marginTop="24dp"
                 android:layout_marginBottom="16dp"
-                android:text="Salir"
+                android:text="Listo"
                 android:textSize="15sp"
                 app:backgroundTint="@color/Principal"
                 app:cornerRadius="22dp"/>

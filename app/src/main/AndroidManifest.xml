@@ -29,6 +29,16 @@
             android:name=".DatosUsuarioSalida"
             android:screenOrientation="portrait"
             android:exported="false"/>
+
+        <activity
+            android:name=".RegistroPC"
+            android:screenOrientation="portrait"
+            android:exported="false"/>
+
+        <activity
+            android:name=".InfoPCActivity"
+            android:screenOrientation="portrait"
+            android:exported="false"/>
         <activity
             android:name=".RegistroActivity"
             android:screenOrientation="portrait"

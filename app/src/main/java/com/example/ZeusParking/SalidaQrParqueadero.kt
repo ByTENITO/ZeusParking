@@ -18,6 +18,9 @@ import androidx.camera.view.PreviewView
 import androidx.core.content.ContextCompat
 import com.example.ZeusParking.BaseNavigationActivity
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.Query
+import com.google.firebase.firestore.QuerySnapshot
+import com.google.firebase.firestore.WriteBatch
 import com.google.mlkit.vision.barcode.BarcodeScanning
 import com.google.mlkit.vision.common.InputImage
 import java.util.concurrent.ExecutorService
@@ -155,43 +158,124 @@ class SalidaQrParqueadero : BaseNavigationActivity() {
     }
 
     private fun verificarSalida(correo: String, vehiculo: String, idVehiculo: String) {
-        database.collection("Salida")
+        // Verificar si hay una entrada activa primero
+        database.collection("Entrada")
             .whereEqualTo("correo", correo)
             .get()
-            .addOnSuccessListener { documents ->
-                if (documents.isEmpty) {
-                    // El usuario no ha ingresado, proceder a verificar salida
-                    verificarEntrada(correo, vehiculo, idVehiculo)
-                } else {
-                    Toast.makeText(this, "El usuario ya salio", Toast.LENGTH_SHORT).show()
+            .addOnSuccessListener { entradaDocuments ->
+                if (entradaDocuments.isEmpty) {
+                    Toast.makeText(this, "No se encontró registro de entrada activa", Toast.LENGTH_SHORT).show()
+                    return@addOnSuccessListener
                 }
+
+                // Si hay entrada activa, verificar portátil
+                verificarEntrada(correo, vehiculo, idVehiculo)
             }
             .addOnFailureListener { e ->
+                Toast.makeText(this, "Error al verificar entrada", Toast.LENGTH_SHORT).show()
                 Log.e("Firestore", "Error al verificar entrada: ", e)
             }
     }
 
     private fun verificarEntrada(correo: String, vehiculo: String, idVehiculo: String) {
+        // Verificar primero si hay un portátil registrado en la entrada
+        database.collection("Entrada_Portatiles")
+            .whereEqualTo("correoUsuario", correo)
+            .orderBy("fechaHora", Query.Direction.DESCENDING)
+            .limit(1)
+            .get()
+            .addOnSuccessListener { portatilDocuments ->
+                try {
+                    if (!portatilDocuments.isEmpty) {
+                        val llevaPC = portatilDocuments.documents[0].getBoolean("llevaPC") ?: false
+                        val serialPC = portatilDocuments.documents[0].getString("serialPC")
+
+                        if (llevaPC && !serialPC.isNullOrEmpty()) {
+                            // Mostrar confirmación de devolución de PC
+                            val intent = Intent(this, InfoPCActivity::class.java).apply {
+                                putExtra("correo", correo)
+                                putExtra("serialPC", serialPC)
+                                putExtra("modoDevolucion", true)
+                            }
+                            startActivity(intent)
+                        }
+                    }
+                    // Continuar con el proceso de salida normal
+                    procesarSalida(correo, vehiculo, idVehiculo, portatilDocuments)
+                } catch (e: Exception) {
+                    Log.e("Firestore", "Error procesando documentos de portátil: ", e)
+                    procesarSalida(correo, vehiculo, idVehiculo, null)
+                }
+            }
+            .addOnFailureListener { e ->
+                Log.e("Firestore", "Error al verificar portátil: ", e)
+                // Continuar con el proceso sin verificación de portátil
+                procesarSalida(correo, vehiculo, idVehiculo, null)
+            }
+    }
+
+    private fun procesarSalida(correo: String, vehiculo: String, idVehiculo: String, portatilDocuments: QuerySnapshot?) {
+        // Crear un batch para todas las operaciones de eliminación
+        val batch = database.batch()
+
+        // Paso 1: Eliminar registros de Entrada
         database.collection("Entrada")
             .whereEqualTo("correo", correo)
             .get()
-            .addOnSuccessListener { documents ->
-                if (!documents.isEmpty) {
-                    // Si existe entrada, eliminarla
-                    for (document in documents) {
-                        database.collection("Entrada").document(document.id).delete()
-                    }
+            .addOnSuccessListener { entradaDocuments ->
+                for (document in entradaDocuments) {
+                    batch.delete(document.reference)
+                    Log.d("Salida", "Marcando entrada para eliminar: ${document.id}")
                 }
+
+                // Paso 2: Eliminar registros de portátiles si existen
+                if (portatilDocuments != null && !portatilDocuments.isEmpty) {
+                    for (document in portatilDocuments) {
+                        batch.delete(document.reference)
+                        Log.d("Salida", "Marcando portátil para eliminar: ${document.id}")
+                    }
+                } else {
+                    // Si no se pasaron documentos, buscarlos directamente
+                    database.collection("Entrada_Portatiles")
+                        .whereEqualTo("correoUsuario", correo)
+                        .get()
+                        .addOnSuccessListener { portatiles ->
+                            for (document in portatiles) {
+                                batch.delete(document.reference)
+                                Log.d("Salida", "Marcando portátil (búsqueda directa) para eliminar: ${document.id}")
+                            }
+                            commitBatchOperations(batch, correo, vehiculo, idVehiculo)
+                        }
+                        .addOnFailureListener { e ->
+                            Log.e("Salida", "Error buscando portátiles", e)
+                            commitBatchOperations(batch, correo, vehiculo, idVehiculo)
+                        }
+                    return@addOnSuccessListener
+                }
+
+                // Paso 3: Ejecutar todas las eliminaciones
+                commitBatchOperations(batch, correo, vehiculo, idVehiculo)
+            }
+            .addOnFailureListener { e ->
+                Toast.makeText(this, "Error al procesar salida", Toast.LENGTH_SHORT).show()
+                Log.e("Salida", "Error al obtener entradas", e)
+            }
+    }
+
+    private fun commitBatchOperations(batch: WriteBatch, correo: String, vehiculo: String, idVehiculo: String) {
+        batch.commit()
+            .addOnSuccessListener {
+                Log.d("Salida", "Todos los registros eliminados exitosamente")
                 val intent = Intent(this, DatosUsuarioSalida::class.java).apply {
                     putExtra("correo", correo)
-                    putExtra("tipo",vehiculo)
-                    putExtra("id",idVehiculo)
+                    putExtra("tipo", vehiculo)
+                    putExtra("id", idVehiculo)
                 }
-                Log.d("IntentData", "Correo: $correo, Tipo: $vehiculo, ID: $idVehiculo")
                 startActivity(intent)
             }
             .addOnFailureListener { e ->
-                Log.e("Firestore", "Error al verificar salida: ", e)
+                Toast.makeText(this, "Error al guardar los cambios", Toast.LENGTH_SHORT).show()
+                Log.e("Salida", "Error en batch commit", e)
             }
     }
 

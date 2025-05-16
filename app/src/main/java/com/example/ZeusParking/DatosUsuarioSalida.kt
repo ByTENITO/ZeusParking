@@ -137,6 +137,42 @@ class DatosUsuarioSalida : AppCompatActivity() {
     }
 
     private fun registrarIngreso(correo: String, vehiculo: String, idVehiculo: String) {
+        cleanOldPortatilRecords(correo)
+        // Primero eliminar cualquier salida previa
+        database.collection("Salida")
+            .whereEqualTo("correo", correo)
+            .get()
+            .addOnSuccessListener { salidaDocuments ->
+                val batch = database.batch()
+                for (document in salidaDocuments) {
+                    batch.delete(document.reference)
+                }
+
+                batch.commit().addOnSuccessListener {
+                    registrarNuevaSalida(correo, vehiculo, idVehiculo)
+                }
+            }
+    }
+
+
+    private fun cleanOldPortatilRecords(correo: String) {
+        database.collection("Entrada_Portatiles")
+            .whereEqualTo("correoUsuario", correo)
+            .get()
+            .addOnSuccessListener { documents ->
+                if (!documents.isEmpty) {
+                    val batch = database.batch()
+                    for (document in documents) {
+                        batch.delete(document.reference)
+                    }
+                    batch.commit()
+                        .addOnSuccessListener {
+                            Log.d("Limpio", "Limpieza de Registro de PCs del Usuario")
+                        }
+                }
+            }
+    }
+    private fun registrarNuevaSalida(correo: String, vehiculo: String, idVehiculo: String) {
         database.collection("Bici_Usuarios")
             .whereEqualTo("correo", correo)
             .whereEqualTo("tipo", vehiculo)
@@ -144,39 +180,31 @@ class DatosUsuarioSalida : AppCompatActivity() {
             .get()
             .addOnSuccessListener { documents ->
                 if (documents.isEmpty) {
-                    Log.d("Firestore", "No se encontraron documentos con correo: $correo")
                     Toast.makeText(this, "No se encontraron datos del usuario", Toast.LENGTH_SHORT).show()
-                } else {
-                    for (document in documents) {
-                        val biciData = BiciData(
-                            nombre = document.getString("nombre") ?: "",
-                            apellidos = document.getString("apellidos") ?: "",
-                            color = document.getString("color") ?: "",
-                            cedula = document.getString("cedula") ?: "",
-                            placa = document.getString("numero") ?: "",
-                            tipo = document.getString("tipo") ?: "",
-                            correo = document.getString("correo") ?: "",
-                            fechaHora = fechaHoraFormateada.toString()
-                        )
-
-                        // Actualizar la interfaz
-                        actualizarInterfaz(biciData)
-
-                        // Registrar la salida
-                        database.collection("Salida")
-                            .add(biciData)
-                            .addOnSuccessListener {
-                                Toast.makeText(this, "Datos cargados", Toast.LENGTH_SHORT).show()
-                                actualizarDisponibilidad(biciData.tipo)
-                            }
-                            .addOnFailureListener {
-                                Toast.makeText(this, "No se cargaron los datos", Toast.LENGTH_SHORT).show()
-                            }
-                    }
+                    return@addOnSuccessListener
                 }
-            }
-            .addOnFailureListener { e ->
-                Log.e("Firestore", "Error al registrar ingreso: ", e)
+
+                for (document in documents) {
+                    val biciData = BiciData(
+                        nombre = document.getString("nombre") ?: "",
+                        apellidos = document.getString("apellidos") ?: "",
+                        color = document.getString("color") ?: "",
+                        cedula = document.getString("cedula") ?: "",
+                        placa = document.getString("numero") ?: "",
+                        tipo = document.getString("tipo") ?: "",
+                        correo = document.getString("correo") ?: "",
+                        fechaHora = fechaHoraFormateada.toString()
+                    )
+
+                    actualizarInterfaz(biciData)
+
+                    database.collection("Salida")
+                        .add(biciData)
+                        .addOnSuccessListener {
+                            Toast.makeText(this, "Salida registrada correctamente", Toast.LENGTH_SHORT).show()
+                            actualizarDisponibilidad(biciData.tipo)
+                        }
+                }
             }
     }
 

@@ -58,4 +58,34 @@
     <string name="sube_aqui_tus_fotos">Sube aqui tus fotos 👇🏼</string>
     <string name="reservar">Reservar</string>
 
+    <string-array name="tipos_pc">
+        <item>Seleccione el tipo</item>
+        <item>Portátil personal</item>
+        <item>Portátil institucional</item>
+        <item>Tablet</item>
+        <item>Otro</item>
+    </string-array>
+
+
+        <string name="portatil_title">PORTATIL DE USUARIO</string>
+        <string name="laptop_icon">Icono de portátil</string>
+        <string name="model_label">Modelo</string>
+        <string name="serial_label">Serial</string>
+        <string name="color_label">Color</string>
+        <string name="type_label">Tipo</string>
+        <string name="features_title">Características</string>
+        <string name="confirmation_title">¿El usuario lleva el equipo hoy?</string>
+        <string name="yes_button">Sí</string>
+        <string name="no_button">No</string>
+
+        <string name="register_laptop_title">Registro de Portátil</string>
+        <string name="laptop_type_hint">Tipo de portátil</string>
+        <string name="brand_hint">Marca</string>
+        <string name="model_hint">Modelo</string>
+        <string name="serial_hint">Número de serie</string>
+        <string name="color_hint">Color</string>
+        <string name="features_hint">Características</string>
+        <string name="register_button">Registrar Portátil</string>
+
+
 </resources>
