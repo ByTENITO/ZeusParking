@@ -21,6 +21,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.cardview.widget.CardView
 import androidx.core.app.NotificationCompat
 import com.example.ZeusParking.BaseNavigationActivity
+import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FieldValue
@@ -127,8 +128,7 @@ class HomeActivity : BaseNavigationActivity() {
 
         // Escuchar cambios en reservas
         database.collection("Reservas")
-            .whereEqualTo("usuarioId", userId)
-            .whereEqualTo("activa", true)
+            .whereEqualTo("id", userId)
             .addSnapshotListener { documents, e ->
                 if (e != null) {
                     Log.w("HomeActivity", "Error escuchando reservas", e)
@@ -195,7 +195,8 @@ class HomeActivity : BaseNavigationActivity() {
                 configurarDisponibilidad(tiposVehiculos)
             }
             .addOnFailureListener { e ->
-                Toast.makeText(this, "Error al cargar vehículos: ${e.message}", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Error al cargar vehículos: ${e.message}", Toast.LENGTH_SHORT)
+                    .show()
             }
     }
 
@@ -254,7 +255,12 @@ class HomeActivity : BaseNavigationActivity() {
         }
     }
 
-    private fun agregarTarjetaDisponibilidad(tipo: String, docId: String, color: String, umbrales: List<Pair<IntRange, String>>) {
+    private fun agregarTarjetaDisponibilidad(
+        tipo: String,
+        docId: String,
+        color: String,
+        umbrales: List<Pair<IntRange, String>>
+    ) {
         val cardView = LayoutInflater.from(this).inflate(
             R.layout.item_disponibilidad,
             disponibilidadContainer,
@@ -301,9 +307,7 @@ class HomeActivity : BaseNavigationActivity() {
         if (userId.isNullOrEmpty()) return
 
         database.collection("Reservas")
-            .whereEqualTo("usuarioId", userId)
-            .whereEqualTo("activa", true)
-            .limit(1)
+            .whereEqualTo("id", userId)
             .get()
             .addOnSuccessListener { documents ->
                 if (documents.isEmpty) {
@@ -312,27 +316,28 @@ class HomeActivity : BaseNavigationActivity() {
                     for (document in documents) {
                         reservaId = document.id
                         val fecha = document.getString("fecha") ?: ""
-                        val hora = document.getString("hora") ?: ""
-                        val tipoVehiculo = document.getString("tipoVehiculo") ?: ""
+                        val tipoVehiculo = document.getString("tipo") ?: ""
                         val numeroVehiculo = document.getString("numero") ?: ""
 
-                        reservaText.text = "Reserva activa para $tipoVehiculo ($numeroVehiculo) el $fecha a las $hora"
+                        reservaText.text =
+                            "Reserva activa para $tipoVehiculo ($numeroVehiculo) el $fecha"
                         mostrarBotonesReserva()
 
                         btnVerQR.setOnClickListener {
-                            qrImageView.visibility = if (qrImageView.visibility == View.VISIBLE) View.GONE else View.VISIBLE
+                            qrImageView.visibility =
+                                if (qrImageView.visibility == View.VISIBLE) View.GONE else View.VISIBLE
                         }
 
                         btnEliminarReserva.setOnClickListener {
-                            mostrarDialogoConfirmacionEliminar()
+                            mostrarDialogoConfirmacionEliminar(tipoVehiculo)
                         }
 
                         btnModificarReserva.setOnClickListener {
                             mostrarDialogoModificarReserva(userId)
                         }
 
-                        val sharedPref = getSharedPreferences("MisDatos", MODE_PRIVATE)
-                        val correo = sharedPref.getString("nombreUsuario", "Desconocido") ?: "DefaultValue"
+                        val correo = FirebaseAuth.getInstance().currentUser?.email.toString()
+
                         try {
                             val qrBitmap = generateQRCode(correo, 500)
                             qrImageView.setImageBitmap(qrBitmap)
@@ -362,53 +367,82 @@ class HomeActivity : BaseNavigationActivity() {
         btnModificarReserva.visibility = View.VISIBLE
     }
 
-    private fun mostrarDialogoConfirmacionEliminar() {
+    private fun mostrarDialogoConfirmacionEliminar(tipoVehiculo: String) {
         AlertDialog.Builder(this)
             .setTitle("Eliminar reserva")
             .setMessage("¿Estás seguro de que deseas cancelar esta reserva?")
             .setPositiveButton("Sí") { dialog, which ->
-                eliminarReserva()
+                eliminarReserva(tipoVehiculo)
             }
             .setNegativeButton("No", null)
             .show()
     }
 
-    private fun eliminarReserva() {
+    private fun eliminarReserva(tipoVehiculo: String) {
         if (reservaId.isEmpty()) return
 
-        database.collection("Reservas")
-            .document(reservaId)
-            .update("activa", false)
-            .addOnSuccessListener {
-                Toast.makeText(this, "Reserva cancelada correctamente", Toast.LENGTH_SHORT).show()
-                mostrarSinReservas()
-                incrementarDisponibilidad()
-            }
-            .addOnFailureListener { e ->
-                Toast.makeText(this, "Error al cancelar la reserva: ${e.message}", Toast.LENGTH_SHORT).show()
-            }
+        database.collection("Reservas").document(reservaId).delete()
+        Toast.makeText(this, "Reserva cancelada correctamente", Toast.LENGTH_SHORT).show()
+        mostrarSinReservas()
+        actualizarDisponibilidad(tipoVehiculo)
     }
 
-    private fun incrementarDisponibilidad() {
-        database.collection("Reservas")
-            .document(reservaId)
-            .get()
-            .addOnSuccessListener { document ->
-                val tipoVehiculo = document.getString("tipoVehiculo") ?: return@addOnSuccessListener
-                val documentId = when (tipoVehiculo) {
-                    "Furgon" -> "0ctYNlFXwtVw9ylURFXi"
-                    "Vehiculo Particular" -> "UF0tfabGHGitcj7En6Wy"
-                    "Bicicleta" -> "IuDC5XlTyhxhqU4It8SD"
-                    "Motocicleta" -> "ntHgnXs4Qbz074siOrvz"
-                    else -> return@addOnSuccessListener
-                }
+    private fun actualizarDisponibilidad(tipoVehiculo: String) {
+        val documentId = when (tipoVehiculo) {
+            "Furgon" -> "0ctYNlFXwtVw9ylURFXi"
+            "Vehiculo Particular" -> "UF0tfabGHGitcj7En6Wy"
+            "Bicicleta" -> "IuDC5XlTyhxhqU4It8SD"
+            "Patineta Electrica" -> "IuDC5XlTyhxhqU4It8SD"
+            "Motocicleta" -> "ntHgnXs4Qbz074siOrvz"
+            else -> return
+        }
+        val FijosId = when (tipoVehiculo) {
+            "Furgon" -> "NLRmedawc0M0nrpDt9Ci"
+            "Vehiculo Particular" -> "edYUNbYSmPtvu1H6dI93"
+            "Bicicleta" -> "sPcLdzFgRF2eAY5BWvFC"
+            "Patineta Electrica" -> "sPcLdzFgRF2eAY5BWvFC"
+            "Motocicleta" -> "AQjYvV224T01lrSEeQQY"
+            else -> return
+        }
+        if (tipoVehiculo == "Patineta Electrica"){
+            Consulta(documentId,"Bicicleta",FijosId)
+        }else{
+            Consulta(documentId, tipoVehiculo, FijosId)
+        }
+    }
 
-                database.collection("Disponibilidad")
-                    .document(documentId)
-                    .update(tipoVehiculo, FieldValue.increment(1))
-                    .addOnSuccessListener {
-                        Log.d("HomeActivity", "Disponibilidad incrementada para $tipoVehiculo")
-                    }
+    private fun Consulta(documentId: String, tipoVehiculo: String, FijosId: String){
+        database.collection("Disponibilidad")
+            .document(documentId).get()
+            .addOnSuccessListener { document ->
+                if (document.exists()) {
+                    val espacios = document.getLong(tipoVehiculo) ?: 0
+                    database.collection("EspaciosFijos").document(FijosId).get()
+                        .addOnSuccessListener { document ->
+                            val espaciosFijos = document.getLong(tipoVehiculo) ?: 0
+                            if (espacios!=espaciosFijos) {
+                                database.collection("Disponibilidad").document(documentId)
+                                    .update(tipoVehiculo, FieldValue.increment(1))
+                                    .addOnSuccessListener {
+                                        Log.d("Firestore", "Campo '$tipoVehiculo' aumentado")
+                                    }
+                                    .addOnFailureListener { e ->
+                                        Log.e("Firestore", "Error al actualizar el campo: ", e)
+                                    }
+                            } else {
+                                Toast.makeText(
+                                    this,
+                                    "No puede salir porque se superaron los espacios disponibles para $tipoVehiculo",
+                                    Toast.LENGTH_LONG
+                                ).show()
+                            }
+                        }
+                } else {
+                    Log.d("Firestore", "No se encontró el documento para $tipoVehiculo")
+                }
+            }
+            .addOnFailureListener { e ->
+                Log.e("Firestore", "Error al obtener el documento de disponibilidad: ", e)
             }
     }
 
@@ -424,7 +458,11 @@ class HomeActivity : BaseNavigationActivity() {
                     .get()
                     .addOnSuccessListener { documents ->
                         if (documents.isEmpty()) { // Corregido: agregado paréntesis
-                            Toast.makeText(this, "No tienes vehículos registrados", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(
+                                this,
+                                "No tienes vehículos registrados",
+                                Toast.LENGTH_SHORT
+                            ).show()
                             return@addOnSuccessListener
                         }
 
@@ -434,18 +472,27 @@ class HomeActivity : BaseNavigationActivity() {
                         }
 
                         if (otrosVehiculos.isEmpty()) { // Corregido: agregado paréntesis
-                            Toast.makeText(this, "No tienes otros vehículos para modificar la reserva", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(
+                                this,
+                                "No tienes otros vehículos para modificar la reserva",
+                                Toast.LENGTH_SHORT
+                            ).show()
                             return@addOnSuccessListener
                         }
 
-                        val tiposVehiculos = otrosVehiculos.mapNotNull { it.getString("tipo") }.distinct()
+                        val tiposVehiculos =
+                            otrosVehiculos.mapNotNull { it.getString("tipo") }.distinct()
 
                         val builder = AlertDialog.Builder(this)
                         builder.setTitle("Selecciona un nuevo tipo de vehículo")
 
-                        builder.setSingleChoiceItems(tiposVehiculos.toTypedArray(), -1) { dialog, which ->
+                        builder.setSingleChoiceItems(
+                            tiposVehiculos.toTypedArray(),
+                            -1
+                        ) { dialog, which ->
                             val nuevoTipo = tiposVehiculos[which]
-                            val vehiculosFiltrados = otrosVehiculos.filter { it.getString("tipo") == nuevoTipo }
+                            val vehiculosFiltrados =
+                                otrosVehiculos.filter { it.getString("tipo") == nuevoTipo }
 
                             if (vehiculosFiltrados.size == 1) {
                                 val nuevoNumero = vehiculosFiltrados[0].getString("numero") ?: ""
@@ -461,12 +508,20 @@ class HomeActivity : BaseNavigationActivity() {
                         builder.show()
                     }
                     .addOnFailureListener { e ->
-                        Toast.makeText(this, "Error al cargar vehículos: ${e.message}", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(
+                            this,
+                            "Error al cargar vehículos: ${e.message}",
+                            Toast.LENGTH_SHORT
+                        ).show()
                         Log.e("HomeActivity", "Error cargando vehículos", e)
                     }
             }
             .addOnFailureListener { e ->
-                Toast.makeText(this, "Error al obtener reserva actual: ${e.message}", Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    this,
+                    "Error al obtener reserva actual: ${e.message}",
+                    Toast.LENGTH_SHORT
+                ).show()
                 Log.e("HomeActivity", "Error obteniendo reserva", e)
             }
     }
@@ -485,6 +540,8 @@ class HomeActivity : BaseNavigationActivity() {
     }
 
     private fun modificarReserva(nuevoTipo: String, nuevoNumero: String) {
+        val sdf = SimpleDateFormat("d/MMMM/yyyy - HH:mm", Locale("es", "ES"))
+        val currentDateTime = sdf.format(Date())
         // Primero verificar disponibilidad del nuevo tipo
         verificarDisponibilidad(nuevoTipo) { disponible ->
             if (disponible) {
@@ -493,34 +550,52 @@ class HomeActivity : BaseNavigationActivity() {
                     .document(reservaId)
                     .get()
                     .addOnSuccessListener { document ->
-                        val tipoActual = document.getString("tipoVehiculo") ?: ""
+                        val tipoActual = document.getString("tipo") ?: ""
 
                         // Actualizar la reserva
                         database.collection("Reservas")
                             .document(reservaId)
                             .update(
-                                "tipoVehiculo", nuevoTipo,
-                                "numero", nuevoNumero,
-                                "fecha", SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date()),
-                                "hora", SimpleDateFormat("HH:mm", Locale.getDefault()).format(Date())
+                                "tipo",
+                                nuevoTipo,
+                                "numero",
+                                nuevoNumero,
+                                "fecha",
+                                currentDateTime
                             )
                             .addOnSuccessListener {
                                 // Actualizar disponibilidades
                                 actualizarDisponibilidad(tipoActual, nuevoTipo)
-                                Toast.makeText(this, "Reserva modificada correctamente", Toast.LENGTH_SHORT).show()
+                                Toast.makeText(
+                                    this,
+                                    "Reserva modificada correctamente",
+                                    Toast.LENGTH_SHORT
+                                ).show()
                                 cargarReservasUsuario(FirebaseAuth.getInstance().currentUser?.uid)
                             }
                             .addOnFailureListener { e ->
-                                Toast.makeText(this, "Error al modificar reserva: ${e.message}", Toast.LENGTH_SHORT).show()
+                                Toast.makeText(
+                                    this,
+                                    "Error al modificar reserva: ${e.message}",
+                                    Toast.LENGTH_SHORT
+                                ).show()
                                 Log.e("HomeActivity", "Error modificando reserva", e)
                             }
                     }
                     .addOnFailureListener { e ->
-                        Toast.makeText(this, "Error al obtener reserva: ${e.message}", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(
+                            this,
+                            "Error al obtener reserva: ${e.message}",
+                            Toast.LENGTH_SHORT
+                        ).show()
                         Log.e("HomeActivity", "Error obteniendo reserva", e)
                     }
             } else {
-                Toast.makeText(this, "No hay espacios disponibles para $nuevoTipo", Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    this,
+                    "No hay espacios disponibles para $nuevoTipo",
+                    Toast.LENGTH_SHORT
+                ).show()
             }
         }
     }
@@ -596,7 +671,8 @@ class HomeActivity : BaseNavigationActivity() {
             }
             .addOnFailureListener { e ->
                 Log.e("HomeActivity", "Error actualizando disponibilidades", e)
-                Toast.makeText(this, "Error actualizando disponibilidades", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Error actualizando disponibilidades", Toast.LENGTH_SHORT)
+                    .show()
             }
     }
 
@@ -654,6 +730,7 @@ class HomeActivity : BaseNavigationActivity() {
                         val emoji = "🚲/🛴"
                         "$emoji Quedan pocos $espacios para Bicicleta/Patineta"
                     }
+
                     "furgon" -> "🚐 Quedan pocos $espacios para Furgon"
                     "motocicleta" -> "🏍️ Quedan pocos $espacios para Motocicleta"
                     "vehiculo particular" -> "🚗 Quedan pocos $espacios para Vehículo Particular"

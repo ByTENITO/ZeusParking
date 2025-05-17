@@ -20,6 +20,7 @@ import android.widget.Spinner
 import android.widget.TextView
 import android.widget.Toast
 import com.example.ZeusParking.BaseNavigationActivity
+import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.zxing.BarcodeFormat
@@ -42,6 +43,7 @@ class QrActivity : BaseNavigationActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_entrada_qr)
 
+        //Responsividad
         Responsividad.inicializar(this)
 
         ivCodigoQR = findViewById(R.id.ivCodigoSalida)
@@ -100,115 +102,60 @@ class QrActivity : BaseNavigationActivity() {
             val tipoVehi = tiposSpinner.selectedItem.toString()
             val userId = FirebaseAuth.getInstance().currentUser?.uid.toString()
             val numero = marcoNum.text.toString()
-
-            if (tipoVehi == "Tipo de Vehiculo" || userId.isEmpty() || numero.isEmpty()) {
+            if (tipoVehi == "Tipo de Vehiculo" || userId.isEmpty() || numero == "" || numero.isEmpty()) {
                 Toast.makeText(
                     this,
                     "Debe llenar todos los campos",
                     Toast.LENGTH_SHORT
                 ).show()
-                return@setOnClickListener
-            }
-
-            verificarDisponibilidad(tipoVehi) { disponible ->
-                if (disponible) {
-                    verificarYRealizarReserva(userId, tipoVehi, numero)
-                } else {
-                    Toast.makeText(
-                        this,
-                        "No hay espacios disponibles para $tipoVehi",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                }
-            }
-        }
-    }
-
-    private fun verificarDisponibilidad(tipoVehiculo: String, callback: (Boolean) -> Unit) {
-        val documentId = when (tipoVehiculo) {
-            "Furgon" -> "0ctYNlFXwtVw9ylURFXi"
-            "Vehiculo Particular" -> "UF0tfabGHGitcj7En6Wy"
-            "Bicicleta" -> "IuDC5XlTyhxhqU4It8SD"
-            "Patineta Electrica" -> "IuDC5XlTyhxhqU4It8SD"
-            "Motocicleta" -> "ntHgnXs4Qbz074siOrvz"
-            else -> {
-                callback(false)
-                return
-            }
-        }
-
-        val campo = if (tipoVehiculo == "Patineta Electrica") "Bicicleta" else tipoVehiculo
-
-        database.collection("Disponibilidad").document(documentId)
-            .get()
-            .addOnSuccessListener { document ->
-                if (document.exists()) {
-                    val espacios = document.getLong(campo) ?: 0
-                    callback(espacios > 0)
-                } else {
-                    callback(false)
-                }
-            }
-            .addOnFailureListener { e ->
-                Log.e("QrActivity", "Error al verificar disponibilidad", e)
-                callback(false)
-            }
-    }
-
-    private fun verificarYRealizarReserva(userId: String, tipoVehi: String, numero: String) {
-        database.collection("Bici_Usuarios")
-            .whereEqualTo("id", userId)
-            .whereEqualTo("tipo", tipoVehi)
-            .whereEqualTo("numero", numero)
-            .get()
-            .addOnSuccessListener { documents ->
-                if (!documents.isEmpty) {
-                    database.collection("Reservas")
-                        .whereEqualTo("usuarioId", userId)
-                        .whereEqualTo("activa", true)
-                        .get()
-                        .addOnSuccessListener { reservas ->
-                            if (reservas.isEmpty) {
-                                val intent = Intent(this, Reservacion::class.java).apply {
-                                    putExtra("ID", userId)
-                                    putExtra("Tipo", tipoVehi)
-                                    putExtra("numero", numero)
+            } else {
+                database.collection("Bici_Usuarios")
+                    .whereEqualTo("id", userId)
+                    .whereEqualTo("tipo", tipoVehi)
+                    .whereEqualTo("numero",numero)
+                    .get()
+                    .addOnSuccessListener { documents ->
+                        if (!documents.isEmpty) {
+                            database.collection("Reservas")
+                                .whereEqualTo("id", userId)
+                                .get()
+                                .addOnSuccessListener { documents ->
+                                    if (documents.isEmpty) {
+                                        val intent = Intent(this, Reservacion::class.java).apply {
+                                            putExtra("ID", userId)
+                                            putExtra("Tipo", tipoVehi)
+                                            putExtra("numero",numero)
+                                            Log.d("tipo de vehiculo", tipoVehi)
+                                        }
+                                        startActivity(intent)
+                                    } else {
+                                        Toast.makeText(
+                                            this,
+                                            "La reserva ya fue realizada",
+                                            Toast.LENGTH_SHORT
+                                        ).show()
+                                    }
                                 }
-                                startActivity(intent)
-                            } else {
-                                Toast.makeText(
-                                    this,
-                                    "Ya tienes una reserva activa",
-                                    Toast.LENGTH_SHORT
-                                ).show()
-                            }
+                        } else {
+                            Toast.makeText(
+                                this,
+                                "No hay registro de este vehiculo",
+                                Toast.LENGTH_SHORT
+                            ).show()
                         }
-                } else {
-                    Toast.makeText(
-                        this,
-                        "No hay registro de este vehiculo",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                }
+                    }
             }
-            .addOnFailureListener { e ->
-                Toast.makeText(
-                    this,
-                    "Error al verificar vehículo: ${e.message}",
-                    Toast.LENGTH_SHORT
-                ).show()
-            }
+        }
     }
 
     private fun updateDateTime() {
-        val sdf = SimpleDateFormat("d/MMMM/yyyy - HH:mm:ss", Locale("es", "ES"))
+        val sdf = SimpleDateFormat("d/MMMM/yyyy - HH:mm", Locale("es", "ES"))
         val currentDateTime = sdf.format(Date())
         tvDateTime.text = currentDateTime
     }
 
     private fun generateAndDisplayQrCode() {
-        val sharedPref = getSharedPreferences("MisDatos", MODE_PRIVATE)
-        val correo = sharedPref.getString("nombreUsuario", "Desconocido") ?: "DefaultValue"
+        val correo = FirebaseAuth.getInstance().currentUser?.email.toString()
 
         try {
             val qrBitmap = generateQRCode(correo, 700)

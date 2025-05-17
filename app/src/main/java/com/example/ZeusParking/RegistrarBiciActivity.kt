@@ -188,11 +188,10 @@ class RegistrarBiciActivity : BaseNavigationActivity() {
         val cedula = cedulaNum.text.toString()
         val marco = marcoNum.text.toString()
         val tipoVehiculo = tiposSpinner.selectedItem.toString()
-        val sharedPref = getSharedPreferences("MisDatos", MODE_PRIVATE)
-        val correo = sharedPref.getString("nombreUsuario", "Desconocido")
+        val correo = FirebaseAuth.getInstance().currentUser?.email.toString()
         val id = FirebaseAuth.getInstance().currentUser?.uid
 
-        if (nombre.isEmpty() || apellidos.isEmpty() || color.isEmpty() || cedula.isEmpty() || marco.isEmpty()) {
+        if (nombre.isEmpty() || apellidos.isEmpty() || color.isEmpty() || cedula.isEmpty() || marco.isEmpty() || fotoUri1 == null || fotoUri2 == null) {
             Toast.makeText(this, "Llene Todos los Campos Por Favor", Toast.LENGTH_SHORT).show()
             return
         }
@@ -216,7 +215,7 @@ class RegistrarBiciActivity : BaseNavigationActivity() {
                             cedula,
                             marco,
                             tipoVehiculo,
-                            correo.toString(),
+                            correo,
                             id.toString()
                         )
 

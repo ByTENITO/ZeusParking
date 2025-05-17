@@ -93,7 +93,9 @@ class Home_vigilante : BaseNavigationActivity() {
             "Furgon",
             notiFurgon,
             listOf(
-                (0..0) to "Hola, no quedan espacios para Furgon"
+                (0..0) to "Hola, no quedan espacios para Furgon",
+                (1..2) to "Hola, quedan pocos espacios en el parqueadero de Furgon, quedan: {espacios}",
+                (3..4) to "Hola, quedan {espacios} espacios para Furgon"
             )
         )
         escucharDisponibilidad(
@@ -336,75 +338,66 @@ class Home_vigilante : BaseNavigationActivity() {
                     datosOriginales.clear()
                     for (document in documents) {
                         if (document.id != inicializador && document.exists()) {
-                            val usuarioId = document.getString("usuarioId") ?: ""
-                            database.collection("Bici_Usuarios")
-                                .whereEqualTo("id", usuarioId)
-                                .get()
-                                .addOnSuccessListener { userDocuments ->
-                                    if (!userDocuments.isEmpty) {
-                                        val userDoc = userDocuments.documents[0]
-                                        val nombres = userDoc.getString("nombre") ?: ""
-                                        val apellidos = userDoc.getString("apellidos") ?: ""
 
-                                        // Obtener datos de la reserva
-                                        val fecha = document.getString("fecha") ?: ""
-                                        val hora = document.getString("hora") ?: ""
-                                        val vehiculo = document.getString("tipoVehiculo") ?: ""
-                                        val idVehi = document.getString("numero") ?: ""
+                            val nombres = document.getString("nombre").toString()
+                            val apellidos = document.getString("apellidos").toString()
+                            val fecha = document.getString("fecha").toString()
+                            val vehiculo = document.getString("tipo").toString()
+                            val idVehi = document.getString("numero").toString()
 
-                                        val fechaCompleta = "$fecha $hora"
+                            Log.d(
+                                "Reservas",
+                                "Nombres:$nombres,Apellidos:$apellidos,Fecha:$fecha,Vehiculo:$vehiculo,Numero:$idVehi"
+                            )
 
-                                        val datos = ReservData(
-                                            nombres,
-                                            apellidos,
-                                            fechaCompleta,
-                                            vehiculo,
-                                            idVehi
-                                        )
-                                        datosOriginales.add(datos)
-                                        tabla(datos)
-                                    }
-                                }
+                            val datos = ReservData(
+                                nombres,
+                                apellidos,
+                                fecha,
+                                vehiculo,
+                                idVehi
+                            )
+                            datosOriginales.add(datos)
+                            tabla(datos)
                         }
                     }
                 }
+
             }
     }
 
     private fun tabla(datos: ReservData) {
-        runOnUiThread {
-            val celdaNombre = MaterialTextView(this)
-            acortarTexto("${datos.apellido},${datos.nombre}", celdaNombre)
-            celdaNombre.textSize = 10F
-            celdaNombre.setTextColor(ContextCompat.getColor(this, R.color.Texto_pastel))
-            celdaNombre.background = ContextCompat.getDrawable(this, R.drawable.borde_celda)
+        val celdaNombre = MaterialTextView(this)
+        acortarTexto("${datos.apellido},${datos.nombre}", celdaNombre)
+        celdaNombre.textSize = 10F
+        celdaNombre.setTextColor(ContextCompat.getColor(this, R.color.Texto_pastel))
+        celdaNombre.background = ContextCompat.getDrawable(this, R.drawable.borde_celda)
 
-            val celdaFecha = TextView(this)
-            acortarTexto(datos.fecha, celdaFecha)
-            celdaFecha.textSize = 10F
-            celdaFecha.setTextColor(ContextCompat.getColor(this, R.color.Texto_pastel))
-            celdaFecha.background = ContextCompat.getDrawable(this, R.drawable.borde_celda)
+        val celdaFecha = TextView(this)
+        acortarTexto(datos.fecha, celdaFecha)
+        celdaFecha.textSize = 10F
+        celdaFecha.setTextColor(ContextCompat.getColor(this, R.color.Texto_pastel))
+        celdaFecha.background = ContextCompat.getDrawable(this, R.drawable.borde_celda)
 
-            val celdaVehi = TextView(this)
-            acortarTexto(datos.vehiculo, celdaVehi)
-            celdaVehi.textSize = 10F
-            celdaVehi.setTextColor(ContextCompat.getColor(this, R.color.Texto_pastel))
-            celdaVehi.background = ContextCompat.getDrawable(this, R.drawable.borde_celda)
+        val celdaVehi = TextView(this)
+        acortarTexto(datos.vehiculo, celdaVehi)
+        celdaVehi.textSize = 10F
+        celdaVehi.setTextColor(ContextCompat.getColor(this, R.color.Texto_pastel))
+        celdaVehi.background = ContextCompat.getDrawable(this, R.drawable.borde_celda)
 
-            val celdaIdVehi = TextView(this)
-            acortarTexto(datos.numero, celdaIdVehi)
-            celdaIdVehi.textSize = 10F
-            celdaIdVehi.setTextColor(ContextCompat.getColor(this, R.color.Texto_pastel))
-            celdaIdVehi.background = ContextCompat.getDrawable(this, R.drawable.borde_celda)
+        val celdaIdVehi = TextView(this)
+        acortarTexto(datos.numero, celdaIdVehi)
+        celdaIdVehi.textSize = 10F
+        celdaIdVehi.setTextColor(ContextCompat.getColor(this, R.color.Texto_pastel))
+        celdaIdVehi.background = ContextCompat.getDrawable(this, R.drawable.borde_celda)
 
-            val fila = TableRow(this)
-            fila.addView(celdaNombre)
-            fila.addView(celdaFecha)
-            fila.addView(celdaVehi)
-            fila.addView(celdaIdVehi)
+        val fila = TableRow(this)
+        fila.addView(celdaNombre)
+        fila.addView(celdaFecha)
+        fila.addView(celdaVehi)
+        fila.addView(celdaIdVehi)
 
-            ReservasTabla.addView(fila)
-        }
+        ReservasTabla.addView(fila)
     }
 
     private fun mostrarFiltro(lista: List<ReservData>) {
