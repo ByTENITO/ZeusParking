@@ -137,8 +137,6 @@ class DatosUsuarioSalida : AppCompatActivity() {
     }
 
     private fun registrarIngreso(correo: String, vehiculo: String, idVehiculo: String) {
-        cleanOldPortatilRecords(correo)
-        // Primero eliminar cualquier salida previa
         database.collection("Salida")
             .whereEqualTo("correo", correo)
             .get()
@@ -154,24 +152,6 @@ class DatosUsuarioSalida : AppCompatActivity() {
             }
     }
 
-
-    private fun cleanOldPortatilRecords(correo: String) {
-        database.collection("Entrada_Portatiles")
-            .whereEqualTo("correoUsuario", correo)
-            .get()
-            .addOnSuccessListener { documents ->
-                if (!documents.isEmpty) {
-                    val batch = database.batch()
-                    for (document in documents) {
-                        batch.delete(document.reference)
-                    }
-                    batch.commit()
-                        .addOnSuccessListener {
-                            Log.d("Limpio", "Limpieza de Registro de PCs del Usuario")
-                        }
-                }
-            }
-    }
     private fun registrarNuevaSalida(correo: String, vehiculo: String, idVehiculo: String) {
         database.collection("Bici_Usuarios")
             .whereEqualTo("correo", correo)
@@ -179,10 +159,6 @@ class DatosUsuarioSalida : AppCompatActivity() {
             .whereEqualTo("numero", idVehiculo)
             .get()
             .addOnSuccessListener { documents ->
-                if (documents.isEmpty) {
-                    Toast.makeText(this, "No se encontraron datos del usuario", Toast.LENGTH_SHORT).show()
-                    return@addOnSuccessListener
-                }
 
                 for (document in documents) {
                     val biciData = BiciData(

@@ -74,28 +74,28 @@ class DatosUsuarioEntrada : AppCompatActivity() {
         }
 
         database.collection("Bici_Usuarios")
-            .whereEqualTo("correo",correo)
-            .whereEqualTo("tipo",vehiculo)
-            .addSnapshotListener {documents, e->
+            .whereEqualTo("correo", correo)
+            .whereEqualTo("tipo", vehiculo)
+            .addSnapshotListener { documents, e ->
                 if (documents != null) {
-                    for (document in documents){
+                    for (document in documents) {
                         val userId = document.getString("id")
                         val cedula = document.getString("cedula")
-                        buscarImagenUser(userId,cedula)
-                        buscarImagenVehi(userId,document.id,idVehiculo)
-                        Log.d("FireStorage","id -> ${document.id} ")
-                        Log.d("FireStorage","usuario -> $cedula")
+                        buscarImagenUser(userId, cedula)
+                        buscarImagenVehi(userId, document.id, idVehiculo)
+                        Log.d("FireStorage", "id -> ${document.id} ")
+                        Log.d("FireStorage", "usuario -> $cedula")
                     }
                 }
             }
         database.collection("Reservas")
-            .whereEqualTo("tipo",vehiculo)
-            .whereEqualTo("numero",idVehiculo)
+            .whereEqualTo("tipo", vehiculo)
+            .whereEqualTo("numero", idVehiculo)
             .get()
             .addOnSuccessListener { documents ->
-                if (documents.isEmpty){
+                if (documents.isEmpty) {
                     registrarIngreso(correo, vehiculo, idVehiculo)
-                }else{
+                } else {
                     registroEntrada(correo, vehiculo, idVehiculo)
                 }
             }
@@ -105,28 +105,28 @@ class DatosUsuarioEntrada : AppCompatActivity() {
         }
     }
 
-    private fun buscarImagenUser (userId: String?, cedula: String? ){
+    private fun buscarImagenUser(userId: String?, cedula: String?) {
         val storageImagenUser = FirebaseStorage.getInstance().reference
         val imageStorage = storageImagenUser.child("$userId/$cedula.png")
-        Log.d("FireStorage","$userId/$cedula.png")
+        Log.d("FireStorage", "$userId/$cedula.png")
 
         imageStorage.downloadUrl.addOnSuccessListener { uri ->
-            Log.d("FireStorage","URL obtenida: $uri")
+            Log.d("FireStorage", "URL obtenida: $uri")
             Picasso.get().load(uri).into(fotoUsuario)
         }.addOnFailureListener { e ->
-            Log.e("FireStorage","Error en URL:",e)
+            Log.e("FireStorage", "Error en URL:", e)
         }
     }
 
-    private fun buscarImagenVehi (userId: String?, id: String?,idVehi: String?){
+    private fun buscarImagenVehi(userId: String?, id: String?, idVehi: String?) {
         val storageImagenUser = FirebaseStorage.getInstance().reference
         val imageStorage = storageImagenUser.child("$userId/$id/$idVehi.png")
 
         imageStorage.downloadUrl.addOnSuccessListener { uri ->
-            Log.d("FireStorage","URL obtenida: $uri")
+            Log.d("FireStorage", "URL obtenida: $uri")
             Picasso.get().load(uri).into(fotoVehi)
         }.addOnFailureListener { e ->
-            Log.e("FireStorage","Error en URL:",e)
+            Log.e("FireStorage", "Error en URL:", e)
         }
     }
 
@@ -137,36 +137,32 @@ class DatosUsuarioEntrada : AppCompatActivity() {
             .whereEqualTo("numero", idVehiculo)
             .get()
             .addOnSuccessListener { documents ->
-                if (documents.isEmpty) {
-                    Log.d("Firestore", "No se encontraron documentos con correo: $correo")
-                    Toast.makeText(this, "No se encontraron datos del usuario", Toast.LENGTH_SHORT).show()
-                } else {
-                    for (document in documents) {
-                        val biciData = BiciData(
-                            nombre = document.getString("nombre") ?: "",
-                            apellidos = document.getString("apellidos") ?: "",
-                            color = document.getString("color") ?: "",
-                            cedula = document.getString("cedula") ?: "",
-                            placa = document.getString("numero") ?: "",
-                            tipo = document.getString("tipo") ?: "",
-                            correo = document.getString("correo") ?: "",
-                            fechaHora = fechaHoraFormateada.toString()
-                        )
+                for (document in documents) {
+                    val biciData = BiciData(
+                        nombre = document.getString("nombre") ?: "",
+                        apellidos = document.getString("apellidos") ?: "",
+                        color = document.getString("color") ?: "",
+                        cedula = document.getString("cedula") ?: "",
+                        placa = document.getString("numero") ?: "",
+                        tipo = document.getString("tipo") ?: "",
+                        correo = document.getString("correo") ?: "",
+                        fechaHora = fechaHoraFormateada.toString()
+                    )
 
-                        // Actualizar la interfaz
-                        actualizarInterfaz(biciData)
+                    // Actualizar la interfaz
+                    actualizarInterfaz(biciData)
 
-                        // Registrar el ingreso
-                        database.collection("Entrada")
-                            .add(biciData)
-                            .addOnSuccessListener {
-                                Toast.makeText(this, "Datos cargados", Toast.LENGTH_SHORT).show()
-                                actualizarDisponibilidad(biciData.tipo)
-                            }
-                            .addOnFailureListener {
-                                Toast.makeText(this, "No se cargaron los datos", Toast.LENGTH_SHORT).show()
-                            }
-                    }
+                    // Registrar el ingreso
+                    database.collection("Entrada")
+                        .add(biciData)
+                        .addOnSuccessListener {
+                            Toast.makeText(this, "Datos cargados", Toast.LENGTH_SHORT).show()
+                            actualizarDisponibilidad(biciData.tipo)
+                        }
+                        .addOnFailureListener {
+                            Toast.makeText(this, "No se cargaron los datos", Toast.LENGTH_SHORT)
+                                .show()
+                        }
                 }
             }
             .addOnFailureListener { e ->
@@ -183,7 +179,8 @@ class DatosUsuarioEntrada : AppCompatActivity() {
             .addOnSuccessListener { documents ->
                 if (documents.isEmpty) {
                     Log.d("Firestore", "No se encontraron documentos con correo: $correo")
-                    Toast.makeText(this, "No se encontraron datos del usuario", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, "No se encontraron datos del usuario", Toast.LENGTH_SHORT)
+                        .show()
                 } else {
                     for (document in documents) {
                         val biciData = BiciData(
@@ -207,7 +204,8 @@ class DatosUsuarioEntrada : AppCompatActivity() {
                                 Toast.makeText(this, "Datos cargados", Toast.LENGTH_SHORT).show()
                             }
                             .addOnFailureListener {
-                                Toast.makeText(this, "No se cargaron los datos", Toast.LENGTH_SHORT).show()
+                                Toast.makeText(this, "No se cargaron los datos", Toast.LENGTH_SHORT)
+                                    .show()
                             }
                     }
                 }
@@ -235,13 +233,14 @@ class DatosUsuarioEntrada : AppCompatActivity() {
             "Motocicleta" -> "ntHgnXs4Qbz074siOrvz"
             else -> return
         }
-        if (tipoVehiculo == "Patineta Electrica"){
-            Consulta(documentId,"Bicicleta")
-        }else{
+        if (tipoVehiculo == "Patineta Electrica") {
+            Consulta(documentId, "Bicicleta")
+        } else {
             Consulta(documentId, tipoVehiculo)
         }
     }
-    private fun Consulta(documentId: String, tipoVehiculo: String){
+
+    private fun Consulta(documentId: String, tipoVehiculo: String) {
         database.collection("Disponibilidad").document(documentId)
             .get()
             .addOnSuccessListener { document ->
@@ -257,7 +256,11 @@ class DatosUsuarioEntrada : AppCompatActivity() {
                                 Log.e("Firestore", "Error al actualizar el campo: ", e)
                             }
                     } else {
-                        Toast.makeText(this, "No hay espacios disponibles para $tipoVehiculo", Toast.LENGTH_LONG).show()
+                        Toast.makeText(
+                            this,
+                            "No hay espacios disponibles para $tipoVehiculo",
+                            Toast.LENGTH_LONG
+                        ).show()
                     }
                 } else {
                     Log.d("Firestore", "No se encontró el documento para $tipoVehiculo")

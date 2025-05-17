@@ -92,34 +92,29 @@ class EntradaQrParqueadero : BaseNavigationActivity() {
 
     private fun empezarCamara() {
         val camaraProvedorFuturo = ProcessCameraProvider.getInstance(this)
-
         camaraProvedorFuturo.addListener({
-            val camaraProvedor: ProcessCameraProvider = camaraProvedorFuturo.get()
-
+            val cameraProvedor: ProcessCameraProvider = camaraProvedorFuturo.get()
             val preview = Preview.Builder()
                 .build()
                 .also {
                     it.setSurfaceProvider(findViewById<PreviewView>(R.id.ScannerEntrada).surfaceProvider)
                 }
-
-            val imagenAnalizada = ImageAnalysis.Builder()
+            val imaenAnalizada = ImageAnalysis.Builder()
                 .setBackpressureStrategy(ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST)
                 .setOutputImageFormat(ImageAnalysis.OUTPUT_IMAGE_FORMAT_YUV_420_888)
                 .build()
 
-            imagenAnalizada.setAnalyzer(camaraEjecutarEntrada, { imageProxy ->
+            imaenAnalizada.setAnalyzer(camaraEjecutarEntrada, { imageProxy ->
                 processImage(imageProxy)
             })
-
             val camaraSelectora = CameraSelector.Builder()
                 .requireLensFacing(CameraSelector.LENS_FACING_BACK)
                 .build()
-
             try {
-                camaraProvedor.unbindAll()
-                camaraProvedor.bindToLifecycle(this, camaraSelectora, preview, imagenAnalizada)
+                cameraProvedor.unbindAll()
+                cameraProvedor.bindToLifecycle(this, camaraSelectora, preview, imaenAnalizada)
             } catch (exc: Exception) {
-                Log.e("QRScanner", "Error al iniciar la cámara", exc)
+                Log.e("QRScanner", "Error al iniciar la camara", exc)
             }
         }, ContextCompat.getMainExecutor(this))
     }
@@ -140,12 +135,13 @@ class EntradaQrParqueadero : BaseNavigationActivity() {
                     val tiposSpinner = tiposSpinnerEntrada.selectedItem.toString()
                     val id = marcoNumEntrada.text.toString()
                     val qrText = barcode.displayValue
-                    if (tiposSpinner == "Tipo de Vehiculo" || id.isEmpty()){
+                    if (tiposSpinner == "Tipo de Vehiculo" || id.isEmpty()) {
                         Toast.makeText(this, "Porfavor llene todos los campos", Toast.LENGTH_SHORT).show()
-                    }else{
+                        escaneoRealizado = false
+                    } else {
                         qrText?.let {
                             escaneoRealizado = true
-                            verificarEntrada(qrText, tiposSpinner, id)
+                            verificarUsuario(qrText, tiposSpinner, id)
                             Log.d("QRScanner", "Código QR detectado: $qrText")
                         }
                     }
@@ -159,6 +155,39 @@ class EntradaQrParqueadero : BaseNavigationActivity() {
             }
     }
 
+    private fun verificarUsuario(correo: String, vehiculo: String, idVehiculo: String) {
+        database.collection("Bici_Usuarios")
+            .whereEqualTo("correo", correo)
+            .get()
+            .addOnSuccessListener { documents ->
+                if (documents.isEmpty) {
+                    Log.d("Firestore", "No se encontraron documentos con correo: $correo")
+                    Toast.makeText(this, "No se encontraron datos del usuario", Toast.LENGTH_SHORT).show()
+                    escaneoRealizado = false
+                }else {
+                    verificarVehiculo(correo,vehiculo,idVehiculo)
+                }
+            }
+    }
+
+    private fun verificarVehiculo(correo: String, vehiculo: String, idVehiculo: String){
+        database.collection("Bici_Usuarios")
+            .whereEqualTo("correo", correo)
+            .whereEqualTo("tipo", vehiculo)
+            .whereEqualTo("numero", idVehiculo)
+            .addSnapshotListener { documents , e ->
+                if (documents != null){
+                    if (documents.isEmpty) {
+                        Log.d("Firestore", "No se encontraron documentos con correo: $correo")
+                        Toast.makeText(this, "No se encontraron datos del vehiculo", Toast.LENGTH_SHORT).show()
+                        escaneoRealizado = false
+                    }else {
+                        verificarEntrada(correo,vehiculo,idVehiculo)
+                    }
+                }
+            }
+    }
+
     private fun verificarEntrada(correo: String, vehiculo: String, idVehiculo: String) {
         database.collection("Entrada")
             .whereEqualTo("correo", correo)
@@ -166,44 +195,14 @@ class EntradaQrParqueadero : BaseNavigationActivity() {
             .addOnSuccessListener { documents ->
                 if (documents.isEmpty) {
                     // Verificar si el usuario tiene PC registrado
-                    verificarPCUsuario(correo, vehiculo, idVehiculo)
+                    verificarSalida(correo, vehiculo, idVehiculo)
                 } else {
                     Toast.makeText(this, "El usuario ya entro", Toast.LENGTH_SHORT).show()
+                    escaneoRealizado = false
                 }
             }
             .addOnFailureListener { e ->
                 Log.e("Firestore", "Error al verificar entrada: ", e)
-            }
-    }
-    private fun verificarPCUsuario(correo: String, vehiculo: String, idVehiculo: String) {
-        database.collection("Portatiles")
-            .whereEqualTo("correoUsuario", correo)
-            .get()
-            .addOnSuccessListener { documents ->
-                if (documents.isEmpty) {
-                    // No tiene PC registrado, proceder normal
-                    verificarSalida(correo, vehiculo, idVehiculo)
-                } else {
-                    // Tiene PC registrado, mostrar confirmación
-                    val serialPC = documents.documents[0].getString("serial") ?: ""
-                    val intent = Intent(this, InfoPCActivity::class.java).apply {
-                        putExtra("correo", correo)
-                        putExtra("serialPC", serialPC)
-                    }
-                    startActivity(intent)
-
-                    // Continuar con el proceso de entrada después de confirmación
-                    val entradaIntent = Intent(this, DatosUsuarioEntrada::class.java).apply {
-                        putExtra("correo", correo)
-                        putExtra("tipo", vehiculo)
-                        putExtra("id", idVehiculo)
-                    }
-                    startActivity(entradaIntent)
-                }
-            }
-            .addOnFailureListener { e ->
-                Log.e("Firestore", "Error al verificar PC: ", e)
-                verificarSalida(correo, vehiculo, idVehiculo)
             }
     }
 
@@ -212,31 +211,49 @@ class EntradaQrParqueadero : BaseNavigationActivity() {
             .whereEqualTo("correo", correo)
             .get()
             .addOnSuccessListener { documents ->
-                val batch = database.batch()
-
-                // Eliminar todos los registros de salida encontrados
-                for (document in documents) {
-                    batch.delete(document.reference)
+                if (!documents.isEmpty) {
+                    // Si existe salida, eliminarla
+                    for (document in documents) {
+                        database.collection("Salida").document(document.id).delete()
+                    }
                 }
-
-                batch.commit()
-                    .addOnSuccessListener {
-                        // Proceder con la entrada después de eliminar las salidas
-                        val intent = Intent(this, DatosUsuarioEntrada::class.java).apply {
-                            putExtra("correo", correo)
-                            putExtra("tipo", vehiculo)
-                            putExtra("id", idVehiculo)
-                        }
-                        startActivity(intent)
-                    }
-                    .addOnFailureListener { e ->
-                        Log.e("Firestore", "Error al eliminar registros de salida: ", e)
-                        Toast.makeText(this, "Error al procesar entrada", Toast.LENGTH_SHORT).show()
-                    }
+                verificarPCUsuario(correo, vehiculo, idVehiculo)
             }
             .addOnFailureListener { e ->
                 Log.e("Firestore", "Error al verificar salida: ", e)
             }
+    }
+
+    private fun verificarPCUsuario(correo: String, vehiculo: String, idVehiculo: String) {
+        database.collection("Portatiles")
+            .whereEqualTo("correoUsuario", correo)
+            .get()
+            .addOnSuccessListener { documents ->
+                if (!documents.isEmpty) {
+                    // Tiene PC registrado, mostrar confirmación
+                    val serialPC = documents.documents[0].getString("serial") ?: ""
+                    val intent = Intent(this, InfoPCActivity::class.java).apply {
+                        putExtra("correo", correo)
+                        putExtra("serialPC", serialPC)
+                    }
+                    startActivity(intent)
+                }
+                DatosEntrada(correo, vehiculo, idVehiculo)
+            }
+            .addOnFailureListener { e ->
+                Log.e("Firestore", "Error al verificar PC: ", e)
+                verificarSalida(correo, vehiculo, idVehiculo)
+            }
+    }
+
+    private fun DatosEntrada(correo: String, vehiculo: String, idVehiculo: String) {
+        // Continuar con el proceso de entrada después de confirmación
+        val entradaIntent = Intent(this, DatosUsuarioEntrada::class.java).apply {
+            putExtra("correo", correo)
+            putExtra("tipo", vehiculo)
+            putExtra("id", idVehiculo)
+        }
+        startActivity(entradaIntent)
     }
 
     override fun onResume() {
