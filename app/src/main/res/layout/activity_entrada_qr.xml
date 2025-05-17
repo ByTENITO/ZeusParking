@@ -8,7 +8,7 @@
     android:background="@drawable/fondo"
     tools:context=".QrActivity">
 
-    <!-- Logo Superior (mismo estilo pero más compacto) -->
+
     <ImageView
         android:id="@+id/imageView"
         android:layout_width="160dp"
@@ -37,7 +37,7 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:orientation="vertical"
-            android:padding="16dp">
+            android:padding="17dp">
 
             <!-- Tarjeta QR (más compacta) -->
             <com.google.android.material.card.MaterialCardView
@@ -164,6 +164,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/Navegacion"
+        android:elevation="16dp"
         app:itemIconTint="@drawable/nav_item_color"
         app:itemTextColor="@drawable/nav_text_color"
         app:labelVisibilityMode="labeled"

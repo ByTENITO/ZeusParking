@@ -1,9 +1,15 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
+    <style name="Theme.ParquiatenoV10" parent="Theme.Material3.Dark.NoActionBar">
+        <!-- Colores principales -->
+        <item name="colorPrimary">@color/Principal</item>
+        <item name="colorSecondary">@color/Secundario</item>
+        <item name="colorTertiary">@color/Tercero</item>
 
-    <style name="Theme.ParquiatenoV10" parent="Base.Theme.ParquiatenoV10">
-        <!-- Transparent system bars for edge-to-edge. -->
-        <item name="android:navigationBarColor">@android:color/transparent</item>
-        <item name="android:statusBarColor">@android:color/transparent</item>
-        <item name="android:windowLightStatusBar">?attr/isLightTheme</item>
+        <item name="android:statusBarColor">@color/Negro</item>
+        <item name="android:navigationBarColor">@color/Negro</item>
+        <item name="android:windowLightStatusBar">false</item>
+
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
     </style>
 </resources>

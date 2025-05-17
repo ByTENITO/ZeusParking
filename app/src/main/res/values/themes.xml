@@ -1,9 +1,12 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- Base application theme. -->
-    <style name="Base.Theme.ParquiatenoV10" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Customize your light theme here. -->
-        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+    <!-- res/values/themes.xml -->
+    <style name="Base.Theme.ParquiatenoV10" parent="Theme.Material3.Dark">
+        <!-- Colores personalizados (los mismos que definiste en colors.xml) -->
+        <item name="colorPrimary">@color/Principal</item>
+        <item name="colorSecondary">@color/Secundario</item>
+        <item name="colorTertiary">@color/Tercero</item>
+        <item name="android:statusBarColor">@color/Negro</item>
+        <item name="android:navigationBarColor">@color/Negro</item>
+        <item name="android:windowLightStatusBar">false</item>
     </style>
-
-    <style name="Theme.ParquiatenoV10" parent="Base.Theme.ParquiatenoV10" />
 </resources>

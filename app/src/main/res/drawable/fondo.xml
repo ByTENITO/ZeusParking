@@ -5,7 +5,6 @@
     android:viewportWidth="360"
     android:viewportHeight="640">
 
-    <!-- Fondo con gradiente vertical oscuro -->
     <path
         android:pathData="M0,0h360v640h-360z">
         <aapt:attr name="android:fillColor">

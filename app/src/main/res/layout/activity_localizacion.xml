@@ -18,9 +18,10 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:background="@color/Navegacion"
-        app:labelVisibilityMode="labeled"
-        app:menu="@menu/nav_menu"
+        android:elevation="16dp"
         app:itemIconTint="@drawable/nav_item_color"
-        app:itemTextColor="@drawable/nav_text_color"/>
-
+        app:itemTextColor="@drawable/nav_text_color"
+        app:labelVisibilityMode="labeled"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:menu="@menu/nav_menu" />
 </RelativeLayout>

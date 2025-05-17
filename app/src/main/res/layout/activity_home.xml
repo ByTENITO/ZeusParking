@@ -4,6 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
+    android:layout_marginTop="45dp"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/fondo"
@@ -17,6 +18,7 @@
         android:layout_marginTop="16dp"
         android:gravity="center_horizontal"
         android:orientation="vertical"
+        android:background="#1A1A1A"
         android:padding="16dp"
         app:layout_constraintTop_toTopOf="parent">
 
@@ -113,16 +115,18 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginEnd="8dp"
-                            android:text="Ver QR"
+                            android:textColor="@color/Texto_pastel"
+                            android:text="QR"
                             android:visibility="gone"
-                            android:backgroundTint="@color/Principal"/>
+                            android:backgroundTint="@color/Verde_bien"/>
 
                         <Button
                             android:id="@+id/btn_modificar_reserva"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginEnd="8dp"
-                            android:text="Modificar"
+                            android:textColor="@color/Texto_pastel"
+                            android:text="MODIFICAR"
                             android:visibility="gone"
                             android:backgroundTint="@color/Principal"/>
 
@@ -130,7 +134,8 @@
                             android:id="@+id/btn_eliminar_reserva"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Cancelar"
+                            android:text="ELIMINAR"
+                            android:textColor="@color/Texto_pastel"
                             android:visibility="gone"
                             android:backgroundTint="@color/error_red"/>
                     </LinearLayout>

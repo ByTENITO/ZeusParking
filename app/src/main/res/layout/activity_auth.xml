@@ -9,7 +9,7 @@
     android:padding="16dp"
     tools:context=".AuthActivity">
 
-    <!-- Logo Section (Top) - Exactamente igual -->
+
     <LinearLayout
         android:id="@+id/logoSection"
         android:layout_width="0dp"
@@ -37,7 +37,7 @@
             android:text="Esta es una app dedicada a facilitar el ingreso al parqueadero de UNIMINUTO, sede Soacha."
             android:textAlignment="center"
             android:textColor="@color/Texto_pastel"
-            android:textSize="12sp" />
+            android:textSize="13sp" />
 
         <TextView
             android:id="@+id/textView6"
@@ -47,10 +47,10 @@
             android:text="Por favor, identifícate para continuar."
             android:textAlignment="center"
             android:textColor="@color/Texto_pastel"
-            android:textSize="11sp" />
+            android:textSize="13sp" />
     </LinearLayout>
 
-    <!-- Form Section (Center) - Exactamente igual -->
+
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/formCard"
         android:layout_width="0dp"
@@ -71,7 +71,7 @@
             android:orientation="vertical"
             android:padding="16dp">
 
-            <!-- Email Field -->
+
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/textInputLayout"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
@@ -92,7 +92,7 @@
                     android:textColorHint="@color/Texto_pastel" />
             </com.google.android.material.textfield.TextInputLayout>
 
-            <!-- Password Field -->
+
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/textInputLayout2"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
@@ -114,7 +114,7 @@
                     android:textColorHint="@color/Texto_pastel" />
             </com.google.android.material.textfield.TextInputLayout>
 
-            <!-- Forgot Password -->
+
             <TextView
                 android:id="@+id/OlvidasteContrasena_TV"
                 android:layout_width="wrap_content"
@@ -126,7 +126,7 @@
         </LinearLayout>
     </com.google.android.material.card.MaterialCardView>
 
-    <!-- Buttons Section - Reorganizada según tu ejemplo -->
+
     <LinearLayout
         android:id="@+id/buttonsSection"
         android:layout_width="0dp"
@@ -139,12 +139,12 @@
         app:layout_constraintTop_toBottomOf="@id/formCard"
         app:layout_constraintVertical_bias="0">
 
-        <!-- Login Button - Exactamente igual -->
+
         <com.google.android.material.button.MaterialButton
             android:id="@+id/Acceder_BTN"
             style="@style/Widget.MaterialComponents.Button.OutlinedButton"
             android:layout_width="match_parent"
-            android:layout_height="40dp"
+            android:layout_height="45dp"
             android:text="Acceder"
             android:textSize="14sp"
             android:textColor="@color/Texto_pastel"
@@ -156,7 +156,7 @@
             app:strokeWidth="1dp"
             app:backgroundTint="@color/Negro" />
 
-        <!-- Social Login Divider - Exactamente igual -->
+
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -178,15 +178,15 @@
                 android:paddingEnd="8dp"
                 android:text="O inicia sesión con"
                 android:textColor="@color/Texto_pastel"
-                android:textSize="11sp" />
+                android:textSize="12sp" />
         </RelativeLayout>
 
-        <!-- Google Login Button - Exactamente igual -->
+
         <com.google.android.material.button.MaterialButton
             android:id="@+id/Google_BTN"
             style="@style/Widget.MaterialComponents.Button.OutlinedButton"
             android:layout_width="match_parent"
-            android:layout_height="40dp"
+            android:layout_height="45dp"
             android:text="Continuar con Google"
             android:textColor="@color/Texto_pastel"
             android:textSize="14sp"
@@ -195,23 +195,23 @@
             app:iconGravity="textStart"
             app:iconPadding="4dp"
             app:iconTint="@null"
-            app:strokeColor="@color/Secundario"
+            app:strokeColor="@color/Principal"
             app:strokeWidth="1dp" />
 
-        <!-- Register Text - Cambiado a TextView como pediste -->
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:gravity="center"
-            android:layout_marginTop="12dp">
+            android:layout_marginTop="20dp">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="¿No tienes una cuenta?"
                 android:textColor="@color/Texto_pastel"
-                android:textSize="12sp"/>
+                android:textSize="15sp"/>
 
             <TextView
                 android:id="@+id/Registrarse_BTN"
@@ -220,7 +220,7 @@
                 android:layout_marginStart="4dp"
                 android:text="Registrarse"
                 android:textColor="@color/Tercero"
-                android:textSize="12sp"/>
+                android:textSize="15sp"/>
         </LinearLayout>
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

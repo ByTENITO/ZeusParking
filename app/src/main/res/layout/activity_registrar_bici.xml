@@ -8,39 +8,40 @@
     android:background="@drawable/fondo"
     tools:context=".RegistrarBiciActivity">
 
-    <!-- Área de contenido desplazable con padding ajustado -->
+    <!-- Área de contenido desplazable con mejor espaciado -->
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:fillViewport="true"
         android:clipToPadding="false"
-        android:paddingBottom="68dp"
-        android:paddingTop="20dp">
+        android:paddingBottom="72dp"
+        android:paddingTop="24dp">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="12dp">
+            android:padding="16dp">
 
-            <!-- Contenedor principal mejor balanceado -->
+            <!-- Contenedor principal con mejor espaciado -->
             <LinearLayout
                 android:id="@+id/centerContainer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:gravity="center"
+                android:paddingVertical="8dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
 
-                <!-- Tarjeta de formulario con espacio adecuado -->
+                <!-- Tarjeta de formulario con mejor espaciado -->
                 <com.google.android.material.card.MaterialCardView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="12dp"
-                    app:cardCornerRadius="8dp"
-                    app:cardElevation="3dp"
+                    android:layout_marginHorizontal="8dp"
+                    app:cardCornerRadius="12dp"
+                    app:cardElevation="4dp"
                     app:strokeColor="@color/Principal"
                     app:strokeWidth="1dp">
 
@@ -48,7 +49,18 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="vertical"
-                        android:padding="16dp">
+                        android:padding="20dp">
+
+                        <!-- Título del formulario -->
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Registro de Bicicleta"
+                            android:textColor="@color/Texto_pastel"
+                            android:textSize="20sp"
+                            android:textStyle="bold"
+                            android:gravity="center"
+                            android:layout_marginBottom="16dp"/>
 
                         <!-- Campos de entrada con mejor espaciado -->
                         <com.google.android.material.textfield.TextInputLayout
@@ -56,15 +68,17 @@
                             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginBottom="6dp"
+                            android:layout_marginBottom="12dp"
                             android:hint="@string/nombres"
                             app:boxStrokeColor="@color/Secundario"
-                            app:hintTextColor="@color/Texto_pastel">
+                            app:hintTextColor="@color/Texto_pastel"
+                            app:startIconTint="@color/Texto_pastel">
 
                             <com.google.android.material.textfield.TextInputEditText
                                 android:id="@+id/Nombre_ED"
                                 android:layout_width="match_parent"
-                                android:layout_height="48dp"
+                                android:layout_height="wrap_content"
+                                android:minHeight="48dp"
                                 android:inputType="text"
                                 android:textColor="@color/Texto_pastel"/>
                         </com.google.android.material.textfield.TextInputLayout>
@@ -74,15 +88,17 @@
                             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginBottom="6dp"
+                            android:layout_marginBottom="12dp"
                             android:hint="@string/apellidos"
                             app:boxStrokeColor="@color/Secundario"
-                            app:hintTextColor="@color/Texto_pastel">
+                            app:hintTextColor="@color/Texto_pastel"
+                            app:startIconTint="@color/Texto_pastel">
 
                             <com.google.android.material.textfield.TextInputEditText
                                 android:id="@+id/Apellidos_ED"
                                 android:layout_width="match_parent"
-                                android:layout_height="48dp"
+                                android:layout_height="wrap_content"
+                                android:minHeight="48dp"
                                 android:inputType="text"
                                 android:textColor="@color/Texto_pastel"/>
                         </com.google.android.material.textfield.TextInputLayout>
@@ -92,34 +108,38 @@
                             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginBottom="6dp"
+                            android:layout_marginBottom="12dp"
                             android:hint="@string/cedula"
                             app:boxStrokeColor="@color/Secundario"
-                            app:hintTextColor="@color/Texto_pastel">
+                            app:hintTextColor="@color/Texto_pastel"
+                            app:startIconTint="@color/Texto_pastel">
 
                             <com.google.android.material.textfield.TextInputEditText
                                 android:id="@+id/Cedula_NUM"
                                 android:layout_width="match_parent"
-                                android:layout_height="48dp"
+                                android:layout_height="wrap_content"
+                                android:minHeight="48dp"
                                 android:inputType="number"
                                 android:textColor="@color/Texto_pastel"/>
                         </com.google.android.material.textfield.TextInputLayout>
 
-                        <!-- Spinner con TextInputLayout para consistencia -->
+                        <!-- Spinner mejorado -->
                         <com.google.android.material.textfield.TextInputLayout
                             android:id="@+id/spinnerContainer"
                             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginBottom="6dp"
-                            android:hint="Tipo"
+                            android:layout_marginBottom="12dp"
+                            android:hint="Tipo de bicicleta"
                             app:boxStrokeColor="@color/Secundario"
-                            app:hintTextColor="@color/Texto_pastel">
+                            app:hintTextColor="@color/Texto_pastel"
+                            app:startIconTint="@color/Texto_pastel">
 
                             <Spinner
                                 android:id="@+id/Tipos_Spinner"
                                 android:layout_width="match_parent"
-                                android:layout_height="48dp"
+                                android:layout_height="wrap_content"
+                                android:minHeight="48dp"
                                 android:backgroundTint="@color/Navegacion"
                                 android:popupBackground="@color/Navegacion"
                                 android:textColor="@color/Texto_pastel"/>
@@ -130,14 +150,16 @@
                             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginBottom="6dp"
+                            android:layout_marginBottom="12dp"
                             app:boxStrokeColor="@color/Secundario"
-                            app:hintTextColor="@color/Texto_pastel">
+                            app:hintTextColor="@color/Texto_pastel"
+                            app:startIconTint="@color/Texto_pastel">
 
                             <com.google.android.material.textfield.TextInputEditText
                                 android:id="@+id/Marco_NUM"
                                 android:layout_width="match_parent"
-                                android:layout_height="48dp"
+                                android:layout_height="wrap_content"
+                                android:minHeight="48dp"
                                 android:inputType="number"
                                 android:textColor="@color/Texto_pastel"/>
                         </com.google.android.material.textfield.TextInputLayout>
@@ -147,76 +169,87 @@
                             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginBottom="12dp"
+                            android:layout_marginBottom="16dp"
                             android:hint="@string/color"
                             app:boxStrokeColor="@color/Secundario"
-                            app:hintTextColor="@color/Texto_pastel">
+                            app:hintTextColor="@color/Texto_pastel"
+                            app:startIconTint="@color/Texto_pastel">
 
                             <com.google.android.material.textfield.TextInputEditText
                                 android:id="@+id/Color_ED"
                                 android:layout_width="match_parent"
-                                android:layout_height="48dp"
+                                android:layout_height="wrap_content"
+                                android:minHeight="48dp"
                                 android:inputType="text"
                                 android:textColor="@color/Texto_pastel"/>
                         </com.google.android.material.textfield.TextInputLayout>
 
-                        <!-- Sección de fotos con mejor espaciado -->
+                        <!-- Sección de fotos mejorada -->
                         <TextView
                             android:id="@+id/textView3"
-                            android:layout_width="wrap_content"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="@string/sube_aqui_tus_fotos"
-                            android:textColor="@android:color/white"
-                            android:textSize="15sp"
-                            android:layout_gravity="center_horizontal"
+                            android:textColor="@color/Texto_pastel"
+                            android:textSize="16sp"
+                            android:textStyle="bold"
+                            android:gravity="center"
                             android:layout_marginBottom="12dp"/>
 
-                        <!-- Botones de foto con mejor proporción -->
+                        <!-- Botones de foto con mejor diseño -->
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:orientation="horizontal"
-                            android:layout_marginBottom="12dp">
+                            android:layout_marginBottom="16dp"
+                            android:gravity="center"
+                            android:weightSum="2">
 
                             <com.google.android.material.button.MaterialButton
                                 android:id="@+id/AgregarFoto1_BTN"
                                 style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                                 android:layout_width="0dp"
-                                android:layout_height="40dp"
+                                android:layout_height="48dp"
                                 android:layout_weight="1"
-                                android:layout_marginEnd="6dp"
-                                android:text="Usuario"
-                                android:textSize="13sp"
+                                android:layout_marginEnd="8dp"
+                                android:text="FOTO USUARIO"
+                                android:textSize="14sp"
                                 android:textColor="@color/Texto_pastel"
-                                app:cornerRadius="6dp"
-                                app:strokeColor="@color/Principal"/>
+                                app:cornerRadius="8dp"
+                                app:strokeColor="@color/Principal"
+                                app:iconGravity="textStart"
+                                app:iconTint="@color/Texto_pastel"/>
 
                             <com.google.android.material.button.MaterialButton
                                 android:id="@+id/AgregarFoto2_BTN"
                                 style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                                 android:layout_width="0dp"
-                                android:layout_height="40dp"
+                                android:layout_height="48dp"
                                 android:layout_weight="1"
-                                android:text="Vehiculo"
-                                android:textSize="13sp"
+                                android:text="FOTO VEHICULO"
+                                android:textSize="14sp"
                                 android:textColor="@color/Texto_pastel"
-                                app:cornerRadius="6dp"
-                                app:strokeColor="@color/Principal"/>
+                                app:cornerRadius="8dp"
+                                app:strokeColor="@color/Principal"
+                                app:iconGravity="textStart"
+                                app:iconTint="@color/Texto_pastel"/>
                         </LinearLayout>
 
-                        <!-- Botón de guardar con mejor tamaño -->
+                        <!-- Botón de guardar mejorado -->
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/Guardar_BTN"
                             style="@style/Widget.MaterialComponents.Button"
                             android:layout_width="match_parent"
-                            android:layout_height="48dp"
+                            android:layout_height="52dp"
                             android:text="@string/guardar"
-                            android:textSize="15sp"
-                            app:iconTint="@null"
-                            app:strokeColor="@color/Secundario"
+                            android:textSize="16sp"
+                            android:textAllCaps="false"
                             android:textColor="@color/Texto_pastel"
                             app:backgroundTint="@color/Principal"
-                            app:cornerRadius="8dp"/>
+                            app:cornerRadius="8dp"
+                            app:iconGravity="textStart"
+                            app:iconTint="@color/Texto_pastel"
+                            android:layout_marginTop="8dp"/>
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
             </LinearLayout>
@@ -235,6 +268,5 @@
         app:itemIconTint="@drawable/nav_item_color"
         app:itemTextColor="@drawable/nav_text_color"
         app:layout_constraintBottom_toBottomOf="parent"/>
-
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

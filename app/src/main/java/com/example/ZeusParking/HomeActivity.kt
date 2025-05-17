@@ -226,15 +226,16 @@ class HomeActivity : BaseNavigationActivity() {
             )
         }
 
-        if (tiposVehiculos.contains("Bicicleta")) {
+        // Modificado para incluir Patineta Electrica
+        if (tiposVehiculos.contains("Bicicleta") || tiposVehiculos.contains("Patineta Electrica")) {
             agregarTarjetaDisponibilidad(
                 "Bicicleta",
                 "IuDC5XlTyhxhqU4It8SD",
                 "#FFF3E0",
                 listOf(
-                    (0..0) to "No quedan espacios para Bicicleta",
-                    (1..5) to "Quedan pocos espacios en el parqueadero de Bicicleta, quedan: {espacios}",
-                    (6..10) to "Quedan {espacios} espacios para Bicicleta"
+                    (0..0) to "No quedan espacios para Bicicleta/Patineta",
+                    (1..5) to "Quedan pocos espacios en el parqueadero de Bicicleta/Patineta, quedan: {espacios}",
+                    (6..10) to "Quedan {espacios} espacios para Bicicleta/Patineta"
                 )
             )
         }
@@ -315,7 +316,7 @@ class HomeActivity : BaseNavigationActivity() {
                         val tipoVehiculo = document.getString("tipoVehiculo") ?: ""
                         val numeroVehiculo = document.getString("numero") ?: ""
 
-                        reservaText.text = "Reserva activa para $tipoVehiculo (N° $numeroVehiculo) el $fecha a las $hora"
+                        reservaText.text = "Reserva activa para $tipoVehiculo ($numeroVehiculo) el $fecha a las $hora"
                         mostrarBotonesReserva()
 
                         btnVerQR.setOnClickListener {
@@ -647,22 +648,30 @@ class HomeActivity : BaseNavigationActivity() {
                 val espacios = document?.getLong(campo)?.toInt() ?: 0
                 Log.d("Firestore", "Actualizado $campo -> $espacios")
 
-                val emoji = when (campo.lowercase()) {
-                    "furgon" -> "🚐"
-                    "bicicleta" -> "🚲"
-                    "motocicleta" -> "🏍️"
-                    "vehiculo particular" -> "🚗"
-                    else -> ""
+                // Actualización para mostrar correctamente Bicicleta/Patineta
+                val displayText = when (campo.lowercase()) {
+                    "bicicleta" -> {
+                        val emoji = "🚲/🛴"
+                        "$emoji Quedan pocos $espacios para Bicicleta/Patineta"
+                    }
+                    "furgon" -> "🚐 Quedan pocos $espacios para Furgon"
+                    "motocicleta" -> "🏍️ Quedan pocos $espacios para Motocicleta"
+                    "vehiculo particular" -> "🚗 Quedan pocos $espacios para Vehículo Particular"
+                    else -> "Quedan $espacios espacios"
                 }
 
-                textoView.text = "$emoji Quedan $espacios espacios para $campo"
+                textoView.text = displayText
 
                 for ((rango, mensaje) in umbrales) {
                     if (espacios in rango) {
+                        val notificationTitle = when (campo.lowercase()) {
+                            "bicicleta" -> "ZeusParking - Bicicleta/Patineta"
+                            else -> "ZeusParking - $campo"
+                        }
                         mostrarNotificacion(
                             this,
-                            "ZeusParking - $campo",
-                            "$emoji " + mensaje.replace("{espacios}", espacios.toString())
+                            notificationTitle,
+                            mensaje.replace("{espacios}", espacios.toString())
                         )
                         break
                     }

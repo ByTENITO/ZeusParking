@@ -160,6 +160,8 @@ class Reservacion : AppCompatActivity() {
                 if (documents.isEmpty()) {
                     val reservaData = hashMapOf(
                         "usuarioId" to userId,
+                        "nombre" to reserva.nombre, // Añadir nombre
+                        "apellidos" to reserva.apellidos, // Añadir apellidos
                         "numero" to reserva.numero,
                         "tipoVehiculo" to reserva.tipo,
                         "fecha" to SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date()),

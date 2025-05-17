@@ -18,7 +18,7 @@
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="@android:color/transparent"
-            app:title="Registro de Entrada"
+            app:title="REGISTRO DE SALIDA"
             app:titleTextColor="@color/Texto_pastel"/>
     </com.google.android.material.appbar.AppBarLayout>
 
@@ -39,12 +39,12 @@
                 android:layout_height="wrap_content"
                 android:text="ESCANEAR CÓDIGO QR"
                 android:textColor="@color/Principal"
-                android:textSize="13sp"
+                android:textSize="20sp"
                 android:textStyle="bold"/>
 
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
-                android:layout_height="300dp"
+                android:layout_height="400dp"
                 app:cardCornerRadius="12dp"
                 app:strokeColor="@color/Principal"
                 app:cardElevation="2dp"
@@ -64,7 +64,7 @@
                 android:layout_marginTop="12dp"
                 android:text="INFORMACIÓN DEL VEHÍCULO"
                 android:textColor="@color/Principal"
-                android:textSize="13sp"
+                android:textSize="15sp"
                 android:textStyle="bold"/>
 
             <com.google.android.material.card.MaterialCardView
@@ -111,8 +111,7 @@
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/Marco_NUMVigiSalida"
                             android:layout_width="match_parent"
-                            android:layout_height="48dp"
-                            android:hint="Placa o N° de Marco"
+                            android:layout_height="50dp"
                             android:textColor="@color/Texto_pastel"/>
                     </com.google.android.material.textfield.TextInputLayout>
                 </LinearLayout>
