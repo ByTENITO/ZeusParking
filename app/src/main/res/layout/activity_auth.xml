@@ -9,7 +9,6 @@
     android:padding="16dp"
     tools:context=".AuthActivity">
 
-
     <LinearLayout
         android:id="@+id/logoSection"
         android:layout_width="0dp"
@@ -33,7 +32,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:lineSpacingExtra="2dp"
             android:text="Esta es una app dedicada a facilitar el ingreso al parqueadero de UNIMINUTO, sede Soacha."
             android:textAlignment="center"
             android:textColor="@color/Texto_pastel"
@@ -49,7 +47,6 @@
             android:textColor="@color/Texto_pastel"
             android:textSize="13sp" />
     </LinearLayout>
-
 
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/formCard"
@@ -71,7 +68,6 @@
             android:orientation="vertical"
             android:padding="16dp">
 
-
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/textInputLayout"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
@@ -79,7 +75,6 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="8dp"
                 app:boxStrokeColor="@color/Secundario"
-                app:errorEnabled="true"
                 app:hintTextColor="@color/Texto_pastel">
 
                 <com.google.android.material.textfield.TextInputEditText
@@ -91,7 +86,6 @@
                     android:textColor="@color/Texto_pastel"
                     android:textColorHint="@color/Texto_pastel" />
             </com.google.android.material.textfield.TextInputLayout>
-
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/textInputLayout2"
@@ -114,7 +108,6 @@
                     android:textColorHint="@color/Texto_pastel" />
             </com.google.android.material.textfield.TextInputLayout>
 
-
             <TextView
                 android:id="@+id/OlvidasteContrasena_TV"
                 android:layout_width="wrap_content"
@@ -126,19 +119,15 @@
         </LinearLayout>
     </com.google.android.material.card.MaterialCardView>
 
-
     <LinearLayout
         android:id="@+id/buttonsSection"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
+        android:layout_marginTop="10dp"
         android:orientation="vertical"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/formCard"
-        app:layout_constraintVertical_bias="0">
-
+        app:layout_constraintTop_toBottomOf="@id/formCard">
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/Acceder_BTN"
@@ -146,21 +135,17 @@
             android:layout_width="match_parent"
             android:layout_height="45dp"
             android:text="Acceder"
-            android:textSize="14sp"
             android:textColor="@color/Texto_pastel"
+            android:textSize="14sp"
+            app:backgroundTint="@color/Negro"
             app:cornerRadius="8dp"
-            app:iconGravity="textStart"
-            app:iconPadding="4dp"
-            app:iconTint="@null"
             app:strokeColor="@color/Principal"
-            app:strokeWidth="1dp"
-            app:backgroundTint="@color/Negro" />
-
+            app:strokeWidth="1dp" />
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
+            android:layout_marginTop="10dp"
             android:layout_marginBottom="4dp">
 
             <View
@@ -174,43 +159,40 @@
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
                 android:background="@android:color/transparent"
-                android:paddingStart="8dp"
-                android:paddingEnd="8dp"
+                android:paddingHorizontal="8dp"
                 android:text="O inicia sesión con"
                 android:textColor="@color/Texto_pastel"
                 android:textSize="12sp" />
         </RelativeLayout>
 
-
         <com.google.android.material.button.MaterialButton
             android:id="@+id/Google_BTN"
             style="@style/Widget.MaterialComponents.Button.OutlinedButton"
             android:layout_width="match_parent"
-            android:layout_height="45dp"
+            android:layout_height="48dp"
             android:text="Continuar con Google"
             android:textColor="@color/Texto_pastel"
             android:textSize="14sp"
             app:cornerRadius="8dp"
             app:icon="@drawable/ic_google"
+            app:iconTint="@color/Texto_pastel"
             app:iconGravity="textStart"
             app:iconPadding="4dp"
-            app:iconTint="@null"
-            app:strokeColor="@color/Principal"
+            app:strokeColor="@color/Blanco"
             app:strokeWidth="1dp" />
-
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
+            android:layout_marginTop="15dp"
             android:gravity="center"
-            android:layout_marginTop="20dp">
+            android:orientation="horizontal">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="¿No tienes una cuenta?"
-                android:textColor="@color/Texto_pastel"
+                android:textColor="@color/Blanco"
                 android:textSize="15sp"/>
 
             <TextView
@@ -219,8 +201,12 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="4dp"
                 android:text="Registrarse"
-                android:textColor="@color/Tercero"
-                android:textSize="15sp"/>
+                android:textColor="@color/Texto_pastel"
+                android:textSize="15sp"
+                android:clickable="true"
+                android:focusable="true"
+                android:textStyle="bold"
+                android:background="?attr/selectableItemBackground"/>
         </LinearLayout>
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -44,7 +44,7 @@ class RegistrarBiciActivity : BaseNavigationActivity() {
 
     // Patrones de validación
     private val nombreApellidoPattern = Pattern.compile("^[\\p{L} .'-]+$")
-    private val placaPattern = Pattern.compile("^[a-z]{3}[0-9]{3}$")
+    private val placaPattern = Pattern.compile("^[a-zA-Z]{3,4}[0-9]{2,3}[a-zA-Z]?$")
     private val cedulaPattern = Pattern.compile("^[0-9]{1,10}$")
 
     data class BiciData(
@@ -110,7 +110,7 @@ class RegistrarBiciActivity : BaseNavigationActivity() {
                     }
 
                     3, 4 -> { // Vehículo particular y moto
-                        marcoNum.hint = "Placa (Ej. abc123)"
+                        marcoNum.hint = "Placa (Ej. abc123, abc23d, abcd12)"
                         marcoNum.inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD
                         marcoNum.filters = arrayOf(InputFilter.LengthFilter(6))
                         marcoNum.addTextChangedListener(placaTextWatcher)
@@ -207,9 +207,9 @@ class RegistrarBiciActivity : BaseNavigationActivity() {
         override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
         override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
         override fun afterTextChanged(s: Editable?) {
-            val texto = s.toString().lowercase()
+            val texto = s.toString().trim()
             if (!placaPattern.matcher(texto).matches()) {
-                marcoNum.error = "Formato: 3 letras + 3 números (ej: abc123)"
+                marcoNum.error = "Formatos válidos:\n- abc123 - abc12d (4 letras + 2 números)"
             } else {
                 marcoNum.error = null
             }
@@ -304,8 +304,8 @@ class RegistrarBiciActivity : BaseNavigationActivity() {
 
         // Validación específica para placas de vehículo particular y moto
         if ((tiposSpinner.selectedItemPosition == 3 || tiposSpinner.selectedItemPosition == 4) &&
-            !placaPattern.matcher(marco.lowercase()).matches()) {
-            marcoNum.error = "Formato de placa inválido (ej: abc123)"
+            !placaPattern.matcher(marco.trim()).matches()) {
+            marcoNum.error = "Formato de placa inválido. Ejemplos válidos:\nabc123, abc12c, abcd12"
             return
         }
 
@@ -402,7 +402,10 @@ class RegistrarBiciActivity : BaseNavigationActivity() {
         builder.setTitle("Instrucciones para el Registro")
         builder.setMessage("""
         1. Complete todos los campos obligatorios
-        2. Para vehículos: ingrese placa en formato abc123
+        2. Para vehículos: ingrese placa en formato:
+            - ABC123 (3 letras + 3 números)
+            - ABC12C (3 letras + 2 números + 1 letra) 
+            - ABCD12 (4 letras + 2 números)
         3. Para bicicletas: últimos 4 dígitos del marco
         4. Debe subir 2 fotos claras del vehículo
         5. Verifique que los datos sean correctos antes de guardar
