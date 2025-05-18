@@ -1,5 +1,6 @@
 package com.example.parquiatenov10
 
+import android.app.AlertDialog
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.Color
@@ -42,6 +43,9 @@ class QrActivity : BaseNavigationActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_entrada_qr)
+
+        //Instrucciones de qr y reserva
+        mostrarInstruccionesQR()
 
         //Responsividad
         Responsividad.inicializar(this)
@@ -202,6 +206,23 @@ class QrActivity : BaseNavigationActivity() {
         Handler(Looper.getMainLooper()).postDelayed({
             ivCodigoQR.startAnimation(fadeIn)
         }, 100)
+    }
+
+    private fun mostrarInstruccionesQR() {
+        val builder = AlertDialog.Builder(this)
+        builder.setTitle("Instrucciones de Uso del QR")
+        builder.setMessage("""
+        1. Este QR es personal e intransferible
+        2. Con él podrás entrar y salir del parqueadero
+        3. Solo puedes tener una reserva activa a la vez
+        4. El sistema verificará automáticamente:
+           - Que el vehículo esté registrado
+           - Que no tengas otra reserva activa
+           - Que haya disponibilidad para tu tipo de vehículo
+        5. Presenta este QR al ingresar al parqueadero
+    """.trimIndent())
+        builder.setPositiveButton("Entendido", null)
+        builder.show()
     }
 
     override fun getCurrentNavigationItem(): Int {
