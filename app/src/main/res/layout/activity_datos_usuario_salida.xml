@@ -97,7 +97,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
                                 android:layout_marginStart="8dp"
-                                android:text="Correo Usuario"
+                                android:text="No disponible"
                                 android:textColor="@color/Blanco"
                                 android:textSize="14sp"/>
                         </LinearLayout>
@@ -123,7 +123,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
                                 android:layout_marginStart="8dp"
-                                android:text="Nombre Usuario"
+                                android:text="No disponible"
                                 android:textColor="@color/Blanco"
                                 android:textSize="14sp"/>
                         </LinearLayout>
@@ -148,7 +148,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
                                 android:layout_marginStart="8dp"
-                                android:text="Apellido Usuario"
+                                android:text="No disponible"
                                 android:textColor="@color/Blanco"
                                 android:textSize="14sp"/>
                         </LinearLayout>
@@ -221,7 +221,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
                                 android:layout_marginStart="8dp"
-                                android:text="Color Vehiculo"
+                                android:text="No disponible"
                                 android:textColor="@color/Blanco"
                                 android:textSize="14sp"/>
                         </LinearLayout>
@@ -247,7 +247,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
                                 android:layout_marginStart="8dp"
-                                android:text="id Vehiculo"
+                                android:text="No disponible"
                                 android:textColor="@color/Blanco"
                                 android:textSize="14sp"/>
                         </LinearLayout>
@@ -272,7 +272,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
                                 android:layout_marginStart="8dp"
-                                android:text="Tipo"
+                                android:text="No disponible"
                                 android:textColor="@color/Blanco"
                                 android:textSize="14sp"/>
                         </LinearLayout>

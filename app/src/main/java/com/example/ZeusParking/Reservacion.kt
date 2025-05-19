@@ -16,7 +16,9 @@ import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.NotificationCompat
+import com.example.parquiatenov10.DatosUsuarioEntrada.BiciData
 import com.google.firebase.Timestamp
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.type.TimeZone
@@ -42,6 +44,10 @@ class Reservacion : AppCompatActivity() {
     private lateinit var colorTxT: TextView
     private lateinit var horaTxT: TextView
     private lateinit var salir: Button
+
+    private var fechaHoraActual = ZonedDateTime.now()
+    private var formato = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
+    private var fechaHoraFormateada = fechaHoraActual.format(formato)
 
     data class ReserData(
         val nombre: String,
@@ -73,7 +79,7 @@ class Reservacion : AppCompatActivity() {
         val numero = intent.getStringExtra("numero") ?: "No disponible"
         Log.d("Datos","Datos recibios, tipo $vehiculo ,numero: $numero ,id:$userId")
         generateAndDisplayQrCode()
-        consulta(userId, vehiculo, numero)
+        registrarIngreso(userId, vehiculo, numero)
         salir.setOnClickListener {
             finish()
         }
@@ -81,69 +87,8 @@ class Reservacion : AppCompatActivity() {
         crearCanalNotificacion(this)
     }
 
-    private fun consulta(userId: String, vehiculo: String, numero: String) {
-        val sdf = SimpleDateFormat("d/MMMM/yyyy - HH:mm", Locale("es", "ES"))
-        val currentDateTime = sdf.format(Date())
-        database.collection("Bici_Usuarios")
-            .whereEqualTo("id", userId)
-            .whereEqualTo("tipo", vehiculo)
-            .whereEqualTo("numero",numero)
-            .addSnapshotListener { documents, e ->
-                if (documents != null) {
-                    for (document in documents) {
-                        val reserData = ReserData(
-                            nombre = document.getString("nombre") ?: "",
-                            apellidos = document.getString("apellidos") ?: "",
-                            color = document.getString("color") ?: "",
-                            cedula = document.getString("cedula") ?: "",
-                            numero = document.getString("numero") ?: "",
-                            tipo = document.getString("tipo") ?: "",
-                            fecha = currentDateTime,
-                            id = document.getString("id")?:""
-                        )
-                        actualizarInterfaz(reserData)
-                        Reserva(reserData.numero,vehiculo,reserData)
-                    }
-                }
-            }
-    }
-
-    private fun Reserva(numero: String, tipo: String, reserva: ReserData){
-        database.collection("Reservas")
-            .whereEqualTo("tipo",tipo)
-            .whereEqualTo("numero",numero)
-            .get()
-            .addOnSuccessListener{ documents ->
-                database.collection("Reservas")
-                    .add(reserva)
-                    .addOnSuccessListener { document ->
-                        actualizarDisponibilidad(tipo)
-                        Toast.makeText(this, "Reserva realizada, guarda soporte de esta para que sea validada antes de ingresar", Toast.LENGTH_SHORT).show()
-                        mostrarNotificacion(
-                            this,
-                            "Reserva exitosa",
-                            "Tu reserva para $tipo ha sido registrada"
-                        )
-                    }
-            }
-    }
-
-    private fun actualizarInterfaz(reserData: ReserData) {
-        nombreTxT.text = (buildString {
-            append(reserData.nombre)
-            append(" ")
-            append(reserData.apellidos)
-        })
-        colorTxT.text = reserData.color
-        cedulaTxT.text = reserData.cedula
-        idVehiTxT.text = reserData.numero
-        tipoTxT.text = reserData.tipo
-        horaTxT.text = reserData.fecha
-    }
-
     private fun generateAndDisplayQrCode() {
-        val sharedPref = getSharedPreferences("MisDatos", MODE_PRIVATE)
-        val correo = sharedPref.getString("nombreUsuario", "Desconocido") ?: "DefaultValue"
+        val correo = FirebaseAuth.getInstance().currentUser?.email.toString()
 
         try {
             val qrBitmap = generateQRCode(correo, 700)
@@ -152,7 +97,6 @@ class Reservacion : AppCompatActivity() {
             e.printStackTrace()
         }
     }
-
     private fun generateQRCode(content: String, size: Int): Bitmap? {
         return try {
             val hints = mapOf(
@@ -184,7 +128,34 @@ class Reservacion : AppCompatActivity() {
             null
         }
     }
-    private fun actualizarDisponibilidad(tipoVehiculo: String) {
+
+    private fun registrarIngreso(idUser: String, vehiculo: String, idVehiculo: String) {
+        database.collection("Bici_Usuarios")
+            .whereEqualTo("id", idUser)
+            .whereEqualTo("tipo", vehiculo)
+            .whereEqualTo("numero", idVehiculo)
+            .get()
+            .addOnSuccessListener { documents ->
+                for (document in documents) {
+                    val reserData = ReserData(
+                        nombre = document.getString("nombre") ?: "",
+                        apellidos = document.getString("apellidos") ?: "",
+                        color = document.getString("color") ?: "",
+                        cedula = document.getString("cedula") ?: "",
+                        numero = document.getString("numero") ?: "",
+                        tipo = document.getString("tipo") ?: "",
+                        fecha = fechaHoraFormateada.toString(),
+                        id = idUser.toString()
+                    )
+                    actualizarDisponibilidad(reserData.tipo, reserData)
+                }
+            }
+            .addOnFailureListener { e ->
+                Log.e("Firestore", "Error al registrar salio: ", e)
+            }
+    }
+
+    private fun actualizarDisponibilidad(tipoVehiculo: String, reserData: ReserData) {
         val documentId = when (tipoVehiculo) {
             "Furgon" -> "0ctYNlFXwtVw9ylURFXi"
             "Vehiculo Particular" -> "UF0tfabGHGitcj7En6Wy"
@@ -193,13 +164,14 @@ class Reservacion : AppCompatActivity() {
             "Motocicleta" -> "ntHgnXs4Qbz074siOrvz"
             else -> return
         }
-        if (tipoVehiculo == "Patineta Electrica"){
-            Consulta(documentId,"Bicicleta")
-        }else{
-            Consulta(documentId, tipoVehiculo)
+        if (tipoVehiculo == "Patineta Electrica") {
+            Consulta(documentId, "Bicicleta", reserData)
+        } else {
+            Consulta(documentId, tipoVehiculo, reserData)
         }
     }
-    private fun Consulta(documentId: String, tipoVehiculo: String){
+
+    private fun Consulta(documentId: String, tipoVehiculo: String, reserData: ReserData) {
         database.collection("Disponibilidad").document(documentId)
             .get()
             .addOnSuccessListener { document ->
@@ -210,12 +182,26 @@ class Reservacion : AppCompatActivity() {
                             .update(tipoVehiculo, FieldValue.increment(-1))
                             .addOnSuccessListener {
                                 Log.d("Firestore", "Campo '$tipoVehiculo' decrementado")
+                                actualizarInterfaz(reserData)
+                                database.collection("Reservas")
+                                    .add(reserData)
+                                    .addOnSuccessListener {
+                                        Toast.makeText(this, "Datos cargados", Toast.LENGTH_SHORT).show()
+                                    }
+                                    .addOnFailureListener {
+                                        Toast.makeText(this, "No se cargaron los datos", Toast.LENGTH_SHORT)
+                                            .show()
+                                    }
                             }
                             .addOnFailureListener { e ->
                                 Log.e("Firestore", "Error al actualizar el campo: ", e)
                             }
                     } else {
-                        Toast.makeText(this, "No hay espacios disponibles para $tipoVehiculo", Toast.LENGTH_LONG).show()
+                        Toast.makeText(
+                            this,
+                            "No hay espacios disponibles para $tipoVehiculo",
+                            Toast.LENGTH_LONG
+                        ).show()
                     }
                 } else {
                     Log.d("Firestore", "No se encontró el documento para $tipoVehiculo")
@@ -225,6 +211,20 @@ class Reservacion : AppCompatActivity() {
                 Log.e("Firestore", "Error al obtener el documento de disponibilidad: ", e)
             }
     }
+
+    private fun actualizarInterfaz(reserData: ReserData) {
+        nombreTxT.text = (buildString {
+            append(reserData.nombre)
+            append(" ")
+            append(reserData.apellidos)
+        })
+        colorTxT.text = reserData.color
+        cedulaTxT.text = reserData.cedula
+        idVehiTxT.text = reserData.numero
+        tipoTxT.text = reserData.tipo
+        horaTxT.text = reserData.fecha
+    }
+
     private fun crearCanalNotificacion(context: Context) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val nombre = "Canal ZeusParking"

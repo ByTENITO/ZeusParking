@@ -117,7 +117,7 @@
                                     android:layout_height="wrap_content"
                                     android:layout_marginStart="12dp"
                                     android:layout_weight="1"
-                                    android:text="Nombre"
+                                    android:text="No disponible"
                                     android:textColor="@color/Blanco" />
                             </LinearLayout>
 
@@ -137,7 +137,7 @@
                                     android:layout_height="wrap_content"
                                     android:layout_marginStart="12dp"
                                     android:layout_weight="1"
-                                    android:text="Cedula"
+                                    android:text="No disponible"
                                     android:textColor="@color/Blanco" />
                             </LinearLayout>
 
@@ -157,7 +157,7 @@
                                     android:layout_height="wrap_content"
                                     android:layout_marginStart="12dp"
                                     android:layout_weight="1"
-                                    android:text="Tipo"
+                                    android:text="No disponible"
                                     android:textColor="@color/Blanco" />
                             </LinearLayout>
 
@@ -177,7 +177,7 @@
                                     android:layout_height="wrap_content"
                                     android:layout_marginStart="12dp"
                                     android:layout_weight="1"
-                                    android:text="Placa/Num.marco"
+                                    android:text="No disponible"
                                     android:textColor="@color/Blanco" />
                             </LinearLayout>
 
@@ -197,7 +197,7 @@
                                     android:layout_height="wrap_content"
                                     android:layout_marginStart="12dp"
                                     android:layout_weight="1"
-                                    android:text="Color"
+                                    android:text="No disponible"
                                     android:textColor="@color/Blanco" />
                             </LinearLayout>
                         </LinearLayout>

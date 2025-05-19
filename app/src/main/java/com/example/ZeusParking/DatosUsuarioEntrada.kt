@@ -1,5 +1,6 @@
 package com.example.parquiatenov10
 
+import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
@@ -149,24 +150,68 @@ class DatosUsuarioEntrada : AppCompatActivity() {
                         fechaHora = fechaHoraFormateada.toString()
                     )
 
-                    // Actualizar la interfaz
-                    actualizarInterfaz(biciData)
-
-                    // Registrar el ingreso
-                    database.collection("Entrada")
-                        .add(biciData)
-                        .addOnSuccessListener {
-                            Toast.makeText(this, "Datos cargados", Toast.LENGTH_SHORT).show()
-                            actualizarDisponibilidad(biciData.tipo)
-                        }
-                        .addOnFailureListener {
-                            Toast.makeText(this, "No se cargaron los datos", Toast.LENGTH_SHORT)
-                                .show()
-                        }
+                    actualizarDisponibilidad(biciData.tipo, biciData)
                 }
             }
             .addOnFailureListener { e ->
                 Log.e("Firestore", "Error al registrar salio: ", e)
+            }
+    }
+
+    private fun actualizarDisponibilidad(tipoVehiculo: String, biciData: BiciData) {
+        val documentId = when (tipoVehiculo) {
+            "Furgon" -> "0ctYNlFXwtVw9ylURFXi"
+            "Vehiculo Particular" -> "UF0tfabGHGitcj7En6Wy"
+            "Bicicleta" -> "IuDC5XlTyhxhqU4It8SD"
+            "Patineta Electrica" -> "IuDC5XlTyhxhqU4It8SD"
+            "Motocicleta" -> "ntHgnXs4Qbz074siOrvz"
+            else -> return
+        }
+        if (tipoVehiculo == "Patineta Electrica") {
+            Consulta(documentId, "Bicicleta", biciData)
+        } else {
+            Consulta(documentId, tipoVehiculo, biciData)
+        }
+    }
+
+    private fun Consulta(documentId: String, tipoVehiculo: String, biciData: BiciData) {
+        database.collection("Disponibilidad").document(documentId)
+            .get()
+            .addOnSuccessListener { document ->
+                if (document.exists()) {
+                    val espacios = document.getLong(tipoVehiculo) ?: 0
+                    if (espacios > 0) {
+                        database.collection("Disponibilidad").document(documentId)
+                            .update(tipoVehiculo, FieldValue.increment(-1))
+                            .addOnSuccessListener {
+                                Log.d("Firestore", "Campo '$tipoVehiculo' decrementado")
+                                actualizarInterfaz(biciData)
+                                database.collection("Entrada")
+                                    .add(biciData)
+                                    .addOnSuccessListener {
+                                        Toast.makeText(this, "Datos cargados", Toast.LENGTH_SHORT).show()
+                                    }
+                                    .addOnFailureListener {
+                                        Toast.makeText(this, "No se cargaron los datos", Toast.LENGTH_SHORT)
+                                            .show()
+                                    }
+                            }
+                            .addOnFailureListener { e ->
+                                Log.e("Firestore", "Error al actualizar el campo: ", e)
+                            }
+                    } else {
+                        Toast.makeText(
+                            this,
+                            "No hay espacios disponibles para $tipoVehiculo",
+                            Toast.LENGTH_LONG
+                        ).show()
+                    }
+                } else {
+                    Log.d("Firestore", "No se encontró el documento para $tipoVehiculo")
+                }
+            }
+            .addOnFailureListener { e ->
+                Log.e("Firestore", "Error al obtener el documento de disponibilidad: ", e)
             }
     }
 
@@ -222,52 +267,5 @@ class DatosUsuarioEntrada : AppCompatActivity() {
         apellidoTXT.text = biciData.apellidos
         numeroTXT.text = biciData.placa
         tipoTXT.text = biciData.tipo
-    }
-
-    private fun actualizarDisponibilidad(tipoVehiculo: String) {
-        val documentId = when (tipoVehiculo) {
-            "Furgon" -> "0ctYNlFXwtVw9ylURFXi"
-            "Vehiculo Particular" -> "UF0tfabGHGitcj7En6Wy"
-            "Bicicleta" -> "IuDC5XlTyhxhqU4It8SD"
-            "Patineta Electrica" -> "IuDC5XlTyhxhqU4It8SD"
-            "Motocicleta" -> "ntHgnXs4Qbz074siOrvz"
-            else -> return
-        }
-        if (tipoVehiculo == "Patineta Electrica") {
-            Consulta(documentId, "Bicicleta")
-        } else {
-            Consulta(documentId, tipoVehiculo)
-        }
-    }
-
-    private fun Consulta(documentId: String, tipoVehiculo: String) {
-        database.collection("Disponibilidad").document(documentId)
-            .get()
-            .addOnSuccessListener { document ->
-                if (document.exists()) {
-                    val espacios = document.getLong(tipoVehiculo) ?: 0
-                    if (espacios > 0) {
-                        database.collection("Disponibilidad").document(documentId)
-                            .update(tipoVehiculo, FieldValue.increment(-1))
-                            .addOnSuccessListener {
-                                Log.d("Firestore", "Campo '$tipoVehiculo' decrementado")
-                            }
-                            .addOnFailureListener { e ->
-                                Log.e("Firestore", "Error al actualizar el campo: ", e)
-                            }
-                    } else {
-                        Toast.makeText(
-                            this,
-                            "No hay espacios disponibles para $tipoVehiculo",
-                            Toast.LENGTH_LONG
-                        ).show()
-                    }
-                } else {
-                    Log.d("Firestore", "No se encontró el documento para $tipoVehiculo")
-                }
-            }
-            .addOnFailureListener { e ->
-                Log.e("Firestore", "Error al obtener el documento de disponibilidad: ", e)
-            }
     }
 }
