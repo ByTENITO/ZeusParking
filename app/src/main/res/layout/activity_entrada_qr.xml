@@ -8,7 +8,6 @@
     android:background="@drawable/fondo"
     tools:context=".QrActivity">
 
-
     <ImageView
         android:id="@+id/imageView"
         android:layout_width="160dp"
@@ -21,7 +20,6 @@
         app:layout_constraintVertical_bias="0.1"
         app:srcCompat="@drawable/zeuspass" />
 
-    <!-- Contenedor Principal con Scroll -->
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -39,10 +37,10 @@
             android:orientation="vertical"
             android:padding="17dp">
 
-            <!-- Tarjeta QR (más compacta) -->
+            <!-- Tarjeta QR -->
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/qrCard"
-                android:layout_width="280dp"
+                android:layout_width="300dp"
                 android:layout_height="320dp"
                 app:cardBackgroundColor="@android:color/white"
                 app:cardCornerRadius="12dp"
@@ -52,7 +50,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent">
 
-                    <!-- QR Image (ligeramente más pequeño) -->
+                    <!-- QR Image -->
                     <ImageView
                         android:id="@+id/ivCodigoSalida"
                         android:layout_width="240dp"
@@ -67,7 +65,11 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_below="@id/ivCodigoSalida"
-                        android:layout_centerHorizontal="true"
+                        android:layout_alignParentEnd="true"
+                        android:layout_alignParentBottom="true"
+                        android:layout_marginTop="19dp"
+                        android:layout_marginEnd="75dp"
+                        android:layout_marginBottom="21dp"
                         android:padding="6dp"
                         android:textColor="@color/Negro"
                         android:textSize="15sp"
@@ -76,86 +78,17 @@
                 </RelativeLayout>
             </com.google.android.material.card.MaterialCardView>
 
-            <!-- Texto Reserva -->
-            <TextView
-                android:id="@+id/Reserva"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:padding="4dp"
-                android:textColor="@color/Texto_pastel"
-                android:textSize="15sp"
-                android:textStyle="bold"
-                tools:text="¿Desea reservar?" />
-
-            <!-- Formulario de Reserva (más compacto) -->
-            <com.google.android.material.card.MaterialCardView
+            <!-- Botón para ir a Reserva -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/irReserva"
+                style="@style/Widget.MaterialComponents.Button"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:layout_marginHorizontal="8dp"
-                app:cardCornerRadius="8dp"
-                app:cardElevation="4dp"
-                app:strokeColor="@color/Principal"
-                app:strokeWidth="1dp">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="16dp">
-
-                    <!-- Spinner de Tipo -->
-                    <com.google.android.material.textfield.TextInputLayout
-                        android:id="@+id/spinnerContainer"
-                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="8dp"
-                        android:hint="Tipo"
-                        app:boxStrokeColor="@color/Principal"
-                        app:hintTextColor="@android:color/white">
-
-                        <Spinner
-                            android:id="@+id/Tipos_SpinnerQR"
-                            android:layout_width="match_parent"
-                            android:layout_height="48dp"
-                            android:backgroundTint="@color/Navegacion"
-                            android:popupBackground="@color/Navegacion"
-                            android:textColor="@color/Texto_pastel" />
-                    </com.google.android.material.textfield.TextInputLayout>
-
-                    <com.google.android.material.textfield.TextInputLayout
-                        android:id="@+id/textInputLayout"
-                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="8dp"
-                        app:boxStrokeColor="@color/Principal"
-                        app:errorEnabled="true"
-                        app:hintTextColor="@color/Texto_pastel">
-
-                        <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/numero"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:inputType="textEmailAddress"
-                            android:textColor="@color/Texto_pastel"
-                            android:textColorHint="@color/Texto_pastel" />
-                    </com.google.android.material.textfield.TextInputLayout>
-
-                    <!-- Botón de Reserva -->
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/Reserva_BTN"
-                        style="@style/Widget.MaterialComponents.Button"
-                        android:layout_width="match_parent"
-                        android:layout_height="40dp"
-                        android:text="@string/reservar"
-                        android:textColor="@color/Texto_pastel"
-                        app:backgroundTint="@color/Principal"
-                        app:cornerRadius="6dp"/>
-                </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
+                android:layout_height="50dp"
+                android:layout_marginTop="16dp"
+                android:text="Hacer Reserva"
+                android:textColor="@color/Texto_pastel"
+                app:backgroundTint="@color/Principal"
+                app:cornerRadius="6dp"/>
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 

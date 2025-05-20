@@ -318,9 +318,10 @@ class HomeActivity : BaseNavigationActivity() {
                         val fecha = document.getString("fecha") ?: ""
                         val tipoVehiculo = document.getString("tipo") ?: ""
                         val numeroVehiculo = document.getString("numero") ?: ""
+                        val horaReserva = document.getString("horaReserva") ?: ""
 
                         reservaText.text =
-                            "Reserva activa para $tipoVehiculo ($numeroVehiculo) el $fecha"
+                            "Reserva activa para $tipoVehiculo ($numeroVehiculo) el $fecha a las $horaReserva"
                         mostrarBotonesReserva()
 
                         btnVerQR.setOnClickListener {
@@ -540,8 +541,7 @@ class HomeActivity : BaseNavigationActivity() {
     }
 
     private fun modificarReserva(nuevoTipo: String, nuevoNumero: String) {
-        val sdf = SimpleDateFormat("d/MMMM/yyyy - HH:mm", Locale("es", "ES"))
-        val currentDateTime = sdf.format(Date())
+
         // Primero verificar disponibilidad del nuevo tipo
         verificarDisponibilidad(nuevoTipo) { disponible ->
             if (disponible) {
@@ -559,9 +559,7 @@ class HomeActivity : BaseNavigationActivity() {
                                 "tipo",
                                 nuevoTipo,
                                 "numero",
-                                nuevoNumero,
-                                "fecha",
-                                currentDateTime
+                                nuevoNumero
                             )
                             .addOnSuccessListener {
                                 // Actualizar disponibilidades

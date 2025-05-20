@@ -29,6 +29,10 @@
             android:name=".DatosUsuarioSalida"
             android:screenOrientation="portrait"
             android:exported="false"/>
+        <activity
+            android:name=".Registrar_Reserva"
+            android:screenOrientation="portrait"
+            android:exported="false"/>
 
         <activity
             android:name=".RegistroPC"

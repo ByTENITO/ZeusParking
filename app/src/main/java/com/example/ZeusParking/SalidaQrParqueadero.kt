@@ -68,8 +68,8 @@ class SalidaQrParqueadero : BaseNavigationActivity() {
 
                     3, 4, 5 -> {
                         marcoNumSalida.hint = when (position) {
-                            3 -> "Placa (Ej. ABC-123)"
-                            4 -> "Placa (Ej. ABC-123)"
+                            3 -> "Placa (Ej. abc123 - abc12d - abcd1)"
+                            4 -> "Placa (Ej. abc123 - abc12d - abcd1)"
                             5 -> "Numero de Furgon"
                             else -> "Numero de Marco"
                         }
