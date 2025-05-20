@@ -23,6 +23,12 @@ import com.google.mlkit.vision.barcode.BarcodeScanning
 import com.google.mlkit.vision.common.InputImage
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
+import android.content.Context
+import android.os.Handler
+import android.os.Looper
+import com.example.parquiatenov10.SalidaQrParqueadero
 
 class EntradaQrParqueadero : BaseNavigationActivity() {
     private lateinit var camaraEjecutarEntrada: ExecutorService
@@ -30,10 +36,27 @@ class EntradaQrParqueadero : BaseNavigationActivity() {
     private lateinit var tiposSpinnerEntrada: Spinner
     private lateinit var marcoNumEntrada: EditText
     private var escaneoRealizado: Boolean = false
+    private val handler = Handler(Looper.getMainLooper())
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_entrada_qr_parqueadero)
+
+        val checker = object : Runnable {
+            override fun run() {
+                if (hayConexionInternet(this@EntradaQrParqueadero)) {
+                    Log.d("conexion", "¡Hay conexión a Internet!")
+                } else {
+                    Toast.makeText(this@EntradaQrParqueadero, "¡Se ha perdido la conexion!", Toast.LENGTH_SHORT).show()
+                    finish()
+                    Log.d("conexion", "No hay conexión")
+                }
+
+                handler.postDelayed(this, 5000) // repetir cada 5 segundos
+            }
+        }
+
+        handler.post(checker)
 
         //Responsividad
         Responsividad.inicializar(this)
@@ -85,6 +108,14 @@ class EntradaQrParqueadero : BaseNavigationActivity() {
 
             override fun onNothingSelected(parent: AdapterView<*>) {}
         }
+    }
+
+    fun hayConexionInternet(context: Context): Boolean {
+        val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val redActiva = connectivityManager.activeNetwork ?: return false
+        val capacidades = connectivityManager.getNetworkCapabilities(redActiva) ?: return false
+
+        return capacidades.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
     }
 
     //Navegacion del Sistema

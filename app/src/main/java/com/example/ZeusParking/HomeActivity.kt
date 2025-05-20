@@ -21,7 +21,6 @@ import androidx.activity.enableEdgeToEdge
 import androidx.cardview.widget.CardView
 import androidx.core.app.NotificationCompat
 import com.example.ZeusParking.BaseNavigationActivity
-import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FieldValue
@@ -32,8 +31,9 @@ import com.google.zxing.EncodeHintType
 import com.google.zxing.MultiFormatWriter
 import com.google.zxing.WriterException
 import com.squareup.picasso.Picasso
-import java.text.SimpleDateFormat
 import java.util.*
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
 
 class HomeActivity : BaseNavigationActivity() {
     private var database = FirebaseFirestore.getInstance()
@@ -330,11 +330,25 @@ class HomeActivity : BaseNavigationActivity() {
                         }
 
                         btnEliminarReserva.setOnClickListener {
-                            mostrarDialogoConfirmacionEliminar(tipoVehiculo)
+                            if (hayConexionInternet(this)) {
+                                Log.d("conexion", "¡Hay conexión a Internet!")
+                                mostrarDialogoConfirmacionEliminar(tipoVehiculo)
+                            } else {
+                                Toast.makeText(this, "¡Se ha perdido la conexion!", Toast.LENGTH_SHORT).show()
+                                finish()
+                                Log.d("conexion", "No hay conexión")
+                            }
                         }
 
                         btnModificarReserva.setOnClickListener {
-                            mostrarDialogoModificarReserva(userId)
+                            if (hayConexionInternet(this)) {
+                                Log.d("conexion", "¡Hay conexión a Internet!")
+                                mostrarDialogoModificarReserva(userId)
+                            } else {
+                                Toast.makeText(this, "¡Se ha perdido la conexion!", Toast.LENGTH_SHORT).show()
+                                finish()
+                                Log.d("conexion", "No hay conexión")
+                            }
                         }
 
                         val correo = FirebaseAuth.getInstance().currentUser?.email.toString()
@@ -352,6 +366,14 @@ class HomeActivity : BaseNavigationActivity() {
                 reservaText.text = "Error al cargar reservas"
                 Log.e("HomeActivity", "Error cargando reservas", e)
             }
+    }
+
+    fun hayConexionInternet(context: Context): Boolean {
+        val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val redActiva = connectivityManager.activeNetwork ?: return false
+        val capacidades = connectivityManager.getNetworkCapabilities(redActiva) ?: return false
+
+        return capacidades.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
     }
 
     private fun mostrarSinReservas() {

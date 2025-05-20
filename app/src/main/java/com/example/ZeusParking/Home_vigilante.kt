@@ -8,7 +8,10 @@ import android.os.Build
 import android.os.Bundle
 import com.google.android.material.button.MaterialButton
 import android.content.Intent
-import android.graphics.drawable.Drawable
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
+import android.os.Handler
+import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
@@ -17,19 +20,21 @@ import android.widget.TableLayout
 import android.widget.TableRow
 import android.widget.TextView
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
 import com.example.ZeusParking.BaseNavigationActivity
-import com.example.parquiatenov10.Responsividad
-import com.google.android.material.datepicker.MaterialTextInputPicker
 import com.google.android.material.progressindicator.LinearProgressIndicator
 import com.google.android.material.textview.MaterialTextView
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ListenerRegistration
-import kotlin.enums.enumEntries
+import java.time.format.DateTimeFormatter
+import java.time.LocalDateTime
+import java.time.Duration
 
-
+@RequiresApi(Build.VERSION_CODES.O)
 class Home_vigilante : BaseNavigationActivity() {
 
     // Vistas de UI
@@ -43,6 +48,9 @@ class Home_vigilante : BaseNavigationActivity() {
     private lateinit var progressMoto: LinearProgressIndicator
     private lateinit var ReservasTabla: TableLayout
     private lateinit var Buscador: EditText
+    private val handler = Handler(Looper.getMainLooper())
+    private lateinit var runnable: Runnable
+
 
     // Firebase
     private val database = FirebaseFirestore.getInstance()
@@ -132,22 +140,24 @@ class Home_vigilante : BaseNavigationActivity() {
         Buscador.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
                 val texto = s.toString().lowercase()
-                if (texto.length >= 7){
-                    val filtradosNombre = datosOriginales.filter { "${it.apellido},${it.nombre}"
-                        .lowercase()
-                        .contains(texto)
+                if (texto.length >= 7) {
+                    val filtradosNombre = datosOriginales.filter {
+                        "${it.apellido},${it.nombre}"
+                            .lowercase()
+                            .contains(texto)
                     }
                     mostrarFiltro(filtradosNombre)
-                    Log.d("lista","$filtradosNombre")
+                    Log.d("lista", "$filtradosNombre")
                 }
 
-                if (texto.length <=6){
-                    val filtradoNumero = datosOriginales.filter { "${it.numero}"
-                        .lowercase()
-                        .contains(texto)
+                if (texto.length <= 6) {
+                    val filtradoNumero = datosOriginales.filter {
+                        "${it.numero}"
+                            .lowercase()
+                            .contains(texto)
                     }
                     mostrarFiltro(filtradoNumero)
-                    Log.d("lista","$filtradoNumero")
+                    Log.d("lista", "$filtradoNumero")
                 }
             }
 
@@ -327,6 +337,7 @@ class Home_vigilante : BaseNavigationActivity() {
             }
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     private fun consultaReserva() {
         val inicializador = "inicializador"
         database.collection("Reservas")
@@ -344,6 +355,9 @@ class Home_vigilante : BaseNavigationActivity() {
                             val fecha = document.getString("fecha").toString()
                             val vehiculo = document.getString("tipo").toString()
                             val idVehi = document.getString("numero").toString()
+                            val hora = document.getString("horaReserva").toString()
+
+                            Tiempo(hora, vehiculo, idVehi)
 
                             Log.d(
                                 "Reservas",
@@ -353,7 +367,7 @@ class Home_vigilante : BaseNavigationActivity() {
                             val datos = ReservData(
                                 nombres,
                                 apellidos,
-                                fecha,
+                                hora,
                                 vehiculo,
                                 idVehi
                             )
@@ -452,6 +466,132 @@ class Home_vigilante : BaseNavigationActivity() {
             texto
         }
         textView.text = textoCorto
+    }
+
+    fun Tiempo(fechaInicio: String, vehiculo: String, idVehiculo: String) {
+        runnable = object : Runnable {
+            override fun run() {
+                val formato = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
+                try {
+                    val inicio = LocalDateTime.parse(fechaInicio, formato)
+                    var fechaHoraActual = LocalDateTime.now()
+
+                    fechaHoraActual = LocalDateTime.now()
+
+                    val duracion = Duration.between(inicio, fechaHoraActual)
+
+                    val horas = duracion.toHours()
+                    val minutos = duracion.toMinutes() % 60
+                    val segundos = duracion.seconds % 60
+
+                    if (minutos > 40) {
+                        actualizarDisponibilidad(vehiculo, idVehiculo)
+                    }
+                    Log.d("tiempo actual","Tiempo: $fechaHoraActual")
+                    handler.postDelayed(this, 1000)
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                    Log.d("hora", "Error al leer la hora: ${e.message}")
+                }
+            }
+        }
+        handler.post(runnable)
+    }
+
+    private fun actualizarDisponibilidad(tipoVehiculo: String, idVehiculo: String) {
+        val documentId = when (tipoVehiculo) {
+            "Furgon" -> "0ctYNlFXwtVw9ylURFXi"
+            "Vehiculo Particular" -> "UF0tfabGHGitcj7En6Wy"
+            "Bicicleta" -> "IuDC5XlTyhxhqU4It8SD"
+            "Patineta Electrica" -> "IuDC5XlTyhxhqU4It8SD"
+            "Motocicleta" -> "ntHgnXs4Qbz074siOrvz"
+            else -> return
+        }
+        val FijosId = when (tipoVehiculo) {
+            "Furgon" -> "NLRmedawc0M0nrpDt9Ci"
+            "Vehiculo Particular" -> "edYUNbYSmPtvu1H6dI93"
+            "Bicicleta" -> "sPcLdzFgRF2eAY5BWvFC"
+            "Patineta Electrica" -> "sPcLdzFgRF2eAY5BWvFC"
+            "Motocicleta" -> "AQjYvV224T01lrSEeQQY"
+            else -> return
+        }
+        if (tipoVehiculo == "Patineta Electrica") {
+            verificarEntrada(documentId, "Bicicleta", FijosId, idVehiculo)
+        } else {
+            verificarEntrada(documentId, tipoVehiculo, FijosId, idVehiculo)
+        }
+    }
+
+    private fun verificarEntrada(
+        documentId: String,
+        tipoVehiculo: String,
+        FijosId: String,
+        idVehiculo: String
+    ) {
+        database.collection("Entrada")
+            .whereEqualTo("numero",idVehiculo)
+            .get()
+            .addOnSuccessListener{ documents->
+                if (documents.isEmpty){
+                    VerifcarDisponibilidad(documentId, tipoVehiculo, FijosId, idVehiculo)
+                }
+            }
+    }
+
+    private fun VerifcarDisponibilidad(
+        documentId: String,
+        tipoVehiculo: String,
+        FijosId: String,
+        idVehiculo: String
+    ) {
+        database.collection("Disponibilidad")
+            .document(documentId).get()
+            .addOnSuccessListener { document ->
+                if (document.exists()) {
+                    val espacios = document.getLong(tipoVehiculo) ?: 0
+                    VerificarEspaciosFijos(FijosId,documentId,espacios,tipoVehiculo,idVehiculo)
+                } else {
+                    Log.d("Firestore", "No se encontró el documento para $tipoVehiculo")
+                }
+            }
+            .addOnFailureListener { e ->
+                Log.e("Firestore", "Error al obtener el documento de disponibilidad: ", e)
+            }
+    }
+
+    private fun VerificarEspaciosFijos(FijosId: String, documentId: String, espacios: Long, tipoVehiculo: String, idVehiculo: String){
+        database.collection("EspaciosFijos").document(FijosId).get()
+            .addOnSuccessListener { document ->
+                val espaciosFijos = document.getLong(tipoVehiculo) ?: 0
+                if (espacios != espaciosFijos) {
+                    incrementarDisponibilidad(documentId,idVehiculo,tipoVehiculo)
+                }
+            }
+    }
+
+    private fun incrementarDisponibilidad(documentId: String,idVehiculo: String,tipoVehiculo: String){
+        database.collection("Disponibilidad").document(documentId)
+            .update(tipoVehiculo, FieldValue.increment(1))
+            .addOnSuccessListener {
+                eliminarReserva(idVehiculo,tipoVehiculo)
+            }
+            .addOnFailureListener { e ->
+                Log.e("Firestore", "Error al actualizar el campo: ", e)
+            }
+    }
+
+    private fun eliminarReserva(idVehiculo: String,tipoVehiculo: String){
+        database.collection("Reservas")
+            .whereEqualTo("numero", idVehiculo)
+            .addSnapshotListener { documents, e ->
+                if (documents != null) {
+                    for (document in documents) {
+                        database.collection("Reservas")
+                            .document(document.id).delete()
+                    }
+                }
+            }
+        Log.d("Firestore", "Campo '$tipoVehiculo' aumentado")
     }
 
     // Navegación

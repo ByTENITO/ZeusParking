@@ -18,14 +18,15 @@ import androidx.camera.view.PreviewView
 import androidx.core.content.ContextCompat
 import com.example.ZeusParking.BaseNavigationActivity
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.Query
-import com.google.firebase.firestore.QuerySnapshot
-import com.google.firebase.firestore.WriteBatch
 import com.google.mlkit.vision.barcode.BarcodeScanning
 import com.google.mlkit.vision.common.InputImage
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
-import kotlin.math.log
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
+import android.content.Context
+import android.os.Handler
+import android.os.Looper
 
 class SalidaQrParqueadero : BaseNavigationActivity() {
     private lateinit var camaraEjecutarSalida: ExecutorService
@@ -33,10 +34,27 @@ class SalidaQrParqueadero : BaseNavigationActivity() {
     private lateinit var tiposSpinnerSalida: Spinner
     private lateinit var marcoNumSalida: EditText
     private var escaneoRealizado: Boolean = false
+    private val handler = Handler(Looper.getMainLooper())
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_salida_qr_parqueadero)
+
+        val checker = object : Runnable {
+            override fun run() {
+                if (hayConexionInternet(this@SalidaQrParqueadero)) {
+                    Log.d("conexion", "¡Hay conexión a Internet!")
+                } else {
+                    Toast.makeText(this@SalidaQrParqueadero, "¡Se ha perdido la conexion!", Toast.LENGTH_SHORT).show()
+                    finish()
+                    Log.d("conexion", "No hay conexión")
+                }
+
+                handler.postDelayed(this, 5000) // repetir cada 5 segundos
+            }
+        }
+
+        handler.post(checker)
 
         //Responsividad
         Responsividad.inicializar(this)
@@ -89,6 +107,14 @@ class SalidaQrParqueadero : BaseNavigationActivity() {
 
             override fun onNothingSelected(parent: AdapterView<*>) {}
         }
+    }
+
+    fun hayConexionInternet(context: Context): Boolean {
+        val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val redActiva = connectivityManager.activeNetwork ?: return false
+        val capacidades = connectivityManager.getNetworkCapabilities(redActiva) ?: return false
+
+        return capacidades.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
     }
 
     //Navegacion del Sistema

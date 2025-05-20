@@ -9,6 +9,9 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.SetOptions
 import java.util.*
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
+import android.content.Context
 
 class RegistroPC : AppCompatActivity() {
     private lateinit var auth: FirebaseAuth
@@ -64,8 +67,23 @@ class RegistroPC : AppCompatActivity() {
 
         // Registrar portátil
         registrarButton.setOnClickListener {
-            registrarPortatil()
+            if (hayConexionInternet(this)) {
+                Log.d("conexion", "¡Hay conexión a Internet!")
+                registrarPortatil()
+            } else {
+                Toast.makeText(this, "¡Se ha perdido la conexion!", Toast.LENGTH_SHORT).show()
+                finish()
+                Log.d("conexion", "No hay conexión")
+            }
         }
+    }
+
+    fun hayConexionInternet(context: Context): Boolean {
+        val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val redActiva = connectivityManager.activeNetwork ?: return false
+        val capacidades = connectivityManager.getNetworkCapabilities(redActiva) ?: return false
+
+        return capacidades.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
     }
 
     private fun registrarPortatil() {

@@ -5,8 +5,12 @@ import android.app.NotificationManager
 import android.content.Context
 import android.content.Intent
 import android.graphics.Color
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
 import android.os.Build
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.text.InputFilter
 import android.text.InputType
 import android.util.Log
@@ -15,6 +19,8 @@ import android.widget.*
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.NotificationCompat
+import com.example.parquiatenov10.Home_vigilante
+import com.example.parquiatenov10.SalidaQrParqueadero
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.QuerySnapshot
@@ -36,10 +42,11 @@ class Registrar_Reserva : AppCompatActivity() {
     private lateinit var reservaBtn: Button
     private lateinit var timePicker: TimePicker
     private lateinit var auth: FirebaseAuth
+    private val handler = Handler(Looper.getMainLooper())
 
     companion object {
-        private const val HORA_INICIO = 0 // 6am
-        private const val HORA_FIN = 21 // 9pm
+        private const val HORA_INICIO = 6 // 6am
+        private const val HORA_FIN = 22 // 9pm
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -61,13 +68,21 @@ class Registrar_Reserva : AppCompatActivity() {
         crearCanalNotificacion(this)
     }
 
+    fun hayConexionInternet(context: Context): Boolean {
+        val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val redActiva = connectivityManager.activeNetwork ?: return false
+        val capacidades = connectivityManager.getNetworkCapabilities(redActiva) ?: return false
+
+        return capacidades.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
+    }
+
     private fun validarHorario(horaReserva: LocalTime): Boolean {
 
         val zonaColombia = ZoneId.of("America/Bogota")
         val ahoraColombia = ZonedDateTime.now(zonaColombia).toLocalTime()
 
         val horaInicio = LocalTime.of(HORA_INICIO, 0)
-        val horaFin = LocalTime.of(HORA_FIN, 59)
+        val horaFin = LocalTime.of(HORA_FIN, 0)
 
         if (horaReserva !in horaInicio..horaFin) {
             return false
@@ -138,31 +153,38 @@ class Registrar_Reserva : AppCompatActivity() {
 
     private fun configurarBotonReserva() {
         reservaBtn.setOnClickListener {
-            val tipoVehi = tiposSpinner.selectedItem.toString()
-            val userId = FirebaseAuth.getInstance().currentUser?.uid.toString()
-            val numero = marcoNum.text.toString()
+            if (hayConexionInternet(this@Registrar_Reserva)) {
+                Log.d("conexion", "¡Hay conexión a Internet!")
+                val tipoVehi = tiposSpinner.selectedItem.toString()
+                val userId = FirebaseAuth.getInstance().currentUser?.uid.toString()
+                val numero = marcoNum.text.toString()
 
-            if (!validarCampos(tipoVehi, userId, numero)) return@setOnClickListener
+                if (!validarCampos(tipoVehi, userId, numero)) return@setOnClickListener
 
-            val horaSeleccionada = timePicker.hour
-            val minutoSeleccionado = timePicker.minute
-            val horaReserva = LocalTime.of(horaSeleccionada, minutoSeleccionado)
+                val horaSeleccionada = timePicker.hour
+                val minutoSeleccionado = timePicker.minute
+                val horaReserva = LocalTime.of(horaSeleccionada, minutoSeleccionado)
 
-            // Obtener hora actual en Colombia
-            val zonaColombia = ZoneId.of("America/Bogota")
-            val ahoraColombia = ZonedDateTime.now(zonaColombia).toLocalTime()
+                // Obtener hora actual en Colombia
+                val zonaColombia = ZoneId.of("America/Bogota")
+                val ahoraColombia = ZonedDateTime.now(zonaColombia).toLocalTime()
 
-            if (!validarHorario(horaReserva)) {
-                val mensaje = if (horaReserva.isBefore(ahoraColombia)) {
-                    "No puede hacer reservas en horas pasadas"
-                } else {
-                    "El horario de reserva debe ser entre ${HORA_INICIO}am y ${HORA_FIN}pm (hora Colombia)"
+                if (!validarHorario(horaReserva)) {
+                    val mensaje = if (horaReserva.isBefore(ahoraColombia)) {
+                        "No puede hacer reservas en horas pasadas"
+                    } else {
+                        "El horario de reserva debe ser entre ${HORA_INICIO}am y ${HORA_FIN}pm (hora Colombia)"
+                    }
+                    Toast.makeText(this, mensaje, Toast.LENGTH_SHORT).show()
+                    return@setOnClickListener
                 }
-                Toast.makeText(this, mensaje, Toast.LENGTH_SHORT).show()
-                return@setOnClickListener
-            }
 
-            verificarDisponibilidad(userId, tipoVehi, numero, horaReserva)
+                verificarDisponibilidad(userId, tipoVehi, numero, horaReserva)
+            } else {
+                Toast.makeText(this@Registrar_Reserva, "¡Se ha perdido la conexion!", Toast.LENGTH_SHORT).show()
+                finish()
+                Log.d("conexion", "No hay conexión")
+            }
         }
     }
 

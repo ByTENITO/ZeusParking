@@ -19,8 +19,13 @@ package com.example.parquiatenov10
     import com.google.firebase.firestore.FirebaseFirestore
     import com.google.firebase.firestore.ktx.firestore
     import com.google.firebase.ktx.Firebase
+    import android.net.ConnectivityManager
+    import android.net.NetworkCapabilities
+    import android.content.Context
+    import android.util.Log
+    import android.widget.Toast
 
-    class RegistroActivity : AppCompatActivity() {
+class RegistroActivity : AppCompatActivity() {
 
         private lateinit var auth: FirebaseAuth
         private lateinit var database: FirebaseFirestore
@@ -128,12 +133,26 @@ package com.example.parquiatenov10
 
         private fun setupButtonListeners() {
             registrarButton.setOnClickListener {
-                registrarUsuario()
+                if (hayConexionInternet(this)) {
+                    Log.d("conexion", "¡Hay conexión a Internet!")
+                    registrarUsuario()
+                } else {
+                    Toast.makeText(this, "¡Se ha perdido la conexion!", Toast.LENGTH_SHORT).show()
+                    finish()
+                    Log.d("conexion", "No hay conexión")
+                }
             }
 
             volverLoginTextView.setOnClickListener {
                 volverALogin()
             }
+        }
+        fun hayConexionInternet(context: Context): Boolean {
+            val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+            val redActiva = connectivityManager.activeNetwork ?: return false
+            val capacidades = connectivityManager.getNetworkCapabilities(redActiva) ?: return false
+
+            return capacidades.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
         }
 
         private fun registrarUsuario() {

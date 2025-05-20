@@ -21,6 +21,12 @@ import com.example.ZeusParking.BaseNavigationActivity
 import android.text.Editable
 import android.text.TextWatcher
 import java.util.regex.Pattern
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
+import android.content.Context
+import android.util.Log
+import com.example.parquiatenov10.Home_vigilante
+import com.example.parquiatenov10.SalidaQrParqueadero
 
 class RegistrarBiciActivity : BaseNavigationActivity() {
     private lateinit var nombreEd: EditText
@@ -47,6 +53,8 @@ class RegistrarBiciActivity : BaseNavigationActivity() {
     private val placaPattern = Pattern.compile("^[a-zA-Z]{3,4}[0-9]{2,3}[a-zA-Z]?$")
     private val cedulaPattern = Pattern.compile("^[0-9]{1,10}$")
 
+    private val handler = Handler(Looper.getMainLooper())
+
     data class BiciData(
         val nombre: String,
         val apellidos: String,
@@ -62,6 +70,7 @@ class RegistrarBiciActivity : BaseNavigationActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_registrar_bici)
         enableEdgeToEdge()
+
         startAnimationsWithDelay()
 
         //Pautas para el registro
@@ -144,8 +153,23 @@ class RegistrarBiciActivity : BaseNavigationActivity() {
         }
 
         Guardar.setOnClickListener {
-            guardarDatosEnFirestore()
+            if (hayConexionInternet(this)) {
+                Log.d("conexion", "¡Hay conexión a Internet!")
+                guardarDatosEnFirestore()
+            } else {
+                Toast.makeText(this, "¡Se ha perdido la conexion!", Toast.LENGTH_SHORT).show()
+                finish()
+                Log.d("conexion", "No hay conexión")
+            }
         }
+    }
+
+    fun hayConexionInternet(context: Context): Boolean {
+        val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val redActiva = connectivityManager.activeNetwork ?: return false
+        val capacidades = connectivityManager.getNetworkCapabilities(redActiva) ?: return false
+
+        return capacidades.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
     }
 
     private fun setupValidaciones() {
