@@ -46,7 +46,7 @@ class Registrar_Reserva : AppCompatActivity() {
 
     companion object {
         private const val HORA_INICIO = 6 // 6am
-        private const val HORA_FIN = 22 // 9pm
+        private const val HORA_FIN = 22 // 10pm
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

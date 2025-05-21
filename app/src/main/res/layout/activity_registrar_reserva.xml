@@ -156,7 +156,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:text="Horario de reservas: 6:00 AM - 9:00 PM"
+                android:text="Horario de reservas: 6:00 AM - 10:00 PM"
                 android:textColor="@color/Texto_pastel"
                 android:textSize="14sp"/>
         </LinearLayout>

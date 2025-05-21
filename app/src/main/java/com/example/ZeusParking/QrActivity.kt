@@ -121,6 +121,7 @@ class QrActivity : BaseNavigationActivity() {
         1. Este QR es personal e intransferible
         2. Con él podrás entrar y salir del parqueadero
         3. Presenta este QR al ingresar al parqueadero
+        4. Si llegas 40min despues de la hora de reserva, se eliminara
         """.trimIndent())
         builder.setPositiveButton("Entendido", null)
         builder.show()

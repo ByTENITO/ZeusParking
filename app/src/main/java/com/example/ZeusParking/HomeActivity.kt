@@ -748,12 +748,12 @@ class HomeActivity : BaseNavigationActivity() {
                 val displayText = when (campo.lowercase()) {
                     "bicicleta" -> {
                         val emoji = "🚲/🛴"
-                        "$emoji Quedan pocos $espacios para Bicicleta/Patineta"
+                        "$emoji Quedan $espacios para Bicicleta/Patineta"
                     }
 
-                    "furgon" -> "🚐 Quedan pocos $espacios para Furgon"
-                    "motocicleta" -> "🏍️ Quedan pocos $espacios para Motocicleta"
-                    "vehiculo particular" -> "🚗 Quedan pocos $espacios para Vehículo Particular"
+                    "furgon" -> "🚐 Quedan $espacios para Furgon"
+                    "motocicleta" -> "🏍️ Quedan  $espacios para Motocicleta"
+                    "vehiculo particular" -> "🚗 Quedan  $espacios para Vehículo Particular"
                     else -> "Quedan $espacios espacios"
                 }
 
