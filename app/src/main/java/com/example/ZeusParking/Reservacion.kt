@@ -230,7 +230,7 @@ class Reservacion : AppCompatActivity() {
         cedulaTxT.text = reserData.cedula
         idVehiTxT.text = reserData.numero
         tipoTxT.text = reserData.tipo
-        horaTxT.text = "${reserData.fecha} ${reserData.horaReserva}"
+        horaTxT.text = "${reserData.horaReserva}"
     }
 
     private fun crearCanalNotificacion(context: Context) {
