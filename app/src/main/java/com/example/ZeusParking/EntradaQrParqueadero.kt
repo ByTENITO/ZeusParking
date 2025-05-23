@@ -28,7 +28,6 @@ import android.net.NetworkCapabilities
 import android.content.Context
 import android.os.Handler
 import android.os.Looper
-import com.example.parquiatenov10.SalidaQrParqueadero
 
 class EntradaQrParqueadero : BaseNavigationActivity() {
     private lateinit var camaraEjecutarEntrada: ExecutorService
@@ -47,7 +46,6 @@ class EntradaQrParqueadero : BaseNavigationActivity() {
                 if (hayConexionInternet(this@EntradaQrParqueadero)) {
                     Log.d("conexion", "¡Hay conexión a Internet!")
                 } else {
-                    Toast.makeText(this@EntradaQrParqueadero, "¡Se ha perdido la conexion!", Toast.LENGTH_SHORT).show()
                     finish()
                     Log.d("conexion", "No hay conexión")
                 }

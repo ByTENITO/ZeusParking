@@ -45,7 +45,6 @@ class SalidaQrParqueadero : BaseNavigationActivity() {
                 if (hayConexionInternet(this@SalidaQrParqueadero)) {
                     Log.d("conexion", "¡Hay conexión a Internet!")
                 } else {
-                    Toast.makeText(this@SalidaQrParqueadero, "¡Se ha perdido la conexion!", Toast.LENGTH_SHORT).show()
                     finish()
                     Log.d("conexion", "No hay conexión")
                 }

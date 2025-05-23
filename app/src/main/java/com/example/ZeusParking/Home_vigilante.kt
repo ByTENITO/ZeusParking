@@ -24,6 +24,7 @@ import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
 import com.example.ZeusParking.BaseNavigationActivity
+import com.example.parquiatenov10.EntradaQrParqueadero
 import com.google.android.material.progressindicator.LinearProgressIndicator
 import com.google.android.material.textview.MaterialTextView
 import com.google.firebase.auth.FirebaseAuth
@@ -485,7 +486,10 @@ class Home_vigilante : BaseNavigationActivity() {
                     val segundos = duracion.seconds % 60
 
                     if (minutos > 40) {
-                        actualizarDisponibilidad(vehiculo, idVehiculo)
+                        if (hayConexionInternet(this@Home_vigilante)) {
+                            Log.d("conexion", "¡Hay conexión a Internet!")
+                            actualizarDisponibilidad(vehiculo, idVehiculo)
+                        }
                     }
                     Log.d("tiempo actual","Tiempo: $fechaHoraActual")
                     handler.postDelayed(this, 1000)
@@ -563,7 +567,7 @@ class Home_vigilante : BaseNavigationActivity() {
         database.collection("EspaciosFijos").document(FijosId).get()
             .addOnSuccessListener { document ->
                 val espaciosFijos = document.getLong(tipoVehiculo) ?: 0
-                if (espacios != espaciosFijos) {
+                if (espacios < espaciosFijos) {
                     incrementarDisponibilidad(documentId,idVehiculo,tipoVehiculo)
                 }
             }
@@ -592,6 +596,14 @@ class Home_vigilante : BaseNavigationActivity() {
                 }
             }
         Log.d("Firestore", "Campo '$tipoVehiculo' aumentado")
+    }
+
+    fun hayConexionInternet(context: Context): Boolean {
+        val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val redActiva = connectivityManager.activeNetwork ?: return false
+        val capacidades = connectivityManager.getNetworkCapabilities(redActiva) ?: return false
+
+        return capacidades.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
     }
 
     // Navegación

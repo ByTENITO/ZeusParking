@@ -1,19 +1,11 @@
 package com.example.parquiatenov10
 
 import android.Manifest
-import android.content.Context
 import android.content.pm.PackageManager
 import android.location.Location
-import android.net.ConnectivityManager
-import android.net.NetworkCapabilities
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
-import android.util.Log
-import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import com.example.ZeusParking.BaseNavigationActivity
-import com.example.parquiatenov10.SalidaQrParqueadero
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -27,7 +19,6 @@ class Localizacion : BaseNavigationActivity(), OnMapReadyCallback {
 
     private lateinit var mMap: GoogleMap
     private lateinit var usuario: FusedLocationProviderClient
-    private val handler = Handler(Looper.getMainLooper())
 
     data class UbicacionDetallada(
         val coordinates: LatLng,
@@ -39,21 +30,6 @@ class Localizacion : BaseNavigationActivity(), OnMapReadyCallback {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_localizacion)
-
-        val checker = object : Runnable {
-            override fun run() {
-                if (hayConexionInternet(this@Localizacion)) {
-                    Log.d("conexion", "¡Hay conexión a Internet!")
-                } else {
-                    Toast.makeText(this@Localizacion, "¡Se ha perdido la conexion!", Toast.LENGTH_SHORT).show()
-                    Log.d("conexion", "No hay conexión")
-                }
-
-                handler.postDelayed(this, 5000) // repetir cada 5 segundos
-            }
-        }
-
-        handler.post(checker)
 
         //Responsividad
         Responsividad.inicializar(this)
@@ -67,14 +43,6 @@ class Localizacion : BaseNavigationActivity(), OnMapReadyCallback {
         val mapFragment = supportFragmentManager
             .findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)
-    }
-
-    fun hayConexionInternet(context: Context): Boolean {
-        val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-        val redActiva = connectivityManager.activeNetwork ?: return false
-        val capacidades = connectivityManager.getNetworkCapabilities(redActiva) ?: return false
-
-        return capacidades.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
     }
 
     //Navegacion del Sistema

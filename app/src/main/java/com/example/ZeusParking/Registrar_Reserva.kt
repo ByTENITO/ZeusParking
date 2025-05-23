@@ -153,7 +153,7 @@ class Registrar_Reserva : AppCompatActivity() {
 
     private fun configurarBotonReserva() {
         reservaBtn.setOnClickListener {
-            if (hayConexionInternet(this@Registrar_Reserva)) {
+            if (hayConexionInternet(this)) {
                 Log.d("conexion", "¡Hay conexión a Internet!")
                 val tipoVehi = tiposSpinner.selectedItem.toString()
                 val userId = FirebaseAuth.getInstance().currentUser?.uid.toString()
@@ -181,7 +181,7 @@ class Registrar_Reserva : AppCompatActivity() {
 
                 verificarDisponibilidad(userId, tipoVehi, numero, horaReserva)
             } else {
-                Toast.makeText(this@Registrar_Reserva, "¡Se ha perdido la conexion!", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "¡Se ha perdido la conexion!", Toast.LENGTH_SHORT).show()
                 finish()
                 Log.d("conexion", "No hay conexión")
             }
