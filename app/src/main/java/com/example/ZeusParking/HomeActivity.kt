@@ -320,8 +320,10 @@ class HomeActivity : BaseNavigationActivity() {
                         val numeroVehiculo = document.getString("numero") ?: ""
                         val horaReserva = document.getString("horaReserva") ?: ""
 
+                        val hora = horaReserva.substringAfter(" ")
+
                         reservaText.text =
-                            "Reserva activa para $tipoVehiculo ($numeroVehiculo) el $fecha a las $horaReserva"
+                            "Reserva activa para $tipoVehiculo ($numeroVehiculo) el $fecha a las $hora"
                         mostrarBotonesReserva()
 
                         btnVerQR.setOnClickListener {

@@ -34,6 +34,7 @@ import com.google.firebase.firestore.ListenerRegistration
 import java.time.format.DateTimeFormatter
 import java.time.LocalDateTime
 import java.time.Duration
+import kotlin.math.log
 
 @RequiresApi(Build.VERSION_CODES.O)
 class Home_vigilante : BaseNavigationActivity() {
@@ -51,6 +52,7 @@ class Home_vigilante : BaseNavigationActivity() {
     private lateinit var Buscador: EditText
     private val handler = Handler(Looper.getMainLooper())
     private lateinit var runnable: Runnable
+    private val vehiculosProcesados = mutableSetOf<String>()
 
 
     // Firebase
@@ -470,6 +472,7 @@ class Home_vigilante : BaseNavigationActivity() {
     }
 
     fun Tiempo(fechaInicio: String, vehiculo: String, idVehiculo: String) {
+        vehiculosProcesados.remove(idVehiculo)
         runnable = object : Runnable {
             override fun run() {
                 val formato = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
@@ -477,20 +480,20 @@ class Home_vigilante : BaseNavigationActivity() {
                     val inicio = LocalDateTime.parse(fechaInicio, formato)
                     var fechaHoraActual = LocalDateTime.now()
 
-                    fechaHoraActual = LocalDateTime.now()
-
                     val duracion = Duration.between(inicio, fechaHoraActual)
 
                     val horas = duracion.toHours()
                     val minutos = duracion.toMinutes() % 60
                     val segundos = duracion.seconds % 60
-
-                    if (minutos > 40) {
+                    if (minutos > 40 && !vehiculosProcesados.contains(idVehiculo)) {
                         if (hayConexionInternet(this@Home_vigilante)) {
                             Log.d("conexion", "¡Hay conexión a Internet!")
                             actualizarDisponibilidad(vehiculo, idVehiculo)
+                            vehiculosProcesados.add(idVehiculo)
                         }
+                        Log.d("placa","$idVehiculo")
                     }
+                    Log.d("reservas eliminadas","$vehiculosProcesados")
                     Log.d("tiempo actual","Tiempo: $fechaHoraActual")
                     handler.postDelayed(this, 1000)
                 } catch (e: Exception) {
@@ -537,12 +540,12 @@ class Home_vigilante : BaseNavigationActivity() {
             .get()
             .addOnSuccessListener{ documents->
                 if (documents.isEmpty){
-                    VerifcarDisponibilidad(documentId, tipoVehiculo, FijosId, idVehiculo)
+                    verifcarDisponibilidad(documentId, tipoVehiculo, FijosId, idVehiculo)
                 }
             }
     }
 
-    private fun VerifcarDisponibilidad(
+    private fun verifcarDisponibilidad(
         documentId: String,
         tipoVehiculo: String,
         FijosId: String,
@@ -553,7 +556,7 @@ class Home_vigilante : BaseNavigationActivity() {
             .addOnSuccessListener { document ->
                 if (document.exists()) {
                     val espacios = document.getLong(tipoVehiculo) ?: 0
-                    VerificarEspaciosFijos(FijosId,documentId,espacios,tipoVehiculo,idVehiculo)
+                    verificarEspaciosFijos(FijosId,documentId,espacios,tipoVehiculo,idVehiculo)
                 } else {
                     Log.d("Firestore", "No se encontró el documento para $tipoVehiculo")
                 }
@@ -563,7 +566,7 @@ class Home_vigilante : BaseNavigationActivity() {
             }
     }
 
-    private fun VerificarEspaciosFijos(FijosId: String, documentId: String, espacios: Long, tipoVehiculo: String, idVehiculo: String){
+    private fun verificarEspaciosFijos(FijosId: String, documentId: String, espacios: Long, tipoVehiculo: String, idVehiculo: String){
         database.collection("EspaciosFijos").document(FijosId).get()
             .addOnSuccessListener { document ->
                 val espaciosFijos = document.getLong(tipoVehiculo) ?: 0
@@ -587,7 +590,8 @@ class Home_vigilante : BaseNavigationActivity() {
     private fun eliminarReserva(idVehiculo: String,tipoVehiculo: String){
         database.collection("Reservas")
             .whereEqualTo("numero", idVehiculo)
-            .addSnapshotListener { documents, e ->
+            .get()
+            .addOnSuccessListener{ documents->
                 if (documents != null) {
                     for (document in documents) {
                         database.collection("Reservas")
