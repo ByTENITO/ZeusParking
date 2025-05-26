@@ -442,7 +442,7 @@
                                     android:background="@drawable/borde_celda"
                                     android:gravity="center"
                                     android:padding="3dp"
-                                    android:text="Fecha/Hora"
+                                    android:text="Hora"
                                     android:textColor="@color/Texto_pastel"
                                     android:textSize="10sp"
                                     android:textStyle="bold" />

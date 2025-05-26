@@ -143,25 +143,10 @@ class Home_vigilante : BaseNavigationActivity() {
         Buscador.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
                 val texto = s.toString().lowercase()
-                if (texto.length >= 7) {
-                    val filtradosNombre = datosOriginales.filter {
-                        "${it.apellido},${it.nombre}"
-                            .lowercase()
-                            .contains(texto)
-                    }
-                    mostrarFiltro(filtradosNombre)
-                    Log.d("lista", "$filtradosNombre")
+                val filtradosNombre = datosOriginales.filter {
+                    "${it.apellido} ${it.nombre} ${it.fecha} ${it.vehiculo} ${it.numero}".lowercase().contains(texto)
                 }
-
-                if (texto.length <= 6) {
-                    val filtradoNumero = datosOriginales.filter {
-                        "${it.numero}"
-                            .lowercase()
-                            .contains(texto)
-                    }
-                    mostrarFiltro(filtradoNumero)
-                    Log.d("lista", "$filtradoNumero")
-                }
+                mostrarFiltro(filtradosNombre)
             }
 
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
@@ -391,7 +376,8 @@ class Home_vigilante : BaseNavigationActivity() {
         celdaNombre.background = ContextCompat.getDrawable(this, R.drawable.borde_celda)
 
         val celdaFecha = TextView(this)
-        acortarTexto(datos.fecha, celdaFecha)
+        val hora = datos.fecha.substringAfter(" ")
+        acortarTexto(hora, celdaFecha)
         celdaFecha.textSize = 10F
         celdaFecha.setTextColor(ContextCompat.getColor(this, R.color.Texto_pastel))
         celdaFecha.background = ContextCompat.getDrawable(this, R.drawable.borde_celda)
@@ -433,8 +419,9 @@ class Home_vigilante : BaseNavigationActivity() {
             celdaNombre.background = ContextCompat.getDrawable(this, R.drawable.borde_celda)
 
             val celdaFecha = TextView(this)
-            celdaFecha.text = usuario.fecha
-            acortarTexto(usuario.fecha, celdaFecha)
+            val hora = usuario.fecha.substringAfter(" ")
+            celdaFecha.text = hora
+            acortarTexto(hora, celdaFecha)
             celdaFecha.textSize = 10F
             celdaFecha.setTextColor(ContextCompat.getColor(this, R.color.Texto_pastel))
             celdaFecha.background = ContextCompat.getDrawable(this, R.drawable.borde_celda)
