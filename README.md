@@ -125,18 +125,6 @@ El sistema está diseñado para optimizar el flujo vehicular en las instalacione
         - Almacenamiento (para fotos de perfil)
    3. **Dependencias externas:** Servicios de Google Play
 
- ### Capturas de pantalla
 
-   #### Módulos y Vistas
-
-| Módulo              | Vista                                      |
-|---------------------|---------------------------------------------|
-| Autenticación       | ![Login](https://github.com/ByTENITO/ZeusParking/issues/8#issue-3020585179)        |
-| Registro Vehículo   | ![Registro](https://github.com/ByTENITO/ZeusParking/issues/9#issue-3020872148)  |
-| Home_usuario        | ![Home_Usuario](https://github.com/ByTENITO/ZeusParking/issues/10#issue-3020878268)          |
-| QR                  | ![QR](https://github.com/ByTENITO/ZeusParking/issues/11#issue-3020879214)    |
-| Home_vigilante      | ![Home_Vigilante](https://github.com/ByTENITO/ZeusParking/issues/12#issue-3020881482)  |
-| Entrada_QR          | ![Entrada](https://github.com/ByTENITO/ZeusParking/issues/13#issue-3020883338)          |
-| Salida_QR           | ![Salida](https://github.com/ByTENITO/ZeusParking/issues/14#issue-3020884433)    |
 
 
