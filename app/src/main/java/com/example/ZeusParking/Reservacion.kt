@@ -176,6 +176,7 @@ class Reservacion : AppCompatActivity() {
             "Furgon" -> "NLRmedawc0M0nrpDt9Ci"
             "Vehiculo Particular" -> "edYUNbYSmPtvu1H6dI93"
             "Bicicleta" -> "sPcLdzFgRF2eAY5BWvFC"
+            "Patineta Electrica" -> "sPcLdzFgRF2eAY5BWvFC"
             "Motocicleta" -> "AQjYvV224T01lrSEeQQY"
             else -> return
         }
