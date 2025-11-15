@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/fondo"
-    tools:context=".SalidaQrParqueadero">
+    tools:context=".EntradaQrParqueadero">
 
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
@@ -57,12 +57,13 @@
                     app:scaleType="fitCenter"/>
             </com.google.android.material.card.MaterialCardView>
 
+            <!-- Sección de información simplificada -->
             <TextView
-                android:id="@+id/sectionVehicle"
+                android:id="@+id/sectionInfo"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"
-                android:text="INFORMACIÓN DEL VEHÍCULO"
+                android:text="INSTRUCCIONES"
                 android:textColor="@color/Principal"
                 android:textSize="15sp"
                 android:textStyle="bold"/>
@@ -79,40 +80,30 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:padding="13dp">
+                    android:padding="16dp">
 
-                    <com.google.android.material.textfield.TextInputLayout
-                        android:id="@+id/spinnerLayout"
-                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        app:boxStrokeColor="@color/Principal">
+                        android:text="1. Escanee el QR del usuario"
+                        android:textColor="@color/Texto_pastel"
+                        android:textSize="14sp"
+                        android:layout_marginBottom="8dp"/>
 
-                        <Spinner
-                            android:id="@+id/Tipos_SpinnerVigiEntrada"
-                            android:layout_width="match_parent"
-                            android:layout_height="48dp"
-                            android:backgroundTint="@color/Principal"
-                            android:popupBackground="@color/Navegacion"/>
-                    </com.google.android.material.textfield.TextInputLayout>
-
-                    <com.google.android.material.textfield.TextInputLayout
-                        android:id="@+id/marcoInputLayout"
-                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        app:boxStrokeColor="@color/Principal"
-                        app:counterEnabled="true"
-                        app:counterMaxLength="20"
-                        app:errorEnabled="true">
+                        android:text="2. El sistema validará automáticamente"
+                        android:textColor="@color/Texto_pastel"
+                        android:textSize="14sp"
+                        android:layout_marginBottom="8dp"/>
 
-                        <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/Marco_NUMVigiEntrada"
-                            android:layout_width="match_parent"
-                            android:layout_height="50dp"
-                            android:textColor="@color/Texto_pastel"/>
-                    </com.google.android.material.textfield.TextInputLayout>
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="3. Confirme los datos del vehículo"
+                        android:textColor="@color/Texto_pastel"
+                        android:textSize="14sp"/>
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
         </LinearLayout>

@@ -2,14 +2,7 @@ package com.example.parquiatenov10
 
 import android.content.Intent
 import android.os.Bundle
-import android.text.InputFilter
-import android.text.InputType
 import android.util.Log
-import android.view.View
-import android.widget.AdapterView
-import android.widget.ArrayAdapter
-import android.widget.EditText
-import android.widget.Spinner
 import android.widget.Toast
 import androidx.annotation.OptIn
 import androidx.camera.core.*
@@ -31,8 +24,6 @@ import android.os.Looper
 class SalidaQrParqueadero : BaseNavigationActivity() {
     private lateinit var camaraEjecutarSalida: ExecutorService
     private var database = FirebaseFirestore.getInstance()
-    private lateinit var tiposSpinnerSalida: Spinner
-    private lateinit var marcoNumSalida: EditText
     private var escaneoRealizado: Boolean = false
     private val handler = Handler(Looper.getMainLooper())
 
@@ -48,8 +39,7 @@ class SalidaQrParqueadero : BaseNavigationActivity() {
                     finish()
                     Log.d("conexion", "No hay conexión")
                 }
-
-                handler.postDelayed(this, 5000) // repetir cada 5 segundos
+                handler.postDelayed(this, 5000)
             }
         }
 
@@ -61,58 +51,14 @@ class SalidaQrParqueadero : BaseNavigationActivity() {
         //Navegacion
         setupNavigation()
 
-        tiposSpinnerSalida = findViewById(R.id.Tipos_SpinnerVigiSalida)
-        marcoNumSalida = findViewById(R.id.Marco_NUMVigiSalida)
         camaraEjecutarSalida = Executors.newSingleThreadExecutor()
         empezarCamara()
-        val adapter = ArrayAdapter.createFromResource(this, R.array.items, R.layout.estilo_spinner)
-        adapter.setDropDownViewResource(R.layout.estilo_spinner)
-        tiposSpinnerSalida.adapter = adapter
-
-        tiposSpinnerSalida.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(
-                parent: AdapterView<*>,
-                view: View?,
-                position: Int,
-                id: Long
-            ) {
-                when (position) {
-                    1, 2 -> {
-                        marcoNumSalida.hint = "Número de Marco"
-                        marcoNumSalida.inputType = InputType.TYPE_CLASS_NUMBER
-                        marcoNumSalida.filters = arrayOf(InputFilter.LengthFilter(20))
-                    }
-
-                    3, 4, 5 -> {
-                        marcoNumSalida.hint = when (position) {
-                            3 -> "Placa (Ej. abc123 - abc12d - abcd1)"
-                            4 -> "Placa (Ej. abc123 - abc12d - abcd1)"
-                            5 -> "Numero de Furgon"
-                            else -> "Numero de Marco"
-                        }
-                        marcoNumSalida.inputType =
-                            InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD
-                        marcoNumSalida.filters = arrayOf(InputFilter.LengthFilter(7))
-                    }
-
-                    else -> {
-                        marcoNumSalida.hint = ""
-                        marcoNumSalida.inputType =
-                            InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD
-                        marcoNumSalida.filters = arrayOf(InputFilter.LengthFilter(20))
-                    }
-                }
-            }
-
-            override fun onNothingSelected(parent: AdapterView<*>) {}
-        }
     }
 
     fun hayConexionInternet(context: Context): Boolean {
         val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
         val redActiva = connectivityManager.activeNetwork ?: return false
         val capacidades = connectivityManager.getNetworkCapabilities(redActiva) ?: return false
-
         return capacidades.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
     }
 
@@ -161,17 +107,18 @@ class SalidaQrParqueadero : BaseNavigationActivity() {
         scanner.process(image)
             .addOnSuccessListener { barcodes ->
                 for (barcode in barcodes) {
-                    val tiposSpinner = tiposSpinnerSalida.selectedItem.toString()
-                    val id = marcoNumSalida.text.toString()
-                    val qrText = barcode.displayValue
-                    if (tiposSpinner == "Tipo de Vehiculo" || id.isEmpty()){
-                        Toast.makeText(this, "Porfavor llene todos los campos", Toast.LENGTH_SHORT).show()
-                    }else {
-                        qrText?.let {
-                            escaneoRealizado = true
-                            verificarUsuario(qrText, tiposSpinner, id)
-                            Log.d("QRScanner", "Código QR detectado: $qrText")
+                    val vehiculoId = barcode.displayValue
+                    vehiculoId?.let {
+                        // Verificar si es un QR antiguo (correo)
+                        if (vehiculoId.contains("@") && vehiculoId.contains(".")) {
+                            Toast.makeText(this, "⚠️ QR antiguo detectado. Por favor pide al usuario que genere un nuevo QR", Toast.LENGTH_LONG).show()
+                            escaneoRealizado = false
+                            return@let
                         }
+
+                        escaneoRealizado = true
+                        verificarVehiculo(vehiculoId)
+                        Log.d("QRScanner", "ID del vehículo detectado: $vehiculoId")
                     }
                 }
             }
@@ -183,63 +130,83 @@ class SalidaQrParqueadero : BaseNavigationActivity() {
             }
     }
 
-    private fun verificarUsuario(correo: String, vehiculo: String, idVehiculo: String) {
+    private fun verificarVehiculo(vehiculoId: String) {
         database.collection("Bici_Usuarios")
-            .whereEqualTo("correo", correo)
-            .whereEqualTo("tipo", vehiculo)
-            .whereEqualTo("numero", idVehiculo)
-            .addSnapshotListener { documents,e ->
-                if (documents != null) {
-                    if (documents.isEmpty) {
+            .document(vehiculoId)
+            .get()
+            .addOnSuccessListener { document ->
+                if (document.exists()) {
+                    val correo = document.getString("correo") ?: ""
+                    val tipo = document.getString("tipo") ?: ""
+                    val numero = document.getString("numero") ?: ""
+
+                    if (correo.isEmpty() || tipo.isEmpty() || numero.isEmpty()) {
+                        Toast.makeText(this, "❌ Datos del vehículo incompletos", Toast.LENGTH_SHORT).show()
                         escaneoRealizado = false
-                        Log.d("Firestore", "No se encontraron documentos con correo: $correo")
-                        Toast.makeText(this, "No se encontraron datos del usuario", Toast.LENGTH_SHORT).show()
-                    }else {
-                        verificarVehiculo(correo,vehiculo,idVehiculo)
+                        return@addOnSuccessListener
                     }
+
+                    // Verificar si tiene entrada activa
+                    verificarEntradaActiva(vehiculoId, correo, tipo, numero)
+                } else {
+                    Toast.makeText(this, "❌ Vehículo no encontrado", Toast.LENGTH_LONG).show()
+                    escaneoRealizado = false
                 }
+            }
+            .addOnFailureListener { e ->
+                Toast.makeText(this, "❌ Error al buscar vehículo", Toast.LENGTH_SHORT).show()
+                Log.e("Firestore", "Error al buscar vehículo: ", e)
+                escaneoRealizado = false
             }
     }
 
-    private fun verificarVehiculo(correo: String, vehiculo: String, idVehiculo: String){
-        database.collection("Bici_Usuarios")
+    private fun verificarEntradaActiva(vehiculoId: String, correo: String, tipo: String, numero: String) {
+        database.collection("Entrada")
             .whereEqualTo("correo", correo)
-            .whereEqualTo("tipo", vehiculo)
-            .whereEqualTo("numero", idVehiculo)
-            .addSnapshotListener { documents , e ->
-                if (documents != null){
-                    if (documents.isEmpty) {
+            .get()
+            .addOnSuccessListener { documents ->
+                if (documents.isEmpty) {
+                    Toast.makeText(this, "❌ No hay entrada registrada para este vehículo", Toast.LENGTH_LONG).show()
+                    escaneoRealizado = false
+                } else {
+                    // Verificar que la entrada activa corresponda al vehículo escaneado
+                    val entradaActiva = documents.documents[0]
+                    val vehiculoEntrada = entradaActiva.getString("placa") ?: ""
+
+                    if (vehiculoEntrada == numero) {
+                        verificarSalidaPrevia(vehiculoId, correo, tipo, numero)
+                    } else {
+                        Toast.makeText(this, "❌ La entrada activa no corresponde a este vehículo", Toast.LENGTH_LONG).show()
                         escaneoRealizado = false
-                        Log.d("Firestore", "No se encontraron documentos con correo: $correo")
-                        Toast.makeText(this, "No se encontraron datos del vehiculo", Toast.LENGTH_SHORT).show()
-                    }else {
-                        verificarSalida(correo,vehiculo,idVehiculo)
                     }
                 }
             }
+            .addOnFailureListener { e ->
+                Toast.makeText(this, "❌ Error al verificar entrada", Toast.LENGTH_SHORT).show()
+                Log.e("Firestore", "Error al verificar entrada: ", e)
+                escaneoRealizado = false
+            }
     }
 
-    private fun verificarSalida(correo: String, vehiculo: String, idVehiculo: String) {
-        // Verificar si hay una entrada activa primero
+    private fun verificarSalidaPrevia(vehiculoId: String, correo: String, tipo: String, numero: String) {
         database.collection("Salida")
             .whereEqualTo("correo", correo)
             .get()
-            .addOnSuccessListener { entradaDocuments ->
-                //verifica que no exista una salida
-                if (entradaDocuments.isEmpty) {
-                    verificarEntrada(correo, vehiculo, idVehiculo)
-                } else {
+            .addOnSuccessListener { salidaDocuments ->
+                if (!salidaDocuments.isEmpty) {
+                    Toast.makeText(this, "⚠️ Ya existe una salida registrada para este usuario", Toast.LENGTH_LONG).show()
                     escaneoRealizado = false
-                    Toast.makeText(this, "El usuario ya salio", Toast.LENGTH_SHORT).show()
+                } else {
+                    verificarPortatil(vehiculoId, correo, tipo, numero)
                 }
-            }.addOnFailureListener { e ->
-                Toast.makeText(this, "Error al verificar salida", Toast.LENGTH_SHORT).show()
+            }
+            .addOnFailureListener { e ->
                 Log.e("Firestore", "Error al verificar salida: ", e)
+                verificarPortatil(vehiculoId, correo, tipo, numero)
             }
     }
 
-    private fun verificarEntrada(correo: String, vehiculo: String, idVehiculo: String) {
-        // Verificar primero si hay un portátil registrado en la entrada
+    private fun verificarPortatil(vehiculoId: String, correo: String, tipo: String, numero: String) {
         database.collection("Entrada_Portatiles")
             .whereEqualTo("correoUsuario", correo)
             .get()
@@ -249,72 +216,66 @@ class SalidaQrParqueadero : BaseNavigationActivity() {
                         val llevaPC = portatilDocuments.documents[0].getBoolean("llevaPC") ?: false
                         val serialPC = portatilDocuments.documents[0].getString("serialPC")
                         if (llevaPC && !serialPC.isNullOrEmpty()) {
-                            // Mostrar confirmación de devolución de PC
                             val intent = Intent(this, InfoPCActivity::class.java).apply {
                                 putExtra("correo", correo)
-                                putExtra("vehiculo", vehiculo)
-                                putExtra("idVehi",idVehiculo)
+                                putExtra("vehiculo", tipo)
+                                putExtra("idVehi", numero)
                                 putExtra("serialPC", serialPC)
                                 putExtra("modoDevolucion", true)
+                                putExtra("vehiculoId", vehiculoId)
                             }
                             startActivity(intent)
+                        } else {
+                            procesarSalida(vehiculoId, correo, tipo, numero)
                         }
-                    }else{
-                        procesarSalida(correo, vehiculo, idVehiculo)
+                    } else {
+                        procesarSalida(vehiculoId, correo, tipo, numero)
                     }
                 } catch (e: Exception) {
-                    Log.e("Firestore", "Error procesando documentos de portátil: ", e)
-                    procesarSalida(correo, vehiculo, idVehiculo)
+                    Log.e("Firestore", "Error procesando portátil: ", e)
+                    procesarSalida(vehiculoId, correo, tipo, numero)
                 }
             }
             .addOnFailureListener { e ->
                 Log.e("Firestore", "Error al verificar portátil: ", e)
-                // Continuar con el proceso sin verificación de portátil
-                procesarSalida(correo, vehiculo, idVehiculo)
+                procesarSalida(vehiculoId, correo, tipo, numero)
             }
     }
 
-    private fun procesarSalida(
-        correo: String,
-        vehiculo: String,
-        idVehiculo: String,
-    ) {
-        // Paso 1: Eliminar registros de Entrada
+    private fun procesarSalida(vehiculoId: String, correo: String, tipo: String, numero: String) {
         database.collection("Entrada")
             .whereEqualTo("correo", correo)
             .get()
             .addOnSuccessListener { entradaDocuments ->
-                for (document in entradaDocuments) {
-                    if (document.exists()) {
-                        database.collection("Entrada").document(document.id).delete()
-                        Log.d("Salida", "Marcando entrada para eliminar: ${document.id}")
-                    }
+                if (entradaDocuments.isEmpty) {
+                    Toast.makeText(this, "❌ No se encontró entrada para procesar salida", Toast.LENGTH_SHORT).show()
+                    escaneoRealizado = false
+                    return@addOnSuccessListener
                 }
-                commitBatchOperations( correo, vehiculo, idVehiculo)
+
+                // Eliminar todas las entradas del usuario (debería ser solo una)
+                for (document in entradaDocuments) {
+                    database.collection("Entrada").document(document.id).delete()
+                }
+
+                val intent = Intent(this, DatosUsuarioSalida::class.java).apply {
+                    putExtra("vehiculoId", vehiculoId)
+                    putExtra("correo", correo)
+                    putExtra("tipo", tipo)
+                    putExtra("id", numero)
+                }
+                startActivity(intent)
             }
             .addOnFailureListener { e ->
-                Toast.makeText(this, "Error al procesar salida", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "❌ Error al procesar salida", Toast.LENGTH_SHORT).show()
                 Log.e("Salida", "Error al obtener entradas", e)
+                escaneoRealizado = false
             }
-    }
-
-    private fun commitBatchOperations(
-        correo: String,
-        vehiculo: String,
-        idVehiculo: String
-    ) {
-        Log.d("Salida", "Todos los registros eliminados exitosamente")
-        val intent = Intent(this, DatosUsuarioSalida::class.java).apply {
-            putExtra("correo", correo)
-            putExtra("tipo", vehiculo)
-            putExtra("id", idVehiculo)
-        }
-        startActivity(intent)
     }
 
     override fun onResume() {
         super.onResume()
-        escaneoRealizado = false // Permitir nuevo escaneo al volver a esta actividad
+        escaneoRealizado = false
     }
 
     override fun onDestroy() {

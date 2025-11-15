@@ -2,15 +2,7 @@ package com.example.parquiatenov10
 
 import android.content.Intent
 import android.os.Bundle
-import android.text.InputFilter
-import android.text.InputType
 import android.util.Log
-import android.view.View
-import android.widget.AdapterView
-import android.widget.ArrayAdapter
-import android.widget.Button
-import android.widget.EditText
-import android.widget.Spinner
 import android.widget.Toast
 import androidx.annotation.OptIn
 import androidx.camera.core.*
@@ -32,8 +24,6 @@ import android.os.Looper
 class EntradaQrParqueadero : BaseNavigationActivity() {
     private lateinit var camaraEjecutarEntrada: ExecutorService
     private var database = FirebaseFirestore.getInstance()
-    private lateinit var tiposSpinnerEntrada: Spinner
-    private lateinit var marcoNumEntrada: EditText
     private var escaneoRealizado: Boolean = false
     private val handler = Handler(Looper.getMainLooper())
 
@@ -62,50 +52,8 @@ class EntradaQrParqueadero : BaseNavigationActivity() {
         //Navegacion
         setupNavigation()
 
-        tiposSpinnerEntrada = findViewById(R.id.Tipos_SpinnerVigiEntrada)
-        marcoNumEntrada = findViewById(R.id.Marco_NUMVigiEntrada)
         camaraEjecutarEntrada = Executors.newSingleThreadExecutor()
         empezarCamara()
-        val adapter = ArrayAdapter.createFromResource(this, R.array.items, R.layout.estilo_spinner)
-        adapter.setDropDownViewResource(R.layout.estilo_spinner)
-        tiposSpinnerEntrada.adapter = adapter
-
-        tiposSpinnerEntrada.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(
-                parent: AdapterView<*>,
-                view: View?,
-                position: Int,
-                id: Long
-            ) {
-                when (position) {
-                    1, 2 -> {
-                        marcoNumEntrada.hint = "Número de Marco"
-                        marcoNumEntrada.inputType = InputType.TYPE_CLASS_NUMBER
-                        marcoNumEntrada.filters = arrayOf(InputFilter.LengthFilter(20))
-                    }
-
-                    3, 4, 5 -> {
-                        marcoNumEntrada.hint = when (position) {
-                            3 -> "Placa (Ej. abc123 - abc12d - abcd1)"
-                            4 -> "Placa (Ej. abc123 - abc12d - abcd1)"
-                            5 -> "Número de Furgón"
-                            else -> "Número de Marco"
-                        }
-                        marcoNumEntrada.inputType =
-                            InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD
-                        marcoNumEntrada.filters = arrayOf(InputFilter.LengthFilter(7))
-                    }
-
-                    else -> {
-                        marcoNumEntrada.hint = ""
-                        marcoNumEntrada.inputType = InputType.TYPE_CLASS_NUMBER
-                        marcoNumEntrada.filters = arrayOf(InputFilter.LengthFilter(20))
-                    }
-                }
-            }
-
-            override fun onNothingSelected(parent: AdapterView<*>) {}
-        }
     }
 
     fun hayConexionInternet(context: Context): Boolean {
@@ -161,18 +109,11 @@ class EntradaQrParqueadero : BaseNavigationActivity() {
         scanner.process(image)
             .addOnSuccessListener { barcodes ->
                 for (barcode in barcodes) {
-                    val tiposSpinner = tiposSpinnerEntrada.selectedItem.toString()
-                    val id = marcoNumEntrada.text.toString()
-                    val qrText = barcode.displayValue
-                    if (tiposSpinner == "Tipo de Vehiculo" || id.isEmpty()) {
-                        Toast.makeText(this, "Porfavor llene todos los campos", Toast.LENGTH_SHORT).show()
-                        escaneoRealizado = false
-                    } else {
-                        qrText?.let {
-                            escaneoRealizado = true
-                            verificarUsuario(qrText, tiposSpinner, id)
-                            Log.d("QRScanner", "Código QR detectado: $qrText")
-                        }
+                    val vehiculoId = barcode.displayValue
+                    vehiculoId?.let {
+                        escaneoRealizado = true
+                        verificarVehiculo(vehiculoId)
+                        Log.d("QRScanner", "ID del vehículo detectado: $vehiculoId")
                     }
                 }
             }
@@ -184,47 +125,42 @@ class EntradaQrParqueadero : BaseNavigationActivity() {
             }
     }
 
-    private fun verificarUsuario(correo: String, vehiculo: String, idVehiculo: String) {
+    private fun verificarVehiculo(vehiculoId: String) {
         database.collection("Bici_Usuarios")
-            .whereEqualTo("correo", correo)
+            .document(vehiculoId)
             .get()
-            .addOnSuccessListener { documents ->
-                if (documents.isEmpty) {
-                    Log.d("Firestore", "No se encontraron documentos con correo: $correo")
-                    Toast.makeText(this, "No se encontraron datos del usuario", Toast.LENGTH_SHORT).show()
-                    escaneoRealizado = false
-                }else {
-                    verificarVehiculo(correo,vehiculo,idVehiculo)
-                }
-            }
-    }
+            .addOnSuccessListener { document ->
+                if (document.exists()) {
+                    val correo = document.getString("correo") ?: ""
+                    val tipo = document.getString("tipo") ?: ""
+                    val numero = document.getString("numero") ?: ""
 
-    private fun verificarVehiculo(correo: String, vehiculo: String, idVehiculo: String){
-        database.collection("Bici_Usuarios")
-            .whereEqualTo("correo", correo)
-            .whereEqualTo("tipo", vehiculo)
-            .whereEqualTo("numero", idVehiculo)
-            .addSnapshotListener { documents , e ->
-                if (documents != null){
-                    if (documents.isEmpty) {
-                        Log.d("Firestore", "No se encontraron documentos con correo: $correo")
-                        Toast.makeText(this, "No se encontraron datos del vehiculo", Toast.LENGTH_SHORT).show()
+                    if (correo.isNotEmpty() && tipo.isNotEmpty() && numero.isNotEmpty()) {
+                        verificarEntrada(vehiculoId, correo, tipo, numero)
+                    } else {
+                        Toast.makeText(this, "Datos del vehículo incompletos", Toast.LENGTH_SHORT).show()
                         escaneoRealizado = false
-                    }else {
-                        verificarEntrada(correo,vehiculo,idVehiculo)
                     }
+                } else {
+                    Toast.makeText(this, "Vehículo no encontrado", Toast.LENGTH_SHORT).show()
+                    escaneoRealizado = false
                 }
+            }
+            .addOnFailureListener { e ->
+                Toast.makeText(this, "Error al buscar vehículo", Toast.LENGTH_SHORT).show()
+                Log.e("Firestore", "Error al buscar vehículo: ", e)
+                escaneoRealizado = false
             }
     }
 
-    private fun verificarEntrada(correo: String, vehiculo: String, idVehiculo: String) {
+    private fun verificarEntrada(vehiculoId: String, correo: String, tipo: String, numero: String) {
         database.collection("Entrada")
             .whereEqualTo("correo", correo)
             .get()
             .addOnSuccessListener { documents ->
                 if (documents.isEmpty) {
                     // Verificar si el usuario tiene PC registrado
-                    verificarSalida(correo, vehiculo, idVehiculo)
+                    verificarSalida(vehiculoId, correo, tipo, numero)
                 } else {
                     Toast.makeText(this, "El usuario ya entro", Toast.LENGTH_SHORT).show()
                     escaneoRealizado = false
@@ -232,10 +168,11 @@ class EntradaQrParqueadero : BaseNavigationActivity() {
             }
             .addOnFailureListener { e ->
                 Log.e("Firestore", "Error al verificar entrada: ", e)
+                escaneoRealizado = false
             }
     }
 
-    private fun verificarSalida(correo: String, vehiculo: String, idVehiculo: String) {
+    private fun verificarSalida(vehiculoId: String, correo: String, tipo: String, numero: String) {
         database.collection("Salida")
             .whereEqualTo("correo", correo)
             .get()
@@ -246,14 +183,15 @@ class EntradaQrParqueadero : BaseNavigationActivity() {
                         database.collection("Salida").document(document.id).delete()
                     }
                 }
-                verificarPCUsuario(correo, vehiculo, idVehiculo)
+                verificarPCUsuario(vehiculoId, correo, tipo, numero)
             }
             .addOnFailureListener { e ->
                 Log.e("Firestore", "Error al verificar salida: ", e)
+                verificarPCUsuario(vehiculoId, correo, tipo, numero)
             }
     }
 
-    private fun verificarPCUsuario(correo: String, vehiculo: String, idVehiculo: String) {
+    private fun verificarPCUsuario(vehiculoId: String, correo: String, tipo: String, numero: String) {
         database.collection("Portatiles")
             .whereEqualTo("correoUsuario", correo)
             .get()
@@ -267,20 +205,20 @@ class EntradaQrParqueadero : BaseNavigationActivity() {
                     }
                     startActivity(intent)
                 }
-                DatosEntrada(correo, vehiculo, idVehiculo)
+                DatosEntrada(vehiculoId, correo, tipo, numero)
             }
             .addOnFailureListener { e ->
                 Log.e("Firestore", "Error al verificar PC: ", e)
-                verificarSalida(correo, vehiculo, idVehiculo)
+                DatosEntrada(vehiculoId, correo, tipo, numero)
             }
     }
 
-    private fun DatosEntrada(correo: String, vehiculo: String, idVehiculo: String) {
-        // Continuar con el proceso de entrada después de confirmación
+    private fun DatosEntrada(vehiculoId: String, correo: String, tipo: String, numero: String) {
         val entradaIntent = Intent(this, DatosUsuarioEntrada::class.java).apply {
+            putExtra("vehiculoId", vehiculoId)
             putExtra("correo", correo)
-            putExtra("tipo", vehiculo)
-            putExtra("id", idVehiculo)
+            putExtra("tipo", tipo)
+            putExtra("id", numero)
         }
         startActivity(entradaIntent)
     }

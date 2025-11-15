@@ -78,6 +78,54 @@
                 </RelativeLayout>
             </com.google.android.material.card.MaterialCardView>
 
+            <!-- Estado vacío -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/layoutEmptyState"
+                android:layout_width="300dp"
+                android:layout_height="320dp"
+                android:visibility="gone"
+                app:cardBackgroundColor="@android:color/white"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="4dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:padding="24dp">
+
+                    <ImageView
+                        android:layout_width="120dp"
+                        android:layout_height="120dp"
+                        android:src="@drawable/ic_qr"
+                        android:tint="@color/Tercero"
+                        android:contentDescription="Icono QR" />
+
+                    <TextView
+                        android:id="@+id/tvEmptyMessage"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:gravity="center"
+                        android:text="Selecciona un vehículo para generar tu QR"
+                        android:textColor="@color/Negro"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnTryAgain"
+                        android:layout_width="wrap_content"
+                        android:layout_height="50dp"
+                        android:layout_marginTop="24dp"
+                        android:text="Volver a intentar"
+                        android:textColor="@color/Texto_pastel"
+                        app:backgroundTint="@color/Principal"
+                        app:cornerRadius="6dp"/>
+
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
             <!-- Botón para ir a Reserva -->
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/irReserva"
