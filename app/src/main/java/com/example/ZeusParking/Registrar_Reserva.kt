@@ -64,7 +64,6 @@ class Registrar_Reserva : AppCompatActivity() {
         configurarTimePicker()
         configurarSpinner()
         configurarBotonReserva()
-
         crearCanalNotificacion(this)
     }
 
@@ -80,7 +79,6 @@ class Registrar_Reserva : AppCompatActivity() {
 
         val zonaColombia = ZoneId.of("America/Bogota")
         val ahoraColombia = ZonedDateTime.now(zonaColombia).toLocalTime()
-
         val horaInicio = LocalTime.of(HORA_INICIO, 0)
         val horaFin = LocalTime.of(HORA_FIN, 0)
 
@@ -132,7 +130,7 @@ class Registrar_Reserva : AppCompatActivity() {
                     }
                     3, 4, 5 -> { // Motocicleta, Vehículo, Furgón
                         marcoNum.hint = when (position) {
-                            3 -> "Placa (Ej. abc123)"
+                            3 -> "Placa (Ej. abc12c)"
                             4 -> "Placa (Ej. abc123)"
                             5 -> "Número de Furgón"
                             else -> "Número"

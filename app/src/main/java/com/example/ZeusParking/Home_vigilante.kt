@@ -466,13 +466,12 @@ class Home_vigilante : BaseNavigationActivity() {
                 try {
                     val inicio = LocalDateTime.parse(fechaInicio, formato)
                     var fechaHoraActual = LocalDateTime.now()
-
                     val duracion = Duration.between(inicio, fechaHoraActual)
-
-                    val horas = duracion.toHours()
+                    val dia = duracion.toDays()
                     val minutos = duracion.toMinutes() % 60
-                    val segundos = duracion.seconds % 60
-                    if (minutos > 40 && !vehiculosProcesados.contains(idVehiculo)) {
+                    val reservaAntigua = dia > 0
+                    val tiempoExpirado = minutos >= 40
+                    if ((tiempoExpirado || reservaAntigua)  && !vehiculosProcesados.contains(idVehiculo)) {
                         if (hayConexionInternet(this@Home_vigilante)) {
                             Log.d("conexion", "¡Hay conexión a Internet!")
                             actualizarDisponibilidad(vehiculo, idVehiculo)

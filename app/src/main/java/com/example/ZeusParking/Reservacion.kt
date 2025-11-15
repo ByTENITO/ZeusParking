@@ -172,52 +172,69 @@ class Reservacion : AppCompatActivity() {
             else -> return
         }
 
+        val FijosId = when (tipoVehiculo) {
+            "Furgon" -> "NLRmedawc0M0nrpDt9Ci"
+            "Vehiculo Particular" -> "edYUNbYSmPtvu1H6dI93"
+            "Bicicleta" -> "sPcLdzFgRF2eAY5BWvFC"
+            "Motocicleta" -> "AQjYvV224T01lrSEeQQY"
+            else -> return
+        }
+
         if (tipoVehiculo == "Patineta Electrica") {
-            Consulta(documentId, "Bicicleta", reserData)
+            Consulta(documentId, FijosId, "Bicicleta", reserData)
         } else {
-            Consulta(documentId, tipoVehiculo, reserData)
+            Consulta(documentId, FijosId, tipoVehiculo, reserData)
         }
     }
 
-    private fun Consulta(documentId: String, tipoVehiculo: String, reserData: ReserData) {
-        database.collection("Disponibilidad").document(documentId)
+    private fun Consulta(documentId: String, FijosId: String, tipoVehiculo: String, reserData: ReserData) {
+        database.collection("EspaciosFijos").document(FijosId)
             .get()
-            .addOnSuccessListener { document ->
-                if (document.exists()) {
-                    val espacios = document.getLong(tipoVehiculo) ?: 0
-                    if (espacios > 0) {
-                        database.collection("Disponibilidad").document(documentId)
-                            .update(tipoVehiculo, FieldValue.increment(-1))
-                            .addOnSuccessListener {
-                                Log.d("Firestore", "Campo '$tipoVehiculo' decrementado")
-                                actualizarInterfaz(reserData)
-                                database.collection("Reservas")
-                                    .add(reserData)
-                                    .addOnSuccessListener {
-                                        Toast.makeText(this, "Datos cargados", Toast.LENGTH_SHORT).show()
-                                    }
-                                    .addOnFailureListener {
-                                        Toast.makeText(this, "No se cargaron los datos", Toast.LENGTH_SHORT)
-                                            .show()
-                                    }
-                            }
-                            .addOnFailureListener { e ->
-                                Log.e("Firestore", "Error al actualizar el campo: ", e)
-                            }
+            .addOnSuccessListener { documentFijo ->
+                val espacioFijo = documentFijo.getLong(tipoVehiculo) ?: 0
+            database.collection("Disponibilidad").document(documentId)
+                .get()
+                .addOnSuccessListener { document ->
+                    if (document.exists()) {
+                        val espacios = document.getLong(tipoVehiculo) ?: 0
+                        val limite = (espacioFijo * 0.80).toInt()
+                        if (espacios > 0 && espacios > limite) {
+                            disminuirDisponibilidad(documentId, tipoVehiculo, reserData)
+                        } else {
+                            Toast.makeText(
+                                this,
+                                "No hay espacios disponibles para $tipoVehiculo",
+                                Toast.LENGTH_LONG
+                            ).show()
+                        }
                     } else {
-                        Toast.makeText(
-                            this,
-                            "No hay espacios disponibles para $tipoVehiculo",
-                            Toast.LENGTH_LONG
-                        ).show()
+                        Log.d("Firestore", "No se encontró el documento para $tipoVehiculo")
                     }
-                } else {
-                    Log.d("Firestore", "No se encontró el documento para $tipoVehiculo")
-                }
-            }
-            .addOnFailureListener { e ->
+                }.addOnFailureListener { e ->
                 Log.e("Firestore", "Error al obtener el documento de disponibilidad: ", e)
             }
+        }
+    }
+
+    private fun disminuirDisponibilidad (documentId: String, tipoVehiculo: String, reserData: ReserData){
+        database.collection("Disponibilidad").document(documentId)
+            .update(tipoVehiculo, FieldValue.increment(-1))
+            .addOnSuccessListener {
+                Log.d("Firestore", "Campo '$tipoVehiculo' decrementado")
+                actualizarInterfaz(reserData)
+                registrarReserva(reserData)
+            }
+            .addOnFailureListener { e ->
+                Log.e("Firestore", "Error al actualizar el campo: ", e)
+            }
+    }
+
+    private fun registrarReserva(reserData: ReserData){
+        database.collection("Reservas").add(reserData).addOnSuccessListener {
+            Toast.makeText(this, "Datos cargados", Toast.LENGTH_SHORT).show()
+        }.addOnFailureListener {
+            Toast.makeText(this, "No se cargaron los datos", Toast.LENGTH_SHORT).show()
+        }
     }
 
     private fun actualizarInterfaz(reserData: ReserData) {
