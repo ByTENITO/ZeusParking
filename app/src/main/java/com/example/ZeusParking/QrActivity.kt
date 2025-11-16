@@ -117,19 +117,33 @@ class QrActivity : BaseNavigationActivity() {
             .get()
             .addOnSuccessListener { documents ->
                 if (documents.isEmpty) {
-                    // No tiene reservas activas, puede proceder
+                    // No tiene reservas activas, mostrar botón de reserva
+                    mostrarBotonReserva(true)
                     Log.d("QrActivity", "No hay reservas activas, verificando vehículos en parqueadero")
                     verificarVehiculosEnParqueadero(correo)
                 } else {
-                    // Tiene reservas activas, mostrar mensaje
+                    // Tiene reservas activas, ocultar botón de reserva
+                    mostrarBotonReserva(false)
                     mostrarErrorReservaActiva(documents)
                 }
             }
             .addOnFailureListener { e ->
                 Log.e("QrActivity", "Error al verificar reservas: ${e.message}")
-                // En caso de error, intentar cargar vehículos de todos modos
+                // En caso de error, mostrar botón por defecto
+                mostrarBotonReserva(true)
                 verificarVehiculosEnParqueadero(correo)
             }
+    }
+    private fun mostrarBotonReserva(mostrar: Boolean) {
+        runOnUiThread {
+            if (mostrar) {
+                btnGoToReserva.visibility = View.VISIBLE
+                Log.d("QrActivity", "Botón de reserva: VISIBLE")
+            } else {
+                btnGoToReserva.visibility = View.GONE
+                Log.d("QrActivity", "Botón de reserva: OCULTO")
+            }
+        }
     }
 
     private fun mostrarErrorReservaActiva(documents: com.google.firebase.firestore.QuerySnapshot) {

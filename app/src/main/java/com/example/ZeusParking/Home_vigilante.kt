@@ -470,7 +470,7 @@ class Home_vigilante : BaseNavigationActivity() {
                     val dia = duracion.toDays()
                     val minutos = duracion.toMinutes() % 60
                     val reservaAntigua = dia > 0
-                    val tiempoExpirado = minutos >= 40
+                    val tiempoExpirado = minutos >= 15
                     if ((tiempoExpirado || reservaAntigua)  && !vehiculosProcesados.contains(idVehiculo)) {
                         if (hayConexionInternet(this@Home_vigilante)) {
                             Log.d("conexion", "¡Hay conexión a Internet!")
