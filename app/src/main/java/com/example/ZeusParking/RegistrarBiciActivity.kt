@@ -49,9 +49,10 @@ class RegistrarBiciActivity : BaseNavigationActivity() {
     private val storage = FirebaseStorage.getInstance()
 
     // Patrones de validación
-    private val nombreApellidoPattern = Pattern.compile("^[\\p{L} .'-]+$")
-    private val placaPattern = Pattern.compile("^[a-zA-Z]{3,4}[0-9]{2,3}[a-zA-Z]?$")
-    private val cedulaPattern = Pattern.compile("^[0-9]{1,10}$")
+    private val nombreApellidoPattern = Pattern.compile("^[a-zA-ZáéíóúÁÉÍÓÚñÑ ]+$")
+    private val placaPattern = Pattern.compile("^[A-Z]{3}[0-9]{3}$|^[A-Z]{3}[0-9]{2}[A-Z]$", Pattern.CASE_INSENSITIVE)
+    private val cedulaPattern = Pattern.compile("^[0-9]{5,10}$")
+    private val colorPattern = Pattern.compile("^[a-zA-ZáéíóúÁÉÍÓÚñÑ ]{3,}$")
 
     private val handler = Handler(Looper.getMainLooper())
 
@@ -174,12 +175,22 @@ class RegistrarBiciActivity : BaseNavigationActivity() {
 
     private fun setupValidaciones() {
         // Validación para nombre
+        nombreEd.filters = arrayOf(InputFilter { source, start, end, dest, dstart, dend ->
+            if (source.isNotEmpty()) {
+                val filtered = source.toString().filter { it.isLetter() || it == ' ' }
+                if (filtered.length != source.length) {
+                    return@InputFilter filtered
+                }
+            }
+            null
+        })
+
         nombreEd.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
             override fun afterTextChanged(s: Editable?) {
-                if (!nombreApellidoPattern.matcher(s.toString()).matches()) {
-                    nombreEd.error = "Nombre no válido"
+                if (s.toString().isNotEmpty() && !nombreApellidoPattern.matcher(s.toString()).matches()) {
+                    nombreEd.error = "Solo se permiten letras y espacios"
                 } else {
                     nombreEd.error = null
                 }
@@ -187,25 +198,45 @@ class RegistrarBiciActivity : BaseNavigationActivity() {
         })
 
         // Validación para apellidos
+        apellidosEd.filters = arrayOf(InputFilter { source, start, end, dest, dstart, dend ->
+            if (source.isNotEmpty()) {
+                val filtered = source.toString().filter { it.isLetter() || it == ' ' }
+                if (filtered.length != source.length) {
+                    return@InputFilter filtered
+                }
+            }
+            null
+        })
+
         apellidosEd.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
             override fun afterTextChanged(s: Editable?) {
-                if (!nombreApellidoPattern.matcher(s.toString()).matches()) {
-                    apellidosEd.error = "Apellidos no válidos"
+                if (s.toString().isNotEmpty() && !nombreApellidoPattern.matcher(s.toString()).matches()) {
+                    apellidosEd.error = "Solo se permiten letras y espacios"
                 } else {
                     apellidosEd.error = null
                 }
             }
         })
 
-        // Validación para cédula (máximo 10 números)
+        // Validación para cédula (entre 5 y 10 números)
+        cedulaNum.filters = arrayOf(
+            InputFilter.LengthFilter(10),
+            InputFilter { source, start, end, dest, dstart, dend ->
+                if (source.isNotEmpty() && !source.toString().matches("[0-9]*".toRegex())) {
+                    return@InputFilter ""
+                }
+                null
+            }
+        )
+
         cedulaNum.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
             override fun afterTextChanged(s: Editable?) {
-                if (!cedulaPattern.matcher(s.toString()).matches()) {
-                    cedulaNum.error = "Cédula debe tener máximo 10 números"
+                if (s.toString().isNotEmpty() && !cedulaPattern.matcher(s.toString()).matches()) {
+                    cedulaNum.error = "Cédula debe tener entre 5 y 10 números"
                 } else {
                     cedulaNum.error = null
                 }
@@ -213,12 +244,22 @@ class RegistrarBiciActivity : BaseNavigationActivity() {
         })
 
         // Validación para color
+        colorEd.filters = arrayOf(InputFilter { source, start, end, dest, dstart, dend ->
+            if (source.isNotEmpty()) {
+                val filtered = source.toString().filter { it.isLetter() || it == ' ' }
+                if (filtered.length != source.length) {
+                    return@InputFilter filtered
+                }
+            }
+            null
+        })
+
         colorEd.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
             override fun afterTextChanged(s: Editable?) {
-                if (s.toString().length < 3) {
-                    colorEd.error = "Color muy corto"
+                if (s.toString().isNotEmpty() && !colorPattern.matcher(s.toString()).matches()) {
+                    colorEd.error = "Mínimo 3 letras, solo caracteres alfabéticos"
                 } else {
                     colorEd.error = null
                 }
@@ -231,9 +272,15 @@ class RegistrarBiciActivity : BaseNavigationActivity() {
         override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
         override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
         override fun afterTextChanged(s: Editable?) {
-            val texto = s.toString().trim()
-            if (!placaPattern.matcher(texto).matches()) {
-                marcoNum.error = "Formatos válidos:\n- abc123 - abc12d (4 letras + 2 números)"
+            val texto = s.toString().trim().uppercase()
+            // Actualizar el texto a mayúsculas si es diferente
+            if (s.toString() != texto) {
+                marcoNum.setText(texto)
+                marcoNum.setSelection(texto.length)
+            }
+
+            if (texto.isNotEmpty() && !placaPattern.matcher(texto).matches()) {
+                marcoNum.error = "Formatos válidos:\n- ABC123 (3 letras + 3 números)\n- ABC12D (3 letras + 2 números + 1 letra)"
             } else {
                 marcoNum.error = null
             }
