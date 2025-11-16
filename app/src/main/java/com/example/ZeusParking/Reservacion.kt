@@ -83,22 +83,38 @@ class Reservacion : AppCompatActivity() {
 
         Log.d("Datos","Datos recibidos - Tipo: $vehiculo, Número: $numero, ID: $userId, Hora: $horaReserva")
 
-        generateAndDisplayQrCode()
+        generateAndDisplayQrCode(vehiculo, numero)
         registrarIngreso(userId, vehiculo, numero, horaReserva)
 
         salir.setOnClickListener { finish() }
         crearCanalNotificacion(this)
     }
 
-    private fun generateAndDisplayQrCode() {
+    private fun generateAndDisplayQrCode(vehiculo: String, idVehiculo: String) {
         val correo = FirebaseAuth.getInstance().currentUser?.email.toString()
 
-        try {
-            val qrBitmap = generateQRCode(correo, 700)
-            CodigoQR.setImageBitmap(qrBitmap)
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
+        database.collection("Bici_Usuarios")
+            .whereEqualTo("correo", correo)
+            .whereEqualTo("tipo", vehiculo)
+            .whereEqualTo("numero", idVehiculo)
+            .get()
+            .addOnSuccessListener { documents ->
+                Log.d("QrActivity", "Vehículos encontrados: ${documents.size()}")
+
+                // Solo tiene un vehículo, generar QR con ese ID
+                val document = documents.documents[0]
+                val vehiculoId = document.id
+
+                try {
+                    val qrBitmap = generateQRCode(vehiculoId, 700)
+                    CodigoQR.setImageBitmap(qrBitmap)
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
+            }
+            .addOnFailureListener { e ->
+                Log.e("QrActivity", "Error al cargar vehículos: ${e.message}")
+            }
     }
 
     private fun generateQRCode(content: String, size: Int): Bitmap? {
