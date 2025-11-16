@@ -8,25 +8,25 @@
     android:background="@drawable/fondo"
     tools:context=".QrActivity">
 
+    <!-- Logo -->
     <ImageView
         android:id="@+id/imageView"
-        android:layout_width="160dp"
-        android:layout_height="64dp"
+        android:layout_width="180dp"
+        android:layout_height="70dp"
         android:adjustViewBounds="true"
         android:contentDescription="Logo ZeusPass"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.1"
+        app:layout_constraintVertical_bias="0.08"
         app:srcCompat="@drawable/zeuspass" />
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:fillViewport="true"
-        android:clipToPadding="false"
-        android:paddingBottom="72dp"
-        android:paddingTop="16dp"
+        android:paddingBottom="20dp"
+        android:paddingTop="10dp"
         app:layout_constraintBottom_toTopOf="@+id/bottom_navigation"
         app:layout_constraintTop_toBottomOf="@+id/imageView">
 
@@ -35,58 +35,35 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:orientation="vertical"
-            android:padding="17dp">
+            android:padding="16dp">
 
-            <!-- Tarjeta QR -->
+            <!-- Título Principal -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:text="Código QR de Entrada"
+                android:textColor="@color/Texto_pastel"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="24dp"
+                android:text="Escanea para ingresar al parqueadero"
+                android:textColor="@color/Texto_pastel"
+                android:textSize="14sp" />
+
+            <!-- Contenedor QR Principal -->
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/qrCard"
-                android:layout_width="300dp"
-                android:layout_height="320dp"
+                android:layout_width="340dp"
+                android:layout_height="400dp"
+                android:layout_marginBottom="20dp"
                 app:cardBackgroundColor="@android:color/white"
-                app:cardCornerRadius="12dp"
-                app:cardElevation="4dp">
-
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent">
-
-                    <!-- QR Image -->
-                    <ImageView
-                        android:id="@+id/ivCodigoSalida"
-                        android:layout_width="240dp"
-                        android:layout_height="240dp"
-                        android:layout_centerHorizontal="true"
-                        android:layout_marginTop="8dp"
-                        android:scaleType="fitCenter" />
-
-                    <!-- Fecha/Hora -->
-                    <TextView
-                        android:id="@+id/tvDateTime"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@id/ivCodigoSalida"
-                        android:layout_alignParentEnd="true"
-                        android:layout_alignParentBottom="true"
-                        android:layout_marginTop="19dp"
-                        android:layout_marginEnd="75dp"
-                        android:layout_marginBottom="21dp"
-                        android:padding="6dp"
-                        android:textColor="@color/Negro"
-                        android:textSize="15sp"
-                        android:textStyle="bold"
-                        tools:text="25/04/2025 - 14:30" />
-                </RelativeLayout>
-            </com.google.android.material.card.MaterialCardView>
-
-            <!-- Estado vacío -->
-            <com.google.android.material.card.MaterialCardView
-                android:id="@+id/layoutEmptyState"
-                android:layout_width="300dp"
-                android:layout_height="320dp"
-                android:visibility="gone"
-                app:cardBackgroundColor="@android:color/white"
-                app:cardCornerRadius="12dp"
-                app:cardElevation="4dp">
+                app:cardCornerRadius="20dp"
+                app:cardElevation="8dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -95,48 +72,97 @@
                     android:orientation="vertical"
                     android:padding="24dp">
 
+                    <!-- QR Grande -->
                     <ImageView
-                        android:layout_width="120dp"
-                        android:layout_height="120dp"
-                        android:src="@drawable/ic_qr"
-                        android:tint="@color/Tercero"
-                        android:contentDescription="Icono QR" />
+                        android:id="@+id/ivCodigoSalida"
+                        android:layout_width="300dp"
+                        android:layout_height="300dp"
+                        android:scaleType="fitCenter" />
+
+                    <!-- Fecha y Hora -->
+                    <TextView
+                        android:id="@+id/tvDateTime"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="20dp"
+                        android:paddingHorizontal="16dp"
+                        android:paddingVertical="8dp"
+                        android:text="25/04/2025 - 14:30"
+                        android:textColor="@color/Principal"
+                        android:textSize="15sp"
+                        android:textStyle="bold" />
+
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Estado Vacío -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/layoutEmptyState"
+                android:layout_width="340dp"
+                android:layout_height="400dp"
+                android:layout_marginBottom="20dp"
+                android:visibility="gone"
+                app:cardBackgroundColor="@android:color/white"
+                app:cardCornerRadius="20dp"
+                app:cardElevation="8dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:padding="32dp">
 
                     <TextView
                         android:id="@+id/tvEmptyMessage"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="16dp"
                         android:gravity="center"
-                        android:text="Selecciona un vehículo para generar tu QR"
+                        android:text="No tienes vehículos disponibles\npara generar QR"
                         android:textColor="@color/Negro"
                         android:textSize="16sp"
-                        android:textStyle="bold" />
+                        android:textStyle="bold"
+                        android:lineSpacingExtra="6dp" />
 
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/btnTryAgain"
-                        android:layout_width="wrap_content"
+                        android:layout_width="200dp"
                         android:layout_height="50dp"
-                        android:layout_marginTop="24dp"
-                        android:text="Volver a intentar"
+                        android:layout_marginTop="32dp"
+                        android:text="Intentar de nuevo"
                         android:textColor="@color/Texto_pastel"
+                        android:textSize="15sp"
+                        android:textStyle="bold"
                         app:backgroundTint="@color/Principal"
-                        app:cornerRadius="6dp"/>
+                        app:cornerRadius="12dp"/>
 
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
-            <!-- Botón para ir a Reserva -->
+            <!-- Botón Reserva -->
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/irReserva"
-                style="@style/Widget.MaterialComponents.Button"
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:layout_marginTop="16dp"
-                android:text="Hacer Reserva"
+                android:layout_width="340dp"
+                android:layout_height="55dp"
+                android:layout_marginTop="8dp"
+                android:text="Hacer Reserva de Parqueadero"
                 android:textColor="@color/Texto_pastel"
+                android:textSize="16sp"
+                android:textStyle="bold"
                 app:backgroundTint="@color/Principal"
-                app:cornerRadius="6dp"/>
+                app:cornerRadius="12dp"/>
+
+            <!-- Información adicional -->
+            <TextView
+                android:layout_width="300dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:gravity="center"
+                android:text="• Presenta este código al ingresar\n• Válido solo para el vehículo seleccionado\n• No compartas tu código QR"
+                android:textColor="@color/Texto_pastel"
+                android:textSize="13sp"
+                android:lineSpacingExtra="4dp"/>
+
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 
@@ -145,7 +171,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/Navegacion"
-        android:elevation="16dp"
         app:itemIconTint="@drawable/nav_item_color"
         app:itemTextColor="@drawable/nav_text_color"
         app:labelVisibilityMode="labeled"

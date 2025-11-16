@@ -78,11 +78,12 @@
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
-            <!-- Formulario de Reserva -->
+            <!-- Contenedor para selección de vehículo -->
             <com.google.android.material.card.MaterialCardView
+                android:id="@+id/vehicleSelectionCard"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginHorizontal="8dp"
+                android:layout_marginBottom="16dp"
                 app:cardCornerRadius="8dp"
                 app:cardElevation="4dp"
                 app:strokeColor="@color/Principal"
@@ -94,62 +95,108 @@
                     android:orientation="vertical"
                     android:padding="16dp">
 
-                    <!-- Spinner de Tipo -->
-                    <com.google.android.material.textfield.TextInputLayout
-                        android:id="@+id/spinnerContainer"
-                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="8dp"
-                        android:hint="Tipo de vehículo"
-                        app:boxStrokeColor="@color/Principal"
-                        app:hintTextColor="@color/Texto_pastel"
-                        app:errorEnabled="true">
-
-                        <Spinner
-                            android:id="@+id/Tipos_SpinnerQR"
-                            android:layout_width="match_parent"
-                            android:layout_height="48dp"
-                            android:backgroundTint="@color/Navegacion"
-                            android:popupBackground="@color/Navegacion"
-                            android:textColor="@color/Texto_pastel" />
-                    </com.google.android.material.textfield.TextInputLayout>
-
-                    <!-- Campo para número/placa -->
-                    <com.google.android.material.textfield.TextInputLayout
-                        android:id="@+id/textInputLayout"
-                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="16dp"
-                        app:boxStrokeColor="@color/Principal"
-                        app:errorEnabled="true"
-                        app:hintTextColor="@color/Texto_pastel">
-
-                        <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/numero"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:textColor="@color/Texto_pastel"
-                            android:textColorHint="@color/Texto_pastel" />
-                    </com.google.android.material.textfield.TextInputLayout>
-
-                    <!-- Botón de Reserva -->
+                    <!-- Botón para seleccionar vehículo -->
                     <com.google.android.material.button.MaterialButton
-                        android:id="@+id/Reserva_BTN"
-                        style="@style/Widget.MaterialComponents.Button"
+                        android:id="@+id/btnSelectVehicle"
+                        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                         android:layout_width="match_parent"
                         android:layout_height="48dp"
-                        android:text="@string/reservar"
+                        android:text="Seleccionar Vehículo"
                         android:textColor="@color/Texto_pastel"
                         android:textAllCaps="false"
                         android:textSize="16sp"
-                        app:backgroundTint="@color/Principal"
-                        app:cornerRadius="6dp"
-                        app:iconGravity="textStart"
-                        app:iconTint="@color/Texto_pastel"/>
+                        app:strokeColor="@color/Principal"
+                        app:icon="@drawable/ic_carro"
+                        app:iconGravity="textStart"/>
+
+                    <!-- Información del vehículo seleccionado -->
+                    <LinearLayout
+                        android:id="@+id/selectedVehicleInfo"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:visibility="gone"
+                        android:padding="12dp"
+                        android:layout_marginTop="8dp">
+
+                        <TextView
+                            android:id="@+id/tvVehicleType"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Tipo:"
+                            android:textColor="@color/Texto_pastel"
+                            android:textSize="14sp"
+                            android:textStyle="bold"/>
+
+                        <TextView
+                            android:id="@+id/tvVehicleNumber"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Número:"
+                            android:textColor="@color/Texto_pastel"
+                            android:textSize="14sp"
+                            android:layout_marginTop="4dp"/>
+                    </LinearLayout>
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
+
+            <!-- Estado vacío -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/layoutEmptyState"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:visibility="gone"
+                app:cardCornerRadius="8dp"
+                app:cardElevation="4dp"
+                app:strokeColor="@color/Secundario"
+                app:strokeWidth="1dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="24dp"
+                    android:gravity="center">
+
+                    <TextView
+                        android:id="@+id/tvEmptyMessage"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="No se encontraron vehículos"
+                        android:textColor="@color/Texto_pastel"
+                        android:textSize="16sp"
+                        android:textAlignment="center"
+                        android:layout_marginBottom="16dp"/>
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnTryAgain"
+                        style="@style/Widget.MaterialComponents.Button"
+                        android:layout_width="wrap_content"
+                        android:layout_height="48dp"
+                        android:text="Reintentar"
+                        android:textColor="@color/Texto_pastel"
+                        android:textAllCaps="false"
+                        android:textSize="14sp"
+                        app:backgroundTint="@color/Principal"
+                        app:cornerRadius="6dp"/>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Botón de Reserva -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/Reserva_BTN"
+                style="@style/Widget.MaterialComponents.Button"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:text="@string/reservar"
+                android:textColor="@color/Texto_pastel"
+                android:textAllCaps="false"
+                android:textSize="16sp"
+                app:backgroundTint="@color/Principal"
+                app:cornerRadius="6dp"
+                app:iconGravity="textStart"
+                app:iconTint="@color/Texto_pastel"/>
 
             <!-- Información de horario -->
             <TextView

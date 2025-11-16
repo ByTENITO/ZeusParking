@@ -1,26 +1,28 @@
 package com.example.parquiatenov10
 
+import android.app.AlertDialog
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
 import android.content.Intent
 import android.graphics.Color
+import android.graphics.Typeface
+import android.graphics.drawable.GradientDrawable
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.text.InputFilter
-import android.text.InputType
 import android.util.Log
+import android.view.Gravity
+import android.view.MotionEvent
 import android.view.View
 import android.widget.*
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.NotificationCompat
-import com.example.parquiatenov10.Home_vigilante
-import com.example.parquiatenov10.SalidaQrParqueadero
+import androidx.core.content.ContextCompat
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.QuerySnapshot
@@ -31,18 +33,26 @@ import java.time.ZoneId
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 import java.util.*
-import java.util.regex.Pattern
 
 @RequiresApi(Build.VERSION_CODES.O)
 class Registrar_Reserva : AppCompatActivity() {
 
     private var database = FirebaseFirestore.getInstance()
-    private lateinit var tiposSpinner: Spinner
-    private lateinit var marcoNum: EditText
-    private lateinit var reservaBtn: Button
     private lateinit var timePicker: TimePicker
+    private lateinit var reservaBtn: Button
     private lateinit var auth: FirebaseAuth
-    private val handler = Handler(Looper.getMainLooper())
+    private lateinit var btnSelectVehicle: Button
+    private lateinit var selectedVehicleInfo: LinearLayout
+    private lateinit var tvVehicleType: TextView
+    private lateinit var tvVehicleNumber: TextView
+    private lateinit var layoutEmptyState: com.google.android.material.card.MaterialCardView
+    private lateinit var btnTryAgain: Button
+    private lateinit var tvEmptyMessage: TextView
+    private lateinit var vehicleSelectionCard: com.google.android.material.card.MaterialCardView
+
+    private var selectedVehicleId: String? = null
+    private var selectedVehicleType: String? = null
+    private var selectedVehicleNumber: String? = null
 
     companion object {
         private const val HORA_INICIO = 6 // 6am
@@ -56,15 +66,317 @@ class Registrar_Reserva : AppCompatActivity() {
         Responsividad.inicializar(this)
         auth = FirebaseAuth.getInstance()
 
-        tiposSpinner = findViewById(R.id.Tipos_SpinnerQR)
-        marcoNum = findViewById(R.id.numero)
-        reservaBtn = findViewById(R.id.Reserva_BTN)
-        timePicker = findViewById(R.id.timePicker)
-
+        inicializarVistas()
         configurarTimePicker()
-        configurarSpinner()
         configurarBotonReserva()
         crearCanalNotificacion(this)
+
+        // Cargar vehículos al iniciar
+        cargarVehiculosUsuario()
+    }
+
+    private fun inicializarVistas() {
+        timePicker = findViewById(R.id.timePicker)
+        reservaBtn = findViewById(R.id.Reserva_BTN)
+        btnSelectVehicle = findViewById(R.id.btnSelectVehicle)
+        selectedVehicleInfo = findViewById(R.id.selectedVehicleInfo)
+        tvVehicleType = findViewById(R.id.tvVehicleType)
+        tvVehicleNumber = findViewById(R.id.tvVehicleNumber)
+        layoutEmptyState = findViewById(R.id.layoutEmptyState)
+        btnTryAgain = findViewById(R.id.btnTryAgain)
+        tvEmptyMessage = findViewById(R.id.tvEmptyMessage)
+        vehicleSelectionCard = findViewById(R.id.vehicleSelectionCard)
+
+        btnSelectVehicle.setOnClickListener {
+            cargarVehiculosYMostrarSeleccion()
+        }
+
+        btnTryAgain.setOnClickListener {
+            cargarVehiculosUsuario()
+        }
+    }
+
+    private fun cargarVehiculosUsuario() {
+        val correo = auth.currentUser?.email
+
+        if (correo.isNullOrEmpty()) {
+            mostrarEstadoVacio("No se pudo obtener el correo del usuario")
+            return
+        }
+
+        mostrarEstadoVacio("Cargando vehículos...")
+
+        database.collection("Bici_Usuarios")
+            .whereEqualTo("correo", correo)
+            .get()
+            .addOnSuccessListener { documents ->
+                if (documents.isEmpty) {
+                    mostrarEstadoVacio("No tienes vehículos registrados")
+                } else {
+                    mostrarInterfazSeleccion()
+                    // Si solo tiene un vehículo, seleccionarlo automáticamente
+                    if (documents.size() == 1) {
+                        val document = documents.documents[0]
+                        seleccionarVehiculo(
+                            document.id,
+                            document.getString("tipo") ?: "Vehículo",
+                            document.getString("numero") ?: "Sin número"
+                        )
+                    }
+                }
+            }
+            .addOnFailureListener { e ->
+                mostrarEstadoVacio("Error al cargar vehículos: ${e.message}")
+            }
+    }
+
+    private fun cargarVehiculosYMostrarSeleccion() {
+        val correo = auth.currentUser?.email
+
+        if (correo.isNullOrEmpty()) {
+            mostrarSweetToast("No se pudo obtener el correo del usuario", false)
+            return
+        }
+
+        database.collection("Bici_Usuarios")
+            .whereEqualTo("correo", correo)
+            .get()
+            .addOnSuccessListener { documents ->
+                if (documents.isEmpty) {
+                    mostrarSweetToast("No tienes vehículos registrados", false)
+                } else if (documents.size() == 1) {
+                    val document = documents.documents[0]
+                    seleccionarVehiculo(
+                        document.id,
+                        document.getString("tipo") ?: "Vehículo",
+                        document.getString("numero") ?: "Sin número"
+                    )
+                    mostrarSweetToast("Vehículo seleccionado automáticamente", true)
+                } else {
+                    mostrarSeleccionVehiculoElegante(documents)
+                }
+            }
+            .addOnFailureListener { e ->
+                mostrarSweetToast("Error al cargar vehículos: ${e.message}", false)
+            }
+    }
+
+    private fun mostrarSeleccionVehiculoElegante(documents: com.google.firebase.firestore.QuerySnapshot) {
+        val vehiculos = mutableListOf<Triple<String, String, String>>()
+
+        for (document in documents) {
+            val tipo = document.getString("tipo") ?: "Vehículo"
+            val numero = document.getString("numero") ?: "Sin número"
+            vehiculos.add(Triple(document.id, tipo, numero))
+        }
+
+        val dialog = AlertDialog.Builder(this).create()
+
+        // Crear layout principal
+        val mainLayout = LinearLayout(this).apply {
+            orientation = LinearLayout.VERTICAL
+            setPadding(20, 20, 20, 20)
+            background = createRoundedDrawable(ContextCompat.getColor(this@Registrar_Reserva, R.color.Blanco), 25f)
+        }
+
+        // Título
+        val titleView = TextView(this).apply {
+            text = "Seleccionar Vehículo"
+            textSize = 20f
+            setTextColor(ContextCompat.getColor(this@Registrar_Reserva, R.color.Principal))
+            setTypeface(typeface, Typeface.BOLD)
+            gravity = Gravity.CENTER
+            setPadding(0, 10, 0, 20)
+        }
+
+        // Mensaje
+        val messageView = TextView(this).apply {
+            text = "Selecciona el vehículo para la reserva:"
+            textSize = 14f
+            setTextColor(ContextCompat.getColor(this@Registrar_Reserva, R.color.Negro))
+            gravity = Gravity.CENTER
+            setPadding(0, 0, 0, 10)
+        }
+
+        // Crear lista personalizada
+        val scrollView = ScrollView(this)
+        val listLayout = LinearLayout(this).apply {
+            orientation = LinearLayout.VERTICAL
+            setPadding(10, 10, 10, 10)
+        }
+
+        vehiculos.forEachIndexed { index, vehiculo ->
+            val itemLayout = LinearLayout(this).apply {
+                orientation = LinearLayout.HORIZONTAL
+                gravity = Gravity.CENTER_VERTICAL
+                setPadding(20, 15, 20, 15)
+                background = createRoundedDrawable(ContextCompat.getColor(this@Registrar_Reserva, R.color.Texto_pastel), 12f)
+                setOnClickListener {
+                    seleccionarVehiculo(vehiculo.first, vehiculo.second, vehiculo.third)
+                    dialog.dismiss()
+                    mostrarSweetToast("Vehículo seleccionado: ${vehiculo.second} - ${vehiculo.third}", true)
+                }
+                setOnTouchListener { v, event ->
+                    when (event.action) {
+                        MotionEvent.ACTION_DOWN -> v.alpha = 0.7f
+                        MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> v.alpha = 1.0f
+                    }
+                    false
+                }
+            }
+
+            // Icono del vehículo
+            val vehicleIcon = TextView(this).apply {
+                text = getVehicleIcon(vehiculo.second)
+                textSize = 18f
+                setPadding(0, 0, 15, 0)
+            }
+
+            // Información del vehículo
+            val infoLayout = LinearLayout(this).apply {
+                orientation = LinearLayout.VERTICAL
+                layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
+            }
+
+            val typeView = TextView(this).apply {
+                text = vehiculo.second
+                textSize = 16f
+                setTextColor(ContextCompat.getColor(this@Registrar_Reserva, R.color.Negro))
+                setTypeface(typeface, Typeface.BOLD)
+            }
+
+            val numberView = TextView(this).apply {
+                text = vehiculo.third
+                textSize = 14f
+                setTextColor(ContextCompat.getColor(this@Registrar_Reserva, R.color.Negro))
+            }
+
+            infoLayout.addView(typeView)
+            infoLayout.addView(numberView)
+
+            itemLayout.addView(vehicleIcon)
+            itemLayout.addView(infoLayout)
+
+            listLayout.addView(itemLayout)
+
+            // Separador
+            if (index < vehiculos.size - 1) {
+                val separator = View(this).apply {
+                    layoutParams = LinearLayout.LayoutParams(
+                        LinearLayout.LayoutParams.MATCH_PARENT,
+                        1
+                    ).apply {
+                        setMargins(10, 5, 10, 5)
+                    }
+                    setBackgroundColor(ContextCompat.getColor(this@Registrar_Reserva, R.color.Tercero))
+                }
+                listLayout.addView(separator)
+            }
+        }
+
+        scrollView.addView(listLayout)
+
+        // Botones
+        val buttonLayout = LinearLayout(this).apply {
+            orientation = LinearLayout.HORIZONTAL
+            gravity = Gravity.CENTER
+            setPadding(0, 10, 0, 0)
+        }
+
+        val cancelButton = Button(this).apply {
+            text = "Cancelar"
+            setTextColor(ContextCompat.getColor(this@Registrar_Reserva, R.color.Blanco))
+            setBackgroundColor(ContextCompat.getColor(this@Registrar_Reserva, R.color.Secundario))
+            setPadding(30, 15, 30, 15)
+            setOnClickListener {
+                dialog.dismiss()
+            }
+            layoutParams = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+            ).apply {
+                setMargins(5, 0, 5, 0)
+            }
+            background = createRoundedDrawable(ContextCompat.getColor(this@Registrar_Reserva, R.color.Secundario), 20f)
+        }
+
+        buttonLayout.addView(cancelButton)
+
+        // Agregar todos los views al layout principal
+        mainLayout.addView(titleView)
+        mainLayout.addView(messageView)
+        mainLayout.addView(scrollView)
+        mainLayout.addView(buttonLayout)
+
+        dialog.setView(mainLayout)
+        dialog.show()
+    }
+
+    private fun seleccionarVehiculo(vehicleId: String, tipo: String, numero: String) {
+        selectedVehicleId = vehicleId
+        selectedVehicleType = tipo
+        selectedVehicleNumber = numero
+
+        tvVehicleType.text = "Tipo: $tipo"
+        tvVehicleNumber.text = "Número: ${numero.uppercase()}"
+        selectedVehicleInfo.visibility = View.VISIBLE
+
+        mostrarSweetToast("Vehículo seleccionado: $tipo - ${numero.uppercase()}", true)
+    }
+
+    private fun createRoundedDrawable(color: Int, cornerRadius: Float): GradientDrawable {
+        return GradientDrawable().apply {
+            shape = GradientDrawable.RECTANGLE
+            this.cornerRadius = cornerRadius
+            setColor(color)
+        }
+    }
+
+    private fun getVehicleIcon(tipo: String): String {
+        return when {
+            tipo.contains("bici", true) -> "🚲"
+            tipo.contains("moto", true) -> "🏍️"
+            tipo.contains("carro", true) -> "🚗"
+            tipo.contains("furgon", true) -> "🚐"
+            tipo.contains("patineta", true) -> "🛴"
+            else -> "🚗"
+        }
+    }
+
+    private fun mostrarSweetToast(message: String, isSuccess: Boolean) {
+        runOnUiThread {
+            val toast = Toast.makeText(this, message, Toast.LENGTH_LONG)
+            val toastView = TextView(this).apply {
+                text = message
+                setTextColor(ContextCompat.getColor(this@Registrar_Reserva, R.color.Blanco))
+                gravity = Gravity.CENTER
+                setPadding(40, 20, 40, 20)
+                val backgroundColor = if (isSuccess) R.color.Verde_bien else R.color.Secundario
+                background = createRoundedDrawable(ContextCompat.getColor(this@Registrar_Reserva, backgroundColor), 25f)
+            }
+            toast.view = toastView
+            toast.setGravity(Gravity.CENTER, 0, 0)
+            toast.show()
+        }
+    }
+
+    private fun mostrarInterfazSeleccion() {
+        runOnUiThread {
+            vehicleSelectionCard.visibility = View.VISIBLE
+            layoutEmptyState.visibility = View.GONE
+        }
+    }
+
+    private fun mostrarEstadoVacio(mensaje: String) {
+        runOnUiThread {
+            vehicleSelectionCard.visibility = View.GONE
+            layoutEmptyState.visibility = View.VISIBLE
+            tvEmptyMessage.text = mensaje
+            selectedVehicleInfo.visibility = View.GONE
+            selectedVehicleId = null
+            selectedVehicleType = null
+            selectedVehicleNumber = null
+        }
     }
 
     fun hayConexionInternet(context: Context): Boolean {
@@ -76,7 +388,6 @@ class Registrar_Reserva : AppCompatActivity() {
     }
 
     private fun validarHorario(horaReserva: LocalTime): Boolean {
-
         val zonaColombia = ZoneId.of("America/Bogota")
         val ahoraColombia = ZonedDateTime.now(zonaColombia).toLocalTime()
         val horaInicio = LocalTime.of(HORA_INICIO, 0)
@@ -93,71 +404,19 @@ class Registrar_Reserva : AppCompatActivity() {
         return true
     }
 
-    private fun validarFormatoPlaca(numero: String, tipoVehi: String): Boolean {
-        return when (tipoVehi) {
-            "Motocicleta", "Vehículo" -> {
-                val placaPattern = Pattern.compile("^[a-zA-Z]{3,4}[0-9]{2,3}[a-zA-Z]?$")
-                placaPattern.matcher(numero).matches()
-            }
-            "Furgón" -> {
-                numero.length == 7
-            }
-            "Bicicleta", "Patineta" -> {
-                numero.length == 4 && numero.all { it.isDigit() }
-            }
-            else -> true
-        }
-    }
-
     private fun configurarTimePicker() {
         timePicker.setIs24HourView(false)
         timePicker.hour = HORA_INICIO
         timePicker.minute = 0
     }
 
-    private fun configurarSpinner() {
-        val adapter = ArrayAdapter.createFromResource(this, R.array.items, R.layout.estilo_spinner)
-        adapter.setDropDownViewResource(R.layout.estilo_spinner)
-        tiposSpinner.adapter = adapter
-
-        tiposSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
-                when (position) {
-                    1, 2 -> { // Bicicleta, Patineta
-                        marcoNum.hint = "4 Últimos Números"
-                        marcoNum.inputType = InputType.TYPE_CLASS_NUMBER
-                        marcoNum.filters = arrayOf(InputFilter.LengthFilter(4))
-                    }
-                    3, 4, 5 -> { // Motocicleta, Vehículo, Furgón
-                        marcoNum.hint = when (position) {
-                            3 -> "Placa (Ej. abc12c)"
-                            4 -> "Placa (Ej. abc123)"
-                            5 -> "Número de Furgón"
-                            else -> "Número"
-                        }
-                        marcoNum.inputType = InputType.TYPE_CLASS_TEXT
-                        marcoNum.filters = arrayOf(InputFilter.LengthFilter(6))
-                    }
-                    else -> {
-                        marcoNum.hint = "Seleccione un tipo de vehiculo"
-                        marcoNum.inputType = InputType.TYPE_CLASS_TEXT
-                    }
-                }
-            }
-
-            override fun onNothingSelected(parent: AdapterView<*>) {}
-        }
-    }
-
     private fun configurarBotonReserva() {
         reservaBtn.setOnClickListener {
             if (hayConexionInternet(this)) {
                 Log.d("conexion", "¡Hay conexión a Internet!")
-                val tipoVehi = tiposSpinner.selectedItem.toString()
                 val userId = FirebaseAuth.getInstance().currentUser?.uid.toString()
-                val numero = marcoNum.text.toString()
 
-                if (!validarCampos(tipoVehi, userId, numero)) return@setOnClickListener
+                if (!validarCampos(userId)) return@setOnClickListener
 
                 val horaSeleccionada = timePicker.hour
                 val minutoSeleccionado = timePicker.minute
@@ -177,7 +436,7 @@ class Registrar_Reserva : AppCompatActivity() {
                     return@setOnClickListener
                 }
 
-                verificarDisponibilidad(userId, tipoVehi, numero, horaReserva)
+                verificarReservaExistente(userId, horaReserva)
             } else {
                 Toast.makeText(this, "¡Se ha perdido la conexion!", Toast.LENGTH_SHORT).show()
                 finish()
@@ -186,60 +445,27 @@ class Registrar_Reserva : AppCompatActivity() {
         }
     }
 
-    private fun validarCampos(tipoVehi: String, userId: String, numero: String): Boolean {
+    private fun validarCampos(userId: String): Boolean {
         return when {
-            tipoVehi == "Tipo de Vehiculo" -> {
-                Toast.makeText(this, "Seleccione un tipo de vehículo", Toast.LENGTH_SHORT).show()
-                false
-            }
             userId.isEmpty() -> {
                 Toast.makeText(this, "Usuario no autenticado", Toast.LENGTH_SHORT).show()
                 false
             }
-            numero.isEmpty() -> {
-                Toast.makeText(this, "Ingrese el número/placa del vehículo", Toast.LENGTH_SHORT).show()
-                false
-            }
-            !validarFormatoPlaca(numero, tipoVehi) -> {
-                val mensaje = when (tipoVehi) {
-                    "Motocicleta", "Vehículo" -> "Formato de placa inválido. Ejemplos válidos:\nabc123, abc12c, abcd12"
-                    "Furgón" -> "Número de furgón debe tener 7 caracteres"
-                    "Bicicleta", "Patineta" -> "Debe ingresar los 4 últimos dígitos"
-                    else -> "Número/placa inválido"
-                }
-                Toast.makeText(this, mensaje, Toast.LENGTH_LONG).show()
+            selectedVehicleId == null -> {
+                Toast.makeText(this, "Seleccione un vehículo", Toast.LENGTH_SHORT).show()
                 false
             }
             else -> true
         }
     }
 
-    private fun verificarDisponibilidad(userId: String, tipoVehi: String, numero: String, horaReserva: LocalTime) {
-        database.collection("Bici_Usuarios")
-            .whereEqualTo("id", userId)
-            .whereEqualTo("tipo", tipoVehi)
-            .whereEqualTo("numero", numero)
-            .get()
-            .addOnSuccessListener { documents ->
-                if (documents.isEmpty) {
-                    Toast.makeText(this, "No hay registro de este vehículo", Toast.LENGTH_SHORT).show()
-                } else {
-                    verificarReservaExistente(userId, tipoVehi, numero, horaReserva)
-                }
-            }
-            .addOnFailureListener { e ->
-                Log.e("Firestore", "Error al verificar vehículo: ", e)
-                Toast.makeText(this, "Error al verificar vehículo", Toast.LENGTH_SHORT).show()
-            }
-    }
-
-    private fun verificarReservaExistente(userId: String, tipoVehi: String, numero: String, horaReserva: LocalTime) {
+    private fun verificarReservaExistente(userId: String, horaReserva: LocalTime) {
         database.collection("Reservas")
             .whereEqualTo("id", userId)
             .get()
             .addOnSuccessListener { documents ->
                 if (documents.isEmpty) {
-                    iniciarReserva(userId, tipoVehi, numero, horaReserva)
+                    iniciarReserva(userId, horaReserva)
                 } else {
                     mostrarErrorReservaExistente(documents)
                 }
@@ -249,7 +475,8 @@ class Registrar_Reserva : AppCompatActivity() {
                 Toast.makeText(this, "Error al verificar reserva", Toast.LENGTH_SHORT).show()
             }
     }
-    private fun iniciarReserva(userId: String, tipoVehi: String, numero: String, horaReserva: LocalTime) {
+
+    private fun iniciarReserva(userId: String, horaReserva: LocalTime) {
         val fechaActual = LocalDate.now()
         val fechaHoraCompleta = LocalDateTime.of(fechaActual, horaReserva)
         val formatoCompleto = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
@@ -257,9 +484,10 @@ class Registrar_Reserva : AppCompatActivity() {
 
         val intent = Intent(this, Reservacion::class.java).apply {
             putExtra("ID", userId)
-            putExtra("Tipo", tipoVehi)
-            putExtra("numero", numero)
+            putExtra("Tipo", selectedVehicleType)
+            putExtra("numero", selectedVehicleNumber)
             putExtra("horaReserva", fechaHoraFormateada)
+            putExtra("vehicleId", selectedVehicleId)
         }
         startActivity(intent)
     }

@@ -356,8 +356,23 @@ class HomeActivity : BaseNavigationActivity() {
                         val correo = FirebaseAuth.getInstance().currentUser?.email.toString()
 
                         try {
-                            val qrBitmap = generateQRCode(correo, 500)
-                            qrImageView.setImageBitmap(qrBitmap)
+                            database.collection("Bici_Usuarios")
+                                .whereEqualTo("correo", correo)
+                                .whereEqualTo("tipo", tipoVehiculo)
+                                .whereEqualTo("numero", numeroVehiculo)
+                                .get()
+                                .addOnSuccessListener { documents ->
+                                    Log.d("QrActivity", "Vehículos encontrados: ${documents.size()}")
+
+                                    // Solo tiene un vehículo, generar QR con ese ID
+                                    val document = documents.documents[0]
+                                    val vehiculoId = document.id
+                                    val qrBitmap = generateQRCode(vehiculoId, 500)
+                                    qrImageView.setImageBitmap(qrBitmap)
+                                }
+                                .addOnFailureListener { e ->
+                                    Log.e("QrActivity", "Error al cargar vehículos: ${e.message}")
+                                }
                         } catch (e: Exception) {
                             e.printStackTrace()
                         }

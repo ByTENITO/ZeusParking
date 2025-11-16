@@ -100,10 +100,60 @@ class QrActivity : BaseNavigationActivity() {
 
         Log.d("QrActivity", "Buscando vehículos para: $correo")
 
-        // Verificar primero si hay vehículos en el parqueadero
-        verificarVehiculosEnParqueadero(correo)
+        // Primero verificar si tiene reservas activas
+        verificarReservasActivas(correo)
     }
 
+    private fun verificarReservasActivas(correo: String) {
+        val userId = FirebaseAuth.getInstance().currentUser?.uid
+
+        if (userId.isNullOrEmpty()) {
+            mostrarError("No se pudo obtener el ID del usuario")
+            return
+        }
+
+        database.collection("Reservas")
+            .whereEqualTo("id", userId)
+            .get()
+            .addOnSuccessListener { documents ->
+                if (documents.isEmpty) {
+                    // No tiene reservas activas, puede proceder
+                    Log.d("QrActivity", "No hay reservas activas, verificando vehículos en parqueadero")
+                    verificarVehiculosEnParqueadero(correo)
+                } else {
+                    // Tiene reservas activas, mostrar mensaje
+                    mostrarErrorReservaActiva(documents)
+                }
+            }
+            .addOnFailureListener { e ->
+                Log.e("QrActivity", "Error al verificar reservas: ${e.message}")
+                // En caso de error, intentar cargar vehículos de todos modos
+                verificarVehiculosEnParqueadero(correo)
+            }
+    }
+
+    private fun mostrarErrorReservaActiva(documents: com.google.firebase.firestore.QuerySnapshot) {
+        val reservasInfo = StringBuilder()
+        reservasInfo.append("Tienes reservas activas:\n\n")
+
+        for (document in documents) {
+            val tipo = document.getString("tipo") ?: "Vehículo"
+            val numero = document.getString("numero") ?: "Sin número"
+            val horaReserva = document.getString("horaReserva") ?: "Hora no especificada"
+
+            reservasInfo.append("• $tipo - ${numero.uppercase()}\n")
+            reservasInfo.append("  Hora: $horaReserva\n\n")
+        }
+
+        reservasInfo.append("Debes cancelar tu reserva activa antes de generar un nuevo QR de entrada.")
+
+        mostrarEstadoVacio(reservasInfo.toString())
+
+        // Mostrar Toast adicional
+        showSweetToast("Tienes reservas activas. Cancélalas primero.", false)
+    }
+
+    // El resto del código se mantiene igual...
     private fun verificarVehiculosEnParqueadero(correo: String) {
         database.collection("Entradas")
             .whereEqualTo("correoUsuario", correo)
